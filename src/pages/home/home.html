@@ -14,4 +14,38 @@
     Take a look at the <code>src/pages/</code> directory to add or change tabs,
     update any existing page or create new pages.
   </p>
+  <ion-card>
+    <ion-item class="no-bottom-border item">
+      <button ion-button large full clear class="timer-button timer-text">06:03:17</button>
+    </ion-item>
+    <!--<ion-item class="no-bottom-border" *ngIf="timeInSeconds && timeInSeconds > 0">-->
+    <!--<button ion-button icon-left clear color="danger" small (click)="initTimer()" item-left *ngIf="!timer.runTimer && (timer.hasStarted || timer.hasFinished) || timer.hasFinished">-->
+    <!--<ion-icon name="refresh"></ion-icon>-->
+    <!--Reset-->
+    <!--</button>-->
+    <!--<button ion-button icon-left clear small color="primary" (click)="pauseTimer()" item-right *ngIf="timer.runTimer && timer.hasStarted && !timer.hasFinished">-->
+    <!--<ion-icon name="pause"></ion-icon>-->
+    <!--Pause-->
+    <!--</button>-->
+    <!--<button ion-button icon-left clear small color="primary" (click)="resumeTimer()" item-right *ngIf="!timer.runTimer && timer.hasStarted && !timer.hasFinished">-->
+    <!--<ion-icon name="play"></ion-icon>-->
+    <!--Resume-->
+    <!--</button>-->
+    <!--<button ion-button icon-left clear small color="primary" (click)="startTimer()" item-right *ngIf="!timer.hasStarted">-->
+    <!--<ion-icon name="play"></ion-icon>-->
+    <!--Start-->
+    <!--</button>-->
+    <!--</ion-item>-->
+  </ion-card>
+
+  <style>
+    .timer-button {
+      font-size: 5rem !important;
+      height: 1em !important;
+    }
+
+    .no-bottom-border.item .item-inner {
+      border-bottom: none !important;
+    }
+  </style>
 </ion-content>
