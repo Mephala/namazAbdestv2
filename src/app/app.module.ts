@@ -11,6 +11,8 @@ import {Geolocation} from "@ionic-native/geolocation";
 import {StatusBar} from "@ionic-native/status-bar";
 import {SplashScreen} from "@ionic-native/splash-screen";
 import {NativeStorage} from "@ionic-native/native-storage";
+import {WordingProvider} from "../providers/wording-provider";
+import {Globalization} from "@ionic-native/globalization";
 
 @NgModule({
   declarations: [
@@ -38,7 +40,10 @@ import {NativeStorage} from "@ionic-native/native-storage";
     LocationProvider,
     Geolocation,
     NativeStorage,
+    WordingProvider,
+    Globalization,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
-export class AppModule {}
+export class AppModule {
+}

@@ -1,7 +1,8 @@
 import {Injectable} from "@angular/core";
-import {Events, Platform} from "ionic-angular";
+import {Events} from "ionic-angular";
 import {NativeStorage} from "@ionic-native/native-storage";
 import {Geolocation} from "@ionic-native/geolocation";
+import {Dictionary, WordingProvider} from "./wording-provider";
 
 /*
  Generated class for the LocationProvider provider.
@@ -13,15 +14,16 @@ import {Geolocation} from "@ionic-native/geolocation";
 export class LocationProvider {
 
   ld: LocationDuple;
+  dictionary: Dictionary;
 
-  constructor(public platform: Platform, public events: Events, private geolocation: Geolocation, private nativeStorage: NativeStorage) {
+  constructor(public events: Events, private geolocation: Geolocation, private nativeStorage: NativeStorage, public wordingProvider: WordingProvider) {
 
   }
 
   public initiate(): Promise<ServiceResponse> {
+    this.dictionary = this.wordingProvider.dictionary;
     return new Promise<ServiceResponse>(resolve => {
-      this.platform.ready().then(() => {
-        this.nativeStorage.getItem('location').then(data => {
+      this.nativeStorage.getItem('ld').then(data => {
           if (data != null) {
             this.ld = data.ld;
             resolve(new ServiceResponse(1, this.ld));
@@ -36,7 +38,7 @@ export class LocationProvider {
             });
           }
         }, error => {
-          this.events.publish('mainLoadingStatus', 'Preparing application for first use');
+        this.events.publish('mainLoadingStatus', this.dictionary.gettingReadyForTheFirstTime);
           this.getLocationDuple().then(response => {
             if (response.errorCode == 0) {
               this.ld = response.data;
@@ -48,7 +50,6 @@ export class LocationProvider {
             }
           });
         });
-      });
     });
   }
 
