@@ -27,24 +27,24 @@ export class LocationProvider {
         this.nativeStorage.getItem('ld').then(data => {
           if (data != null) {
             this.ld = data.ld;
-            resolve(new ServiceResponse(1, this.ld));
             this.getLocationDuple().then(response => {
               if (response.errorCode == 0) {
                 this.ld = response.data;
-                resolve(new ServiceResponse(0, this.ld));
+                // resolve(new ServiceResponse(0, this.ld));
                 this.saveLocationData(this.ld);
               } else {
-                resolve(new ServiceResponse(2, this.ld));
+                // resolve(new ServiceResponse(2, this.ld));
               }
             });
+            resolve(new ServiceResponse(1, this.ld));
           }
         }, error => {
           this.events.publish('mainLoadingStatus', this.dictionary.gettingReadyForTheFirstTime);
           this.getLocationDuple().then(response => {
             if (response.errorCode == 0) {
               this.ld = response.data;
-              resolve(new ServiceResponse(0, this.ld));
               this.saveLocationData(this.ld);
+              resolve(new ServiceResponse(0, this.ld));
             } else {
               //TODO Push error
               resolve(new ServiceResponse(-1, null));
