@@ -20,19 +20,26 @@ export class WordingProvider {
     console.log('Hello WordingProvider Provider');
   }
 
-  public init(): Promise<ServiceResponse> {
+  public init(source: string): Promise<ServiceResponse> {
     return new Promise<ServiceResponse>(resolve => {
-      this.globalization.getPreferredLanguage().then(res => {
-        console.log("Determine preferred language:" + res);
-        this.lanDetermined(res);
+      if (source != "dom") {
+        this.globalization.getPreferredLanguage().then(res => {
+          console.log("Determine preferred language:" + res);
+          this.lanDetermined(res);
+          resolve(new ServiceResponse(0, this.dictionary));
+        }).catch(e => {
+          alert(e);
+          console.log("Failed to determine preferred language, English as default is being used." + e);
+          this.preferredLanguage = "en-Us";
+          this.createEnglishDictionary();
+          resolve(new ServiceResponse(0, this.dictionary));
+        });
+      } else {
+        console.log("Test configuration detected. Returning turkish dictionary as test defaults");
+        this.preferredLanguage = "tr-test";
+        this.createTurkishDictionary();
         resolve(new ServiceResponse(0, this.dictionary));
-      }).catch(e => {
-        alert(e);
-        console.log("Failed to determine preferred language, English as default is being used." + e);
-        this.preferredLanguage = "en-Us";
-        this.createEnglishDictionary();
-        resolve(new ServiceResponse(0, this.dictionary));
-      });
+      }
     });
   }
 

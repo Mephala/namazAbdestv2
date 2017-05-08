@@ -27,7 +27,7 @@ export class HomePage {
           this.loader.setContent(loadingStatus);
         }
       });
-      this.wordingProvider.init().then(response => {
+      this.wordingProvider.init(readySource).then(response => {
         this.dictionary = response.data;
         this.loader.setContent(this.dictionary.pleaseWait);
         this.locationProvider.initiate(readySource).then(response => {
