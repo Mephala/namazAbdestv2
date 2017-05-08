@@ -20,10 +20,11 @@ export class LocationProvider {
 
   }
 
-  public initiate(): Promise<ServiceResponse> {
+  public initiate(source: string): Promise<ServiceResponse> {
     this.dictionary = this.wordingProvider.dictionary;
     return new Promise<ServiceResponse>(resolve => {
-      this.nativeStorage.getItem('ld').then(data => {
+      if (source != 'dom') {
+        this.nativeStorage.getItem('ld').then(data => {
           if (data != null) {
             this.ld = data.ld;
             resolve(new ServiceResponse(1, this.ld));
@@ -38,7 +39,7 @@ export class LocationProvider {
             });
           }
         }, error => {
-        this.events.publish('mainLoadingStatus', this.dictionary.gettingReadyForTheFirstTime);
+          this.events.publish('mainLoadingStatus', this.dictionary.gettingReadyForTheFirstTime);
           this.getLocationDuple().then(response => {
             if (response.errorCode == 0) {
               this.ld = response.data;
@@ -50,6 +51,14 @@ export class LocationProvider {
             }
           });
         });
+      } else {
+        console.log("Test mode detected. Returning test location data");
+        let locationDuple = new LocationDuple();
+        locationDuple.lat = 40.3928;
+        locationDuple.lng = 29.2424;
+        this.ld = locationDuple;
+        resolve(new ServiceResponse(0, this.ld));
+      }
     });
   }
 
@@ -69,7 +78,7 @@ export class LocationProvider {
         resolve(new ServiceResponse(0, ld));
       }).catch((error) => {
         resolve(new ServiceResponse(-2, null));
-        console.log('Failed to retrieve precise location' + error);
+        console.log('Failed to retrieve precise location' + JSON.stringify(error));
         //TODO Push error
       });
     });

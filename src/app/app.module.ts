@@ -13,6 +13,8 @@ import {SplashScreen} from "@ionic-native/splash-screen";
 import {NativeStorage} from "@ionic-native/native-storage";
 import {WordingProvider} from "../providers/wording-provider";
 import {Globalization} from "@ionic-native/globalization";
+import {WebProvider} from "../providers/web-provider";
+import {HttpModule} from "@angular/http";
 
 @NgModule({
   declarations: [
@@ -24,6 +26,7 @@ import {Globalization} from "@ionic-native/globalization";
   ],
   imports: [
     BrowserModule,
+    HttpModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
@@ -42,6 +45,7 @@ import {Globalization} from "@ionic-native/globalization";
     NativeStorage,
     WordingProvider,
     Globalization,
+    WebProvider,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

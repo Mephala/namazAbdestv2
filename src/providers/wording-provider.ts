@@ -14,6 +14,7 @@ import {Globalization} from "@ionic-native/globalization";
 export class WordingProvider {
 
   dictionary: Dictionary;
+  preferredLanguage: string;
 
   constructor(public globalization: Globalization) {
     console.log('Hello WordingProvider Provider');
@@ -28,6 +29,7 @@ export class WordingProvider {
       }).catch(e => {
         alert(e);
         console.log("Failed to determine preferred language, English as default is being used." + e);
+        this.preferredLanguage = "en-Us";
         this.createEnglishDictionary();
         resolve(new ServiceResponse(0, this.dictionary));
       });
@@ -36,6 +38,7 @@ export class WordingProvider {
 
   private lanDetermined(lan) {
     let val = lan.value;
+    this.preferredLanguage = val;
     alert("Determining language:" + lan.value + " , " + val.startsWith("tr"));
     if (val.startsWith("tr")) {
       alert("Creating tr dictionary");
