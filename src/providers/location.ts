@@ -37,6 +37,8 @@ export class LocationProvider {
               }
             });
             resolve(new ServiceResponse(1, this.ld));
+          } else {
+            resolve(new ServiceResponse(-2, null));
           }
         }, error => {
           this.events.publish('mainLoadingStatus', this.dictionary.gettingReadyForTheFirstTime);
