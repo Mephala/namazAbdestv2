@@ -42,6 +42,7 @@ export class WebProvider {
       }).subscribe(data => {
         resolve(new ServiceResponse(0, response));
       }, (err) => {
+        alert("Failed http request:" + err);
         resolve(new ServiceResponse(-1, JSON.stringify(err)));
       });
 

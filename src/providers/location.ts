@@ -26,7 +26,7 @@ export class LocationProvider {
       if (source != 'dom') {
         this.nativeStorage.getItem('ld').then(data => {
           if (data != null) {
-            this.ld = data.ld;
+            this.ld = data;
             this.getLocationDuple().then(response => {
               if (response.errorCode == 0) {
                 this.ld = response.data;
@@ -66,7 +66,15 @@ export class LocationProvider {
 
   private saveLocationData(ld: LocationDuple): Promise<ServiceResponse> {
     return new Promise<ServiceResponse>(resolve => {
-      this.nativeStorage.setItem("ld", ld);
+      this.nativeStorage.setItem("ld", ld).then(
+        () => {
+          console.log('Stored new location:' + ld);
+        },
+        error => {
+          console.log('Failed to fetch new precise location:' + error);
+          //TODO push error and show warning.
+        }
+      );
       resolve(new ServiceResponse(0, null));
     });
   }

@@ -28,7 +28,7 @@ export class WordingProvider {
           this.lanDetermined(res);
           resolve(new ServiceResponse(0, this.dictionary));
         }).catch(e => {
-          alert(e);
+          alert("Globalization error:" + e);
           console.log("Failed to determine preferred language, English as default is being used." + e);
           this.preferredLanguage = "en-Us";
           this.createEnglishDictionary();
@@ -46,9 +46,7 @@ export class WordingProvider {
   private lanDetermined(lan) {
     let val = lan.value;
     this.preferredLanguage = val;
-    alert("Determining language:" + lan.value + " , " + val.startsWith("tr"));
     if (val.startsWith("tr")) {
-      alert("Creating tr dictionary");
       this.createTurkishDictionary();
     } else {
       this.createEnglishDictionary();
