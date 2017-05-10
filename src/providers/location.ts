@@ -56,8 +56,8 @@ export class LocationProvider {
       } else {
         console.log("Test mode detected. Returning test location data");
         let locationDuple = new LocationDuple();
-        locationDuple.lat = 40.3928;
-        locationDuple.lng = 29.2424;
+        locationDuple.lat = 40.979601;
+        locationDuple.lng = 29.0878477;
         this.ld = locationDuple;
         resolve(new ServiceResponse(0, this.ld));
       }
