@@ -15,8 +15,6 @@ import {WordingProvider} from "../providers/wording-provider";
 import {Globalization} from "@ionic-native/globalization";
 import {WebProvider} from "../providers/web-provider";
 import {HttpModule} from "@angular/http";
-import {SettingsPage} from "../pages/settings-page/settings-page";
-import {ReadHadithPage} from "../pages/read-hadith-page/read-hadith-page";
 import {Push} from "@ionic-native/push";
 
 @NgModule({
@@ -25,9 +23,7 @@ import {Push} from "@ionic-native/push";
     AboutPage,
     ContactPage,
     HomePage,
-    TabsPage,
-    SettingsPage,
-    ReadHadithPage
+    TabsPage
   ],
   imports: [
     BrowserModule,
@@ -40,9 +36,7 @@ import {Push} from "@ionic-native/push";
     AboutPage,
     ContactPage,
     HomePage,
-    TabsPage,
-    SettingsPage,
-    ReadHadithPage
+    TabsPage
   ],
   providers: [
     StatusBar,

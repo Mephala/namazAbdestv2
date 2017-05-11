@@ -1,5 +1,5 @@
 import {Component} from "@angular/core";
-import {IonicPage, NavController, NavParams} from "ionic-angular";
+import {IonicPage, NavParams} from "ionic-angular";
 import {Hadith} from "../../providers/web-provider";
 
 /**
@@ -17,7 +17,7 @@ export class ReadHadithPage {
 
   hadis: Hadith;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navParams: NavParams) {
     this.hadis = this.navParams.get("hadis");
   }
 
