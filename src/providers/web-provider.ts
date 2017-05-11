@@ -19,6 +19,7 @@ export class WebProvider {
   // serverRoot: string = "http://ec2-52-27-157-90.us-west-2.compute.amazonaws.com";
   version: string = "2.0.0";
   timeout: number = 30000;
+  startupData: StartupData;
 
   constructor(public http: Http, public locationProvider: LocationProvider, public wordingProvider: WordingProvider) {
     console.log('Hello WebProvider Provider');
@@ -41,6 +42,7 @@ export class WebProvider {
         "&day=" + day + "&month=" + month + "&preferredLanguage=" + preferredLanguage + "&callType=cache&version=" + this.version, options).timeout(this.timeout).map(res => {
         response = res.json();
       }).subscribe(data => {
+        this.startupData = response;
         resolve(new ServiceResponse(0, response));
       }, (err) => {
         alert("Failed http request:" + err);

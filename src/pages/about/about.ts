@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import {Component} from "@angular/core";
+import {NavController} from "ionic-angular";
+import {Hadith, WebProvider} from "../../providers/web-provider";
+import {ReadHadithPage} from "../read-hadith-page/read-hadith-page";
 
 @Component({
   selector: 'page-about',
@@ -7,8 +9,14 @@ import { NavController } from 'ionic-angular';
 })
 export class AboutPage {
 
-  constructor(public navCtrl: NavController) {
+  hadisList: Array<Hadith>;
 
+  constructor(public navCtrl: NavController, public webProvider: WebProvider) {
+    this.hadisList = this.webProvider.startupData.previousHadith;
+  }
+
+  public readHadis(hadis: Hadith) {
+    this.navCtrl.push(ReadHadithPage, {hadis: hadis});
   }
 
 }

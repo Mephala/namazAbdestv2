@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import {Component} from "@angular/core";
+import {NavController} from "ionic-angular";
+import {ImportantDate, WebProvider} from "../../providers/web-provider";
 
 @Component({
   selector: 'page-contact',
@@ -7,7 +8,10 @@ import { NavController } from 'ionic-angular';
 })
 export class ContactPage {
 
-  constructor(public navCtrl: NavController) {
+  importantDayList: Array<ImportantDate>;
+
+  constructor(public navCtrl: NavController, public webProvider: WebProvider) {
+    this.importantDayList = this.webProvider.startupData.importantDates;
 
   }
 
