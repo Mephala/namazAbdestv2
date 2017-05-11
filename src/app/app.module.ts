@@ -17,6 +17,7 @@ import {WebProvider} from "../providers/web-provider";
 import {HttpModule} from "@angular/http";
 import {SettingsPage} from "../pages/settings-page/settings-page";
 import {ReadHadithPage} from "../pages/read-hadith-page/read-hadith-page";
+import {Push} from "@ionic-native/push";
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import {ReadHadithPage} from "../pages/read-hadith-page/read-hadith-page";
     WordingProvider,
     Globalization,
     WebProvider,
+    Push,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

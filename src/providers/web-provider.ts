@@ -4,6 +4,7 @@ import "rxjs/add/operator/map";
 import "rxjs/add/operator/timeout";
 import {LocationProvider, ServiceResponse} from "./location";
 import {WordingProvider} from "./wording-provider";
+import {Push, PushObject, PushOptions} from "@ionic-native/push";
 
 /*
  Generated class for the WebProvider provider.
@@ -20,35 +21,83 @@ export class WebProvider {
   version: string = "2.0.0";
   timeout: number = 30000;
   startupData: StartupData;
+  regt: string = "";
+  pushAllowed: boolean = true;
 
-  constructor(public http: Http, public locationProvider: LocationProvider, public wordingProvider: WordingProvider) {
+  constructor(public http: Http, public locationProvider: LocationProvider, public wordingProvider: WordingProvider, private push: Push) {
     console.log('Hello WebProvider Provider');
   }
 
 
-  public getStartupData(): Promise<ServiceResponse> {
+  public getStartupData(source: string): Promise<ServiceResponse> {
     return new Promise<ServiceResponse>(resolve => {
-      let options = this.getOptions();
-      let locationDuple = this.locationProvider.ld;
-      let lat = locationDuple.lat;
-      let lng = locationDuple.lng;
-      let time = new Date();
-      let day = time.getDate();
-      let month = time.getMonth();
-      let preferredLanguage = this.wordingProvider.preferredLanguage;
-      let regt = ""; // empty for now.
-      let response: StartupData;
-      this.http.get(this.serverRoot + "/getStartupData?lat=" + lat + "&longt=" + lng + "&regt=" + regt + "&time=" + time +
-        "&day=" + day + "&month=" + month + "&preferredLanguage=" + preferredLanguage + "&callType=cache&version=" + this.version, options).timeout(this.timeout).map(res => {
-        response = res.json();
-      }).subscribe(data => {
-        this.startupData = response;
-        resolve(new ServiceResponse(0, response));
-      }, (err) => {
-        alert("Failed http request:" + err);
-        resolve(new ServiceResponse(-1, JSON.stringify(err)));
-      });
 
+      if (source != "dom") {
+        // to check if we have permission
+        this.push.hasPermission()
+          .then((res: any) => {
+
+            if (res.isEnabled) {
+              console.log('We have permission to send push notifications');
+              // to initialize push notifications
+
+              const options: PushOptions = {
+                android: {
+                  senderID: '950472212062'
+                },
+                ios: {
+                  alert: 'true',
+                  badge: true,
+                  sound: 'false'
+                },
+                windows: {}
+              };
+
+              const pushObject: PushObject = this.push.init(options);
+
+              pushObject.on('notification').subscribe((notification: any) => console.log('Received a notification', notification));
+
+              pushObject.on('registration').subscribe((registration: any) => {
+                this.regt = registration.registrationId;
+                this.resolveStartup(resolve);
+              });
+
+              pushObject.on('error').subscribe(error => console.error('Error with Push plugin', error));
+            } else {
+              console.log('We do not have permission to send push notifications');
+              this.pushAllowed = false;
+              this.resolveStartup(resolve);
+            }
+
+          });
+
+
+      } else {
+        this.resolveStartup(resolve);
+      }
+
+    });
+  }
+
+  private resolveStartup(resolve) {
+    let options = this.getOptions();
+    let locationDuple = this.locationProvider.ld;
+    let lat = locationDuple.lat;
+    let lng = locationDuple.lng;
+    let time = new Date();
+    let day = time.getDate();
+    let month = time.getMonth();
+    let preferredLanguage = this.wordingProvider.preferredLanguage;
+    let response: StartupData;
+    this.http.get(this.serverRoot + "/getStartupData?lat=" + lat + "&longt=" + lng + "&regt=" + this.regt + "&time=" + time +
+      "&day=" + day + "&month=" + month + "&preferredLanguage=" + preferredLanguage + "&callType=cache&version=" + this.version, options).timeout(this.timeout).map(res => {
+      response = res.json();
+    }).subscribe(data => {
+      this.startupData = response;
+      resolve(new ServiceResponse(0, response));
+    }, (err) => {
+      alert("Failed http request:" + err);
+      resolve(new ServiceResponse(-1, JSON.stringify(err)));
     });
   }
 
@@ -59,6 +108,15 @@ export class WebProvider {
     headers.append('appToken', this.appToken);
     let options = new RequestOptions({headers: headers});
     return options;
+  }
+
+
+  public handlePush(source: string) {
+
+    if (source != "dom") {
+
+    }
+
   }
 
 }

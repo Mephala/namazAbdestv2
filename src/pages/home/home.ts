@@ -37,7 +37,7 @@ export class HomePage {
         this.locationProvider.initiate(readySource).then(response => {
           if (response.errorCode >= 0) {
             console.log("Code:" + response.errorCode + ", lat:" + response.data.lat + ", lng:" + response.data.lng);
-            this.webProvider.getStartupData().then(response => {
+            this.webProvider.getStartupData(this.source).then(response => {
               this.loader.dismissAll();
               if (response.errorCode == 0) {
                 console.log("Success:" + JSON.stringify(response.data));
