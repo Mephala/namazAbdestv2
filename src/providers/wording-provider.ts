@@ -2,6 +2,7 @@ import {Injectable} from "@angular/core";
 import "rxjs/add/operator/map";
 import {ServiceResponse} from "./location";
 import {Globalization} from "@ionic-native/globalization";
+import {Events} from "ionic-angular";
 
 
 /*
@@ -16,7 +17,7 @@ export class WordingProvider {
   dictionary: Dictionary;
   preferredLanguage: string;
 
-  constructor(public globalization: Globalization) {
+  constructor(public globalization: Globalization, public events: Events) {
     console.log('Hello WordingProvider Provider');
   }
 
@@ -26,18 +27,21 @@ export class WordingProvider {
         this.globalization.getPreferredLanguage().then(res => {
           console.log("Determine preferred language:" + res);
           this.lanDetermined(res);
+          this.events.publish('wordingsConstructed', this.dictionary);
           resolve(new ServiceResponse(0, this.dictionary));
         }).catch(e => {
           alert("Globalization error:" + e);
           console.log("Failed to determine preferred language, English as default is being used." + e);
           this.preferredLanguage = "en-Us";
           this.createEnglishDictionary();
+          this.events.publish('wordingsConstructed', this.dictionary);
           resolve(new ServiceResponse(0, this.dictionary));
         });
       } else {
         console.log("Test configuration detected. Returning turkish dictionary as test defaults");
         this.preferredLanguage = "tr-test";
         this.createTurkishDictionary();
+        this.events.publish('wordingsConstructed', this.dictionary);
         resolve(new ServiceResponse(0, this.dictionary));
       }
     });
@@ -57,6 +61,10 @@ export class WordingProvider {
     this.dictionary = new Dictionary();
     this.dictionary.pleaseWait = "Lütfen Bekleyiniz...";
     this.dictionary.gettingReadyForTheFirstTime = "Uygulama ilk kulanım için hazırlanıyor, konum bilgileriniz alınıyor...";
+    this.dictionary.settingsTabTitle = "Ayarlar";
+    this.dictionary.prayerTime = "Namaz Vakti";
+    this.dictionary.hadiths = "Dini Bilgiler";
+    this.dictionary.importantDays = "Önemli Günler";
 
 
   }
@@ -65,6 +73,10 @@ export class WordingProvider {
     this.dictionary = new Dictionary();
     this.dictionary.pleaseWait = "Please wait...";
     this.dictionary.gettingReadyForTheFirstTime = "Application is getting ready for the first use...";
+    this.dictionary.settingsTabTitle = "Settings";
+    this.dictionary.prayerTime = "Prayer Times";
+    this.dictionary.hadiths = "Information";
+    this.dictionary.importantDays = "Holy-Days";
   }
 
 }

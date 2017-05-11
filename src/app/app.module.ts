@@ -15,6 +15,8 @@ import {WordingProvider} from "../providers/wording-provider";
 import {Globalization} from "@ionic-native/globalization";
 import {WebProvider} from "../providers/web-provider";
 import {HttpModule} from "@angular/http";
+import {SettingsPage} from "../pages/settings-page/settings-page";
+import {ReadHadithPage} from "../pages/read-hadith-page/read-hadith-page";
 
 @NgModule({
   declarations: [
@@ -22,7 +24,9 @@ import {HttpModule} from "@angular/http";
     AboutPage,
     ContactPage,
     HomePage,
-    TabsPage
+    TabsPage,
+    SettingsPage,
+    ReadHadithPage
   ],
   imports: [
     BrowserModule,
@@ -35,7 +39,9 @@ import {HttpModule} from "@angular/http";
     AboutPage,
     ContactPage,
     HomePage,
-    TabsPage
+    TabsPage,
+    SettingsPage,
+    ReadHadithPage
   ],
   providers: [
     StatusBar,

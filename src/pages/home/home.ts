@@ -34,10 +34,10 @@ export class HomePage {
         this.dictionary = response.data;
         this.loader.setContent(this.dictionary.pleaseWait);
         this.locationProvider.initiate(readySource).then(response => {
-          this.loader.dismissAll();
           if (response.errorCode >= 0) {
             console.log("Code:" + response.errorCode + ", lat:" + response.data.lat + ", lng:" + response.data.lng);
             this.webProvider.getStartupData().then(response => {
+              this.loader.dismissAll();
               if (response.errorCode == 0) {
                 console.log("Success:" + JSON.stringify(response.data));
                 this.processStartupData(response.data);

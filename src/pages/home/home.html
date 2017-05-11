@@ -30,6 +30,8 @@
       <!--</button>-->
       <!--</ion-item>-->
     </ion-card>
+
+    <br>
     <ion-grid no-padding>
       <ion-row>
         <ion-col col-2><b>{{startupData.imsakText}}</b></ion-col>
@@ -48,6 +50,28 @@
         <ion-col col-2><b>{{startupData.yatsiTime}}</b></ion-col>
       </ion-row>
     </ion-grid>
+
+    <br>
+
+
+    <ion-item>
+      <ion-avatar item-left>
+        <img [src]="startupData.hadith[0].avatar">
+      </ion-avatar>
+      <p>{{startupData.hadith[0].title}}</p>
+      <ion-icon name="md-book" item-right></ion-icon>
+    </ion-item>
+
+
+    <!--<ion-list>-->
+    <!--<ion-item text-wrap>-->
+    <!--&lt;!&ndash;<h2>Item</h2>&ndash;&gt;-->
+    <!--<p>{{startupData.hadith[0].title}}</p>-->
+    <!--<ion-thumbnail item-start>-->
+    <!--<img [src]="startupData.hadith[0].avatar">-->
+    <!--</ion-thumbnail>-->
+    <!--</ion-item>-->
+    <!--</ion-list>-->
   </template>
 
 
