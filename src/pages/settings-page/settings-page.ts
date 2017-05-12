@@ -17,7 +17,7 @@ export class SettingsPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad SettingsPage');
+    console.log('ionViewDidLoad SettingsPage'); //Push.
   }
 
 }
