@@ -16,6 +16,7 @@ import {Globalization} from "@ionic-native/globalization";
 import {WebProvider} from "../providers/web-provider";
 import {HttpModule} from "@angular/http";
 import {Push} from "@ionic-native/push";
+import {SettingsPage} from "../pages/settings-page/settings-page";
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import {Push} from "@ionic-native/push";
     AboutPage,
     ContactPage,
     HomePage,
-    TabsPage
+    TabsPage,
+    SettingsPage
   ],
   imports: [
     BrowserModule,
@@ -36,7 +38,8 @@ import {Push} from "@ionic-native/push";
     AboutPage,
     ContactPage,
     HomePage,
-    TabsPage
+    TabsPage,
+    SettingsPage
   ],
   providers: [
     StatusBar,
