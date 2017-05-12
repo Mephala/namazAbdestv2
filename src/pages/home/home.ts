@@ -3,7 +3,6 @@ import {AlertController, Events, Loading, LoadingController, NavController, Plat
 import {LocationProvider} from "../../providers/location";
 import {Dictionary, WordingProvider} from "../../providers/wording-provider";
 import {Hadith, StartupData, WebProvider} from "../../providers/web-provider";
-import {ReadHadithPage} from "../read-hadith-page/read-hadith-page";
 
 @Component({
   selector: 'page-home',
@@ -96,7 +95,7 @@ export class HomePage {
   }
 
   public readHadis(hadis: Hadith) {
-    this.navCtrl.push(ReadHadithPage, {hadis: hadis});
+    this.navCtrl.push('ReadHadithPage', {hadis: hadis});
   }
 
 }

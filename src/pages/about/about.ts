@@ -1,7 +1,6 @@
 import {Component} from "@angular/core";
 import {NavController} from "ionic-angular";
 import {Hadith, WebProvider} from "../../providers/web-provider";
-import {ReadHadithPage} from "../read-hadith-page/read-hadith-page";
 
 @Component({
   selector: 'page-about',
@@ -16,7 +15,7 @@ export class AboutPage {
   }
 
   public readHadis(hadis: Hadith) {
-    this.navCtrl.push(ReadHadithPage, {hadis: hadis});
+    this.navCtrl.push('ReadHadithPage', {hadis: hadis});
   }
 
 }
