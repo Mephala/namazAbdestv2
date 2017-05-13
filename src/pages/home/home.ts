@@ -86,6 +86,14 @@ export class HomePage {
     }, 1000);
   }
 
+  public getClassColor(className: string) {
+    if (className == "subduedd") {
+      return "#488aff";
+    } else {
+      return "black";
+    }
+  }
+
 
   private createLoadingMsg(loadingMsg: string) {
     this.loader = this.loadingController.create({

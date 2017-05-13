@@ -34,30 +34,42 @@
     <br>
     <ion-grid no-padding>
       <ion-row>
-        <ion-col col-2><b>{{startupData.imsakText}}</b></ion-col>
-        <ion-col col-2><b>{{startupData.gunesText}}</b></ion-col>
-        <ion-col col-2><b>{{startupData.ogleText}}</b></ion-col>
-        <ion-col col-2><b>{{startupData.ikindiText}}</b></ion-col>
-        <ion-col col-2><b style="color: #488aff">{{startupData.aksamText}}</b></ion-col>
-        <ion-col col-2><b>{{startupData.yatsiText}}</b></ion-col>
+        <ion-col col-2><b [style.color]="getClassColor(startupData.imsakClass)">{{startupData.imsakText}}</b></ion-col>
+        <ion-col col-2><b [style.color]="getClassColor(startupData.gunesClass)">{{startupData.gunesText}}</b></ion-col>
+        <ion-col col-2><b [style.color]="getClassColor(startupData.ogleClass)">{{startupData.ogleText}}</b></ion-col>
+        <ion-col col-2><b [style.color]="getClassColor(startupData.ikindiClass)">{{startupData.ikindiText}}</b>
+        </ion-col>
+        <ion-col col-2><b [style.color]="getClassColor(startupData.aksamClass)">{{startupData.aksamText}}</b></ion-col>
+        <ion-col col-2><b [style.color]="getClassColor(startupData.yatsiClass)">{{startupData.yatsiText}}</b></ion-col>
       </ion-row>
       <ion-row>
-        <ion-col col-2><b>{{startupData.imsakTime}}</b></ion-col>
-        <ion-col col-2><b>{{startupData.gunesTime}}</b></ion-col>
-        <ion-col col-2><b>{{startupData.ogleTime}}</b></ion-col>
-        <ion-col col-2><b>{{startupData.ikindiTime}}</b></ion-col>
-        <ion-col col-2><b style="color: #488aff">{{startupData.aksamTime}}</b></ion-col>
-        <ion-col col-2><b>{{startupData.yatsiTime}}</b></ion-col>
+        <ion-col col-2><b [style.color]="getClassColor(startupData.imsakClass)">{{startupData.imsakTime}}</b></ion-col>
+        <ion-col col-2><b [style.color]="getClassColor(startupData.gunesClass)">{{startupData.gunesTime}}</b></ion-col>
+        <ion-col col-2><b [style.color]="getClassColor(startupData.ogleClass)">{{startupData.ogleTime}}</b></ion-col>
+        <ion-col col-2><b [style.color]="getClassColor(startupData.ikindiClass)">{{startupData.ikindiTime}}</b>
+        </ion-col>
+        <ion-col col-2><b [style.color]="getClassColor(startupData.aksamClass)">{{startupData.aksamTime}}</b></ion-col>
+        <ion-col col-2><b [style.color]="getClassColor(startupData.yatsiClass)">{{startupData.yatsiTime}}</b></ion-col>
       </ion-row>
     </ion-grid>
 
     <br>
 
+    <ion-card>
+      <p style="text-align:center"><b>{{startupData.locationText}}</b></p>
+      <p style="text-align:center"><b>{{startupData.gregorianDateString}}</b></p>
+      <p style="text-align:center"><b>{{startupData.hicriDateString}}</b></p>
+      <p style="text-align:center; color:#112FF5" *ngIf="startupData.specialDay"><b>{{startupData.specialDayString}}</b>
+    </ion-card>
 
-    <ion-item (click)="readHadis(startupData.hadith[0])">
+
+    <br>
+
+    <ion-item (click)="readHadis(startupData.hadith[0])" text-wrap>
       <ion-avatar item-left>
         <img [src]="startupData.hadith[0].avatar">
       </ion-avatar>
+      <h5 style="color: #488aff">Günün Hadisi</h5>
       <p>{{startupData.hadith[0].title}}</p>
       <ion-icon name="md-book" item-right></ion-icon>
     </ion-item>

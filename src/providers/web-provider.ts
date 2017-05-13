@@ -101,6 +101,23 @@ export class WebProvider {
     });
   }
 
+  public loadMoreHadis(lastHadisId: string, hadisCount: number): Promise<ServiceResponse> {
+    return new Promise<ServiceResponse>(resolve => {
+      let options = this.getOptions();
+      let preferredLanguage = this.wordingProvider.preferredLanguage;
+      let moreHadis: Array<Hadith>;
+      this.http.get(this.serverRoot + "/loadMoreHadis?hadisCount=" + hadisCount + "&lastHadisId=" + lastHadisId + "&preferredLanguage=" + preferredLanguage,
+        options).timeout(this.timeout).map(res => {
+        moreHadis = res.json();
+      }).subscribe(data => {
+        resolve(new ServiceResponse(0, moreHadis));
+      }, (err) => {
+        alert("Failed http request:" + err);
+        resolve(new ServiceResponse(-1, JSON.stringify(err)));
+      });
+    });
+  }
+
 
   private getOptions(): RequestOptions {
     let headers = new Headers();
