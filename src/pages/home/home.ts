@@ -94,6 +94,10 @@ export class HomePage {
     }
   }
 
+  public readQuran() {
+    this.navCtrl.push('ReadQuran');
+  }
+
 
   private createLoadingMsg(loadingMsg: string) {
     this.loader = this.loadingController.create({

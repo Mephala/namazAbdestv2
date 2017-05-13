@@ -1,0 +1,56 @@
+<!--
+  Generated template for the ReadQuran page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>readQuran</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+  <ion-searchbar (ionInput)="searchSure($event)" placeholder="Arama"></ion-searchbar>
+
+  <ion-item>
+    <ion-label floating>Sure Seçiniz</ion-label>
+    <ion-select okText="Seç"
+                cancelText="İptal">
+      <ion-option value="dictionary.female">Fatiha</ion-option>
+      <ion-option value="dictionary.male">Felak</ion-option>
+    </ion-select>
+  </ion-item>
+
+  <br>
+  <h1>Fatiha Suresi</h1>
+  <br>
+
+  <p style="color: #488aff">Bismillâhir rahmânir rahîm. </p>
+  <p>Rahmân ve rahîm olan Allah'ın ismi ile.</p>
+  <br>
+  <p style="color: #488aff"> El hamdu lillâhi rabbil âlemîn (âlemîne). </p>
+  <p>Hamd, âlemlerin Rabbi olan Allah’adır.</p>
+  <br>
+  <p style="color: #488aff"> Er rahmânir rahîm(rahîmi). </p>
+  <p>Rahmân’dır, Rahîm’dir.</p>
+  <br>
+  <p style="color: #488aff"> Mâliki yevmid dîn(dîne). </p>
+  <p>Dîn gününün mâlikidir.</p>
+  <br>
+  <p style="color: #488aff"> İyyâke na’budu ve iyyâke nestaîn(nestaînu). </p>
+  <p>(Allah'ım!) Yalnız Sana kul oluruz ve yalnız Senden İSTİANE (mürşidimizi) isteriz.</p>
+  <br>
+  <p style="color: #488aff"> İhdinâs sırâtel mustakîm(mustakîme). </p>
+  <p>(Bu istiane'n ile) bizi, SIRATI MUSTAKÎM'e hidayet et (ulaştır).</p>
+  <br>
+  <p style="color: #488aff"> Sırâtallezîne en’amte aleyhim gayril magdûbi aleyhim ve lâd dâllîn(dâllîne). </p>
+  <p>O yol (SIRATI MUSTAKÎM) ki; üzerlerine nimet verdiklerinin yoludur. Üzerlerine gadap duyulmuşların ve dalâlette
+    kalmışların (Allah’a ulaşmayı dilemeyenlerin) yolu değil.</p>
+
+
+</ion-content>

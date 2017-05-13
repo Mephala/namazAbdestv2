@@ -69,8 +69,18 @@
       <ion-avatar item-left>
         <img [src]="startupData.hadith[0].avatar">
       </ion-avatar>
-      <h5 style="color: #488aff">Günün Hadisi</h5>
+      <h5 style="color: #488aff; margin-top: 2%">Günün Hadisi</h5>
       <p>{{startupData.hadith[0].title}}</p>
+      <ion-icon name="md-book" item-right></ion-icon>
+    </ion-item>
+
+    <br>
+
+    <ion-item (click)="readQuran()" text-wrap>
+      <ion-avatar item-left>
+        <img [src]="startupData.hadith[0].avatar">
+      </ion-avatar>
+      <p>KURAN OKUYUN</p>
       <ion-icon name="md-book" item-right></ion-icon>
     </ion-item>
 
