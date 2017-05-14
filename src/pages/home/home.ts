@@ -4,6 +4,7 @@ import {LocationProvider} from "../../providers/location";
 import {Dictionary, WordingProvider} from "../../providers/wording-provider";
 import {Hadith, StartupData, WebProvider} from "../../providers/web-provider";
 import {LocalNotifications} from "@ionic-native/local-notifications";
+import {InterstitialProvider} from "../../providers/interstitial-provider";
 
 @Component({
   selector: 'page-home',
@@ -19,14 +20,18 @@ export class HomePage {
   timer: Timer;
   loaded: boolean = false;
 
+
   constructor(public navCtrl: NavController, public locationProvider: LocationProvider,
-              public wordingProvider: WordingProvider,
+              public wordingProvider: WordingProvider, private adProvider: InterstitialProvider,
               public alertController: AlertController, public loadingController: LoadingController, private localNotifications: LocalNotifications,
               public events: Events, public platform: Platform, public webProvider: WebProvider) {
     this.createLoadingMsg("");
     this.platform.ready().then((readySource) => {
       this.source = readySource;
       this.webProvider.source = readySource;
+      setTimeout(() => {
+        this.adProvider.showInterstitial();
+      }, 30000);
       console.log('Platform ready from', readySource);
       this.events.subscribe('mainLoadingStatus', loadingStatus => {
         if (loadingStatus != null) {
@@ -57,7 +62,7 @@ export class HomePage {
 
   private processStartupData(data: StartupData) {
     this.startupData = data;
-    console.log("Processing startup data:" + JSON.stringify(data));
+    this.adProvider.initAds(this.source, this.startupData.adThreshold);
     let countDownString: string = this.startupData.countDownRemaining;
     let timerVals = countDownString.split(":");
     this.timer = new Timer(Number(timerVals[0]), Number(timerVals[1]), Number(timerVals[2]));

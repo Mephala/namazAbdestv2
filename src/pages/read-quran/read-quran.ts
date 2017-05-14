@@ -3,6 +3,7 @@ import {IonicPage, Loading, LoadingController, NavController, NavParams} from "i
 import {Dictionary, WordingProvider} from "../../providers/wording-provider";
 import {Kuran, StartupData, Sure, WebProvider} from "../../providers/web-provider";
 import {NativeStorage} from "@ionic-native/native-storage";
+import {InterstitialProvider} from "../../providers/interstitial-provider";
 
 /**
  * Generated class for the ReadQuran page.
@@ -26,7 +27,7 @@ export class ReadQuran {
   startupData: StartupData;
 
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private nativeStorage: NativeStorage,
+  constructor(public navCtrl: NavController, public navParams: NavParams, private nativeStorage: NativeStorage, private adProvider: InterstitialProvider,
               public loadingController: LoadingController, public wordingProvider: WordingProvider,
               public webProvider: WebProvider) {
     this.dictionary = this.wordingProvider.dictionary;
@@ -113,7 +114,12 @@ export class ReadQuran {
     }
   }
 
+  public sureSelected() {
+    this.adProvider.showInterstitial();
+  }
+
   public selectSR(sr: Sure) {
+    this.adProvider.showInterstitial();
     while (this.searchResultSureList.length) {
       this.searchResultSureList.pop();
     }

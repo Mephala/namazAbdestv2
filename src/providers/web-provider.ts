@@ -216,6 +216,7 @@ export class StartupData {
   countDownRemaining: string;
   wantsLocalNotification: boolean;
   wantsKuranDownloaded: boolean;
+  adThreshold: number;
 
   constructor() {
 

@@ -18,6 +18,8 @@ import {HttpModule} from "@angular/http";
 import {Push} from "@ionic-native/push";
 import {SettingsPage} from "../pages/settings-page/settings-page";
 import {LocalNotifications} from "@ionic-native/local-notifications";
+import {AdMob} from "@ionic-native/admob";
+import {InterstitialProvider} from "../providers/interstitial-provider";
 
 @NgModule({
   declarations: [
@@ -53,6 +55,8 @@ import {LocalNotifications} from "@ionic-native/local-notifications";
     WebProvider,
     Push,
     LocalNotifications,
+    AdMob,
+    InterstitialProvider,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

@@ -1,0 +1,95 @@
+import {Injectable} from "@angular/core";
+import {Http} from "@angular/http";
+import "rxjs/add/operator/map";
+import {AdMob} from "@ionic-native/admob";
+import {Platform} from "ionic-angular";
+
+/*
+ Generated class for the InterstitialProvider provider.
+
+ See https://angular.io/docs/ts/latest/guide/dependency-injection.html
+ for more info on providers and Angular 2 DI.
+ */
+@Injectable()
+export class InterstitialProvider {
+
+  underDevelopment: boolean = true;  //FIXME remember to change this value before production.
+
+
+  adMobAndroidBannerId: string = "ca-app-pub-5091865704377150/5386042224";
+  adMobAndroidInterstitialId = "ca-app-pub-5091865704377150/7649267426";
+  adMobIOSBannerId: string = "ca-app-pub-5091865704377150/9126000627";
+  admobIOSInterstitialId: string = "ca-app-pub-5091865704377150/1602733824";
+  bannerId: string;
+  interstitialId: string;
+  isTest: boolean = false;
+  interstitialReady: boolean = false;
+  adsDisabled: boolean = false;
+  adThreshold: number;
+  lastAdTimeStamp: number;
+
+  constructor(public http: Http, private admob: AdMob, private platform: Platform) {
+    console.log('Hello InterstitialProvider Provider');
+  }
+
+  public initAds(source: string, threshold: number) {
+    console.log("Initializing Ads with threshold:" + threshold);
+    this.adThreshold = threshold;
+    if (this.adThreshold == null) {
+      this.adsDisabled = true; // Server fail.
+    }
+    if (source == "dom") {
+      this.adsDisabled = true;
+    } else {
+      if (this.underDevelopment) {
+        this.isTest = true;
+      }
+      if (this.platform.is('android')) {
+        this.bannerId = this.adMobAndroidBannerId;
+        this.interstitialId = this.adMobAndroidInterstitialId;
+      } else {
+        this.bannerId = this.adMobIOSBannerId;
+        this.interstitialId = this.admobIOSInterstitialId;
+      }
+      this.initBanner();
+      this.prepInterstitial();
+    }
+  }
+
+  private prepInterstitial() {
+    this.admob.prepareInterstitial({
+      adId: this.interstitialId,
+      autoShow: false,
+      isTesting: this.isTest
+    }).then((inter) => {
+      this.interstitialReady = true;
+      console.log("Interstitial is ready and stored:" + inter);
+    });
+  }
+
+  public showInterstitial() {
+    if (!this.adsDisabled) {
+      if (this.interstitialReady == true) {
+        console.log("Interstitial is ready and will be shown now.");
+        this.admob.showInterstitial();
+        this.lastAdTimeStamp = new Date().getTime();
+        this.interstitialReady = false;
+        this.prepInterstitial();
+      } else {
+        console.log("Interstitial is not ready and will not be shown now.");
+      }
+    }
+  }
+
+  private initBanner() {
+    if (!this.adsDisabled) {
+      this.admob.createBanner({
+        adId: this.bannerId,
+        autoShow: true,
+        isTesting: this.isTest
+      });
+    }
+  }
+
+
+}

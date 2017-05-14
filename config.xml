@@ -83,6 +83,6 @@
   <plugin name="cordova-plugin-nativestorage" spec="~2.2.2"/>
   <plugin name="cordova-plugin-globalization" spec="~1.0.7"/>
   <icon src="resources/android/icon/drawable-xhdpi-icon.png"/>
-  <plugin name="com.hutchind.cordova.plugins.streamingmedia" spec="~0.1.4"/>
   <plugin name="de.appplant.cordova.plugin.local-notification" spec="~0.8.4"/>
+  <plugin name="cordova-plugin-admobpro" spec="~2.28.3"/>
 </widget>
