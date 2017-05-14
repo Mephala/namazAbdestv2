@@ -70,11 +70,17 @@ export class InterstitialProvider {
   public showInterstitial() {
     if (!this.adsDisabled) {
       if (this.interstitialReady == true) {
-        console.log("Interstitial is ready and will be shown now.");
-        this.admob.showInterstitial();
-        this.lastAdTimeStamp = new Date().getTime();
-        this.interstitialReady = false;
-        this.prepInterstitial();
+        let now: number = new Date().getTime();
+        let difference = now - this.lastAdTimeStamp;
+        if (difference >= this.adThreshold) {
+          console.log("Interstitial is ready and will be shown now.");
+          this.admob.showInterstitial();
+          this.lastAdTimeStamp = new Date().getTime();
+          this.interstitialReady = false;
+          this.prepInterstitial();
+        } else {
+          console.log("Threshold not reached yet, must wait until new ad.");
+        }
       } else {
         console.log("Interstitial is not ready and will not be shown now.");
       }
