@@ -17,6 +17,7 @@ import {WebProvider} from "../providers/web-provider";
 import {HttpModule} from "@angular/http";
 import {Push} from "@ionic-native/push";
 import {SettingsPage} from "../pages/settings-page/settings-page";
+import {LocalNotifications} from "@ionic-native/local-notifications";
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import {SettingsPage} from "../pages/settings-page/settings-page";
     Globalization,
     WebProvider,
     Push,
+    LocalNotifications,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

@@ -65,6 +65,17 @@ export class WordingProvider {
     this.dictionary.prayerTime = "Namaz Vakti";
     this.dictionary.hadiths = "Dini Bilgiler";
     this.dictionary.importantDays = "Önemli Günler";
+    this.dictionary.wantsSpecialDayMessagesToggleString = "Özel Günler Mesaj Alımı";
+    this.dictionary.wantDailyHadisToggleString = "Günlük Mesaj Alımı";
+    this.dictionary.localNotifications = "Bir sonraki vakitte uyarı";
+    this.dictionary.downloadKuran = "Kuran İndir";
+    this.dictionary.whatIsdownloadKuran = "Eğer bu özellik aktif ise, Kuran'ın bir kopyası cihazınıza indirilir ve internet olmaksızın okuyabilirsiniz."
+    this.dictionary.informative = "Bilgilendirme";
+    this.dictionary.ok = "Tamam";
+    this.dictionary.genericSuccessMsg = "İşleminiz başarıyla tamamlanmıştır.";
+    this.dictionary.genericErrorMsg = "İşlem başarısız.";
+    this.dictionary.settingsSavedSuccess = "Ayarlarınız sistemimize kaydedildi.";
+    this.dictionary.settingsSavedError = "Ayarlarınızı kaydedemedik. Lütfen daha sonra deneyiniz.";
 
 
   }
@@ -77,6 +88,17 @@ export class WordingProvider {
     this.dictionary.prayerTime = "Prayer Times";
     this.dictionary.hadiths = "Information";
     this.dictionary.importantDays = "Holy-Days";
+    this.dictionary.wantsSpecialDayMessagesToggleString = "Holy Days Notification";
+    this.dictionary.wantDailyHadisToggleString = "Daily Information Notification";
+    this.dictionary.localNotifications = "Notify next prayer time";
+    this.dictionary.downloadKuran = "Holy Quran Download";
+    this.dictionary.whatIsdownloadKuran = "If enabled, a copy of Holy Quran is downloaded on your device so you can read without internet connection.";
+    this.dictionary.informative = "Information";
+    this.dictionary.ok = "OK";
+    this.dictionary.genericSuccessMsg = "Successfully completed your request";
+    this.dictionary.genericErrorMsg = "Failed to process your request";
+    this.dictionary.settingsSavedSuccess = "Your settings updated.";
+    this.dictionary.settingsSavedError = "Failed to save your settings to our system.Please try again later.";
   }
 
 }
@@ -113,4 +135,16 @@ export class Dictionary {
   disabledNetworkTerminalMsg: string;
   disabledGpsNonTerminalMsg: string;
   pleaseWait: string;
+  localNotifications: string;
+  downloadKuran: string;
+  whatIsdownloadKuran: string;
+  informative: string;
+  ok: string;
+  genericSuccessMsg: string;
+  genericErrorMsg: string;
+  settingsSavedSuccess: string;
+  settingsSavedError: string;
+
+  constructor() {
+  }
 }

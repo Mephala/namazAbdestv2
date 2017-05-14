@@ -16,14 +16,15 @@ import {Push, PushObject, PushOptions} from "@ionic-native/push";
 export class WebProvider {
 
   appToken: string = "21891fh8291f2812192819h8129f8h34729fh7))_(8128ddh218hf7fh71f21hj1299d218912777898"; //default
-  // serverRoot: string = "http://192.168.0.109:8080/namazAppServer";
-  serverRoot: string = "http://ec2-52-27-157-90.us-west-2.compute.amazonaws.com";
+  serverRoot: string = "http://192.168.0.109:8080/namazAppServer";
+  // serverRoot: string = "http://ec2-52-27-157-90.us-west-2.compute.amazonaws.com";
   version: string = "2.0.0";
   timeout: number = 30000;
   startupData: StartupData;
   regt: string = "";
   pushAllowed: boolean = true;
   turkishKuran: Kuran;
+  source: string;
 
   constructor(public http: Http, public locationProvider: LocationProvider, public wordingProvider: WordingProvider, private push: Push) {
     console.log('Hello WebProvider Provider');
@@ -146,6 +147,21 @@ export class WebProvider {
   }
 
 
+  public saveSettings(wantsDaily: boolean, wantsSpecial: boolean, wantsLocal: boolean, wantsKuran: boolean): Promise<ServiceResponse> {
+    return new Promise<ServiceResponse>(resolve => {
+      let options = this.getOptions();
+      this.http.get(this.serverRoot + "/updateSettings?wantsDailyHadis=" + wantsDaily + "&wantsSpecialDayMessage=" + wantsSpecial
+        + "&wantsLocalNotification=" + wantsLocal + "&wantsKuranDownloaded=" + wantsKuran, options).timeout(this.timeout).map(res => {
+      }).subscribe(data => {
+        resolve(new ServiceResponse(0, null));
+      }, (err) => {
+        alert("Failed http request:" + err);
+        resolve(new ServiceResponse(-1, JSON.stringify(err)));
+      });
+    });
+  }
+
+
   public handlePush(source: string) {
 
     if (source != "dom") {
@@ -197,6 +213,9 @@ export class StartupData {
   wantsDailyHadis: boolean;
   wantsSpecialDayMessages: boolean;
   kibleLocatorMsg: string;
+  countDownRemaining: string;
+  wantsLocalNotification: boolean;
+  wantsKuranDownloaded: boolean;
 
   constructor() {
 
