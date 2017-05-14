@@ -52,6 +52,10 @@ export class SettingsPage {
       let msg = "";
       if (response.errorCode == 0) {
         msg = this.dictionary.settingsSavedSuccess;
+        this.webProvider.startupData.wantsLocalNotification = this.wantsLocalNotification;
+        this.webProvider.startupData.wantsDailyHadis = this.wantsDailyHadis;
+        this.webProvider.startupData.wantsKuranDownloaded = this.wantsKuranDL;
+        this.webProvider.startupData.wantsSpecialDayMessages = this.wantsSpecialDayMsg;
       } else {
         msg = this.dictionary.settingsSavedError;
       }

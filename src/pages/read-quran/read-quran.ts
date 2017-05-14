@@ -38,22 +38,33 @@ export class ReadQuran {
 
     try {
       if (this.startupData.wantsKuranDownloaded) {
-        this.nativeStorage.getItem("kuran").then(data => {
+        console.log("Getting kuran from device storage");
+        this.nativeStorage.getItem('kuran').then(data => {
           if (data != null) {
+            console.log("Data is not null");
             this.kuran = data;
+            console.log("Kuran object is retrieved from storage");
             this.selectedSure = this.kuran.sureList[0]; //Fatiha
+            console.log("Selected sure is saved");
             this.loaded = true;
             console.log("Loading Kuran from device storage");
             loader.dismissAll();
           } else {
+            console.log("Device storage empty, loading kuran from web.");
             this.loadQuranFromWeb(loader);
           }
+        }, error => {
+          console.log("Error fetching kuran from storage:" + error);
+          console.log("Getting kuran from web....");
+          this.loadQuranFromWeb(loader);
         });
       } else {
+        console.log("User disabled saving kuran to storage. Loading it from web.");
         this.loadQuranFromWeb(loader);
       }
     } catch (err) {
       //TODO push err
+      console.log("Device storage is not accessible. Getting kuran from web.");
       this.loadQuranFromWeb(loader);
     }
 
@@ -66,11 +77,12 @@ export class ReadQuran {
         this.selectedSure = this.kuran.sureList[0]; //Fatiha
         this.loaded = true;
         if (this.startupData.wantsKuranDownloaded && this.webProvider.source != "dom") {
-          this.nativeStorage.setItem("kuran", this.kuran);
+          this.nativeStorage.setItem('kuran', this.kuran);
         }
       } else {
         alert("Failed to get Kuran");
       }
+      console.log("Fetched kuran from web. Dismissing loader");
       loader.dismissAll();
     });
   }
