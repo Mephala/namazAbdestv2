@@ -16,13 +16,14 @@ import {Push, PushObject, PushOptions} from "@ionic-native/push";
 export class WebProvider {
 
   appToken: string = "21891fh8291f2812192819h8129f8h34729fh7))_(8128ddh218hf7fh71f21hj1299d218912777898"; //default
-  // serverRoot: string = "http://192.168.0.109:8080/namazAppServer";
-  serverRoot: string = "http://ec2-52-27-157-90.us-west-2.compute.amazonaws.com";
+  serverRoot: string = "http://192.168.0.109:8080/namazAppServer";
+  // serverRoot: string = "http://ec2-52-27-157-90.us-west-2.compute.amazonaws.com";
   version: string = "2.0.0";
   timeout: number = 30000;
   startupData: StartupData;
   regt: string = "";
   pushAllowed: boolean = true;
+  turkishKuran: Kuran;
 
   constructor(public http: Http, public locationProvider: LocationProvider, public wordingProvider: WordingProvider, private push: Push) {
     console.log('Hello WebProvider Provider');
@@ -59,6 +60,7 @@ export class WebProvider {
 
               pushObject.on('registration').subscribe((registration: any) => {
                 this.regt = registration.registrationId;
+                this.appToken = this.regt;
                 this.resolveStartup(resolve);
               });
 
@@ -111,6 +113,22 @@ export class WebProvider {
         moreHadis = res.json();
       }).subscribe(data => {
         resolve(new ServiceResponse(0, moreHadis));
+      }, (err) => {
+        alert("Failed http request:" + err);
+        resolve(new ServiceResponse(-1, JSON.stringify(err)));
+      });
+    });
+  }
+
+  public getTurkishKuran(): Promise<ServiceResponse> {
+    return new Promise<ServiceResponse>(resolve => {
+      let options = this.getOptions();
+      let kuran: Kuran;
+      this.http.get(this.serverRoot + "/getTurkishKuran", options).timeout(this.timeout).map(res => {
+        kuran = res.json();
+      }).subscribe(data => {
+        this.turkishKuran = kuran;
+        resolve(new ServiceResponse(0, this.turkishKuran));
       }, (err) => {
         alert("Failed http request:" + err);
         resolve(new ServiceResponse(-1, JSON.stringify(err)));
@@ -203,6 +221,30 @@ export class ImportantDate {
 
   constructor() {
 
+  }
+}
+
+export class Ayet {
+  original: string;
+  translation: string;
+
+  constructor() {
+  }
+}
+
+export class Sure {
+  name: string;
+  arabic: string;
+  ayetList: Array<Ayet>;
+
+  constructor() {
+  }
+}
+
+export class Kuran {
+  sureList: Array<Sure>;
+
+  constructor() {
   }
 }
 

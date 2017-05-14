@@ -1,5 +1,7 @@
 import {Component} from "@angular/core";
-import {IonicPage, NavController, NavParams} from "ionic-angular";
+import {IonicPage, LoadingController, NavController, NavParams} from "ionic-angular";
+import {Dictionary, WordingProvider} from "../../providers/wording-provider";
+import {Kuran, WebProvider} from "../../providers/web-provider";
 
 /**
  * Generated class for the ReadQuran page.
@@ -14,13 +16,27 @@ import {IonicPage, NavController, NavParams} from "ionic-angular";
 })
 export class ReadQuran {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  dictionary: Dictionary;
+  kuran: Kuran;
+
+  constructor(public navCtrl: NavController, public navParams: NavParams, public loadingController: LoadingController, public wordingProvider: WordingProvider,
+              public webProvider: WebProvider) {
+    this.dictionary = this.wordingProvider.dictionary;
+    let loader = this.loadingController.create({
+      content: this.dictionary.pleaseWait
+    });
+    loader.present();
+    this.webProvider.getTurkishKuran().then(response => {
+      loader.dismissAll();
+      if (response.errorCode == 0) {
+        this.kuran = response.data;
+      } else {
+        alert("Failed to get Kuran");
+      }
+    });
 
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad ReadQuran');
-  }
 
   public searchSure(ev: any) {
     let val = ev.target.value;
