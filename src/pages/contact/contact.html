@@ -6,18 +6,34 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content>
-  <ion-list>
-    <ion-item *ngFor="let importantDate of importantDayList; let odd=odd; let even=even" [class.odd]="odd"
-              [class.even]="even">
-      <div>
-        {{importantDate.title}}
-      </div>
-      <div>
-        {{importantDate.date}}
-      </div>
-    </ion-item>
-  </ion-list>
+<ion-content padding>
+
+  <ng-template *ngIf="!noInternet">
+    <ion-list>
+      <ion-item *ngFor="let importantDate of importantDayList; let odd=odd; let even=even" [class.odd]="odd"
+                [class.even]="even">
+        <div>
+          {{importantDate.title}}
+        </div>
+        <div>
+          {{importantDate.date}}
+        </div>
+      </ion-item>
+    </ion-list>
+  </ng-template>
+
+
+  <ion-card *ngIf="noInternet">
+    <img src="assets/images/no-internet.jpg"/>
+    <ion-card-content>
+      <ion-card-title>
+        {{dictionary.noInternetFail}}
+      </ion-card-title>
+      <p>
+        {{dictionary.noInternetFailExplanation}}
+      </p>
+    </ion-card-content>
+  </ion-card>
 
 
   <style>

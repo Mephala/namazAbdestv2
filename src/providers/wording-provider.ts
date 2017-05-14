@@ -82,6 +82,8 @@ export class WordingProvider {
     this.dictionary.failedToReceiveGPSText = "Cihazınızdan konum bilgisi alamadık. Lütfen en doğru zaman bilgisine ulaşmak için cihazınızın konum bilgisini aktive ediniz.";
     this.dictionary.checkYourInternetConnection = "İnternet Bağlantınızı Kontrol Ediniz";
     this.dictionary.activateGpsAndNet = "En güncel namaz vakitlerini görebilmek için lütfen konum bilginizi aktif, internet bağlantınızı çalışır duruma getiriniz";
+    this.dictionary.noInternetFailExplanation = "Lütfen en güncel namaz vakitlerini alabilmek için internet bağlantınızı ve mobil konum izinlerini kontrol ediniz.";
+    this.dictionary.noInternetFail = "Sisteme Bağlanılamıyor";
   }
 
   private createEnglishDictionary() {

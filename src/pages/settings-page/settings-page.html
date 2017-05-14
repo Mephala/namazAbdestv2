@@ -14,28 +14,41 @@
 
 
 <ion-content padding>
+  <ng-template *ngIf="!noInternet">
 
+    <ion-list>
+      <ion-item>
+        <ion-label>{{dictionary.wantDailyHadisToggleString}}</ion-label>
+        <ion-toggle [(ngModel)]="wantsDailyHadis" (ngModelChange)="saveSettings()"></ion-toggle>
+      </ion-item>
+      <ion-item>
+        <ion-label>{{dictionary.wantsSpecialDayMessagesToggleString}}</ion-label>
+        <ion-toggle [(ngModel)]="wantsSpecialDayMsg" (ngModelChange)="saveSettings()"></ion-toggle>
+      </ion-item>
+      <ion-item>
+        <ion-label>{{dictionary.localNotifications}}</ion-label>
+        <ion-toggle [(ngModel)]="wantsLocalNotification" (ngModelChange)="saveSettings()"></ion-toggle>
+      </ion-item>
+      <ion-item (click)="showDownloadKuranTutorial()" text-wrap>
+        <ion-icon name="ios-information-circle-outline" item-left></ion-icon>
+        <ion-label>{{dictionary.downloadKuran}}</ion-label>
+        <ion-toggle [(ngModel)]="wantsKuranDL" (ngModelChange)="saveSettingsQuran()"></ion-toggle>
+      </ion-item>
+    </ion-list>
 
-  <ion-list>
+  </ng-template>
 
-    <ion-item>
-      <ion-label>{{dictionary.wantDailyHadisToggleString}}</ion-label>
-      <ion-toggle [(ngModel)]="wantsDailyHadis" (ngModelChange)="saveSettings()"></ion-toggle>
-    </ion-item>
-    <ion-item>
-      <ion-label>{{dictionary.wantsSpecialDayMessagesToggleString}}</ion-label>
-      <ion-toggle [(ngModel)]="wantsSpecialDayMsg" (ngModelChange)="saveSettings()"></ion-toggle>
-    </ion-item>
-    <ion-item>
-      <ion-label>{{dictionary.localNotifications}}</ion-label>
-      <ion-toggle [(ngModel)]="wantsLocalNotification" (ngModelChange)="saveSettings()"></ion-toggle>
-    </ion-item>
-    <ion-item (click)="showDownloadKuranTutorial()" text-wrap>
-      <ion-icon name="ios-information-circle-outline" item-left></ion-icon>
-      <ion-label>{{dictionary.downloadKuran}}</ion-label>
-      <ion-toggle [(ngModel)]="wantsKuranDL" (ngModelChange)="saveSettingsQuran()"></ion-toggle>
-    </ion-item>
+  <ion-card *ngIf="noInternet">
+    <img src="assets/images/no-internet.jpg"/>
+    <ion-card-content>
+      <ion-card-title>
+        {{dictionary.noInternetFail}}
+      </ion-card-title>
+      <p>
+        {{dictionary.noInternetFailExplanation}}
+      </p>
+    </ion-card-content>
+  </ion-card>
 
-  </ion-list>
 
 </ion-content>

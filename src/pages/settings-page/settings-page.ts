@@ -22,15 +22,19 @@ export class SettingsPage {
   wantsSpecialDayMsg: boolean;
   wantsKuranDL: boolean;
   wantsLocalNotification: boolean;
+  noInternet: boolean = false;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public webProvider: WebProvider, public alertController: AlertController,
               public loadingController: LoadingController, public wordingProvider: WordingProvider, private toastController: ToastController, private nativeStorage: NativeStorage) {
-    this.startupData = this.webProvider.startupData;
     this.dictionary = this.wordingProvider.dictionary;
-    this.wantsDailyHadis = this.startupData.wantsDailyHadis;
-    this.wantsSpecialDayMsg = this.startupData.wantsSpecialDayMessages;
-    this.wantsKuranDL = this.startupData.wantsKuranDownloaded;
-    this.wantsLocalNotification = this.startupData.wantsLocalNotification;
+    this.noInternet = this.webProvider.noInternet;
+    if (!this.noInternet) {
+      this.startupData = this.webProvider.startupData;
+      this.wantsDailyHadis = this.startupData.wantsDailyHadis;
+      this.wantsSpecialDayMsg = this.startupData.wantsSpecialDayMessages;
+      this.wantsKuranDL = this.startupData.wantsKuranDownloaded;
+      this.wantsLocalNotification = this.startupData.wantsLocalNotification;
+    }
   }
 
   ionViewDidLoad() {

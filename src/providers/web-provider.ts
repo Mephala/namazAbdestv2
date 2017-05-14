@@ -25,6 +25,7 @@ export class WebProvider {
   pushAllowed: boolean = true;
   turkishKuran: Kuran;
   source: string;
+  noInternet: boolean = false;
 
   constructor(public http: Http, public locationProvider: LocationProvider, public wordingProvider: WordingProvider, private push: Push) {
     console.log('Hello WebProvider Provider');
@@ -99,7 +100,8 @@ export class WebProvider {
       this.startupData = response;
       resolve(new ServiceResponse(0, response));
     }, (err) => {
-      alert("Failed http request:" + err);
+      this.noInternet = true;
+      console.log("Failed http request:" + err);
       resolve(new ServiceResponse(-1, JSON.stringify(err)));
     });
   }
@@ -115,7 +117,7 @@ export class WebProvider {
       }).subscribe(data => {
         resolve(new ServiceResponse(0, moreHadis));
       }, (err) => {
-        alert("Failed http request:" + err);
+        console.log("Failed http request:" + err);
         resolve(new ServiceResponse(-1, JSON.stringify(err)));
       });
     });
@@ -155,7 +157,7 @@ export class WebProvider {
       }).subscribe(data => {
         resolve(new ServiceResponse(0, null));
       }, (err) => {
-        alert("Failed http request:" + err);
+        console.log("Failed http request:" + err);
         resolve(new ServiceResponse(-1, JSON.stringify(err)));
       });
     });

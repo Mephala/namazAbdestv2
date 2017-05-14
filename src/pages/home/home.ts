@@ -1,5 +1,13 @@
 import {Component} from "@angular/core";
-import {AlertController, Events, Loading, LoadingController, NavController, Platform} from "ionic-angular";
+import {
+  AlertController,
+  Events,
+  Loading,
+  LoadingController,
+  NavController,
+  Platform,
+  ToastController
+} from "ionic-angular";
 import {LocationProvider} from "../../providers/location";
 import {Dictionary, WordingProvider} from "../../providers/wording-provider";
 import {Hadith, StartupData, WebProvider} from "../../providers/web-provider";
@@ -24,7 +32,7 @@ export class HomePage {
   noInternet: boolean = false;
 
 
-  constructor(public navCtrl: NavController, public locationProvider: LocationProvider,
+  constructor(public navCtrl: NavController, public locationProvider: LocationProvider, public toastController: ToastController,
               public wordingProvider: WordingProvider, private adProvider: InterstitialProvider,
               public alertController: AlertController, public loadingController: LoadingController, private localNotifications: LocalNotifications,
               public events: Events, public platform: Platform, public webProvider: WebProvider) {
@@ -53,7 +61,8 @@ export class HomePage {
                 this.processStartupData(response.data);
               } else {
                 this.noInternet = true;
-                this.showAlert(this.dictionary.failedToReceiveGPSText, this.dictionary.failedToReceiveGPSText, this.dictionary.ok);
+                //TODO Implement this after offline namaz vakitleri is available
+                // this.showAlert(this.dictionary.failedToReceiveGPSText, this.dictionary.failedToReceiveGPSText, this.dictionary.ok);
                 this.processOfflineStuff();
               }
             });
@@ -135,6 +144,14 @@ export class HomePage {
 
   public processOfflineStuff() {
 
+  }
+
+  public toastMsg(msg: string) {
+    let toast = this.toastController.create({
+      message: msg,
+      duration: 3000
+    });
+    toast.present();
   }
 
 }
