@@ -15,42 +15,35 @@
 
 <ion-content padding>
 
-  <ion-searchbar (ionInput)="searchSure($event)" placeholder="Arama"></ion-searchbar>
+  <ng-template [ngIf]="loaded">
 
-  <ion-item>
-    <ion-label floating>Sure Seçiniz</ion-label>
-    <ion-select okText="Seç"
-                cancelText="İptal">
-      <ion-option value="dictionary.female">Fatiha</ion-option>
-      <ion-option value="dictionary.male">Felak</ion-option>
-    </ion-select>
-  </ion-item>
+    <ion-searchbar (ionInput)="searchSure($event)" placeholder="Sure Arayın..."
+                   [(ngModel)]="searchString"></ion-searchbar>
+    <ion-list>
+      <ion-item *ngFor="let sr of searchResultSureList" (click)="selectSR(sr)">
+        {{sr.name}}
+      </ion-item>
+    </ion-list>
 
-  <br>
-  <h1>Fatiha Suresi</h1>
-  <br>
+    <ion-item>
+      <ion-label floating>Sure Seçiniz</ion-label>
+      <ion-select okText="Seç"
+                  cancelText="İptal" [(ngModel)]="selectedSure">
+        <ion-option *ngFor="let s of kuran.sureList" [value]="s">{{s.name}}</ion-option>
+      </ion-select>
+    </ion-item>
 
-  <p style="color: #488aff">Bismillâhir rahmânir rahîm. </p>
-  <p>Rahmân ve rahîm olan Allah'ın ismi ile.</p>
-  <br>
-  <p style="color: #488aff"> El hamdu lillâhi rabbil âlemîn (âlemîne). </p>
-  <p>Hamd, âlemlerin Rabbi olan Allah’adır.</p>
-  <br>
-  <p style="color: #488aff"> Er rahmânir rahîm(rahîmi). </p>
-  <p>Rahmân’dır, Rahîm’dir.</p>
-  <br>
-  <p style="color: #488aff"> Mâliki yevmid dîn(dîne). </p>
-  <p>Dîn gününün mâlikidir.</p>
-  <br>
-  <p style="color: #488aff"> İyyâke na’budu ve iyyâke nestaîn(nestaînu). </p>
-  <p>(Allah'ım!) Yalnız Sana kul oluruz ve yalnız Senden İSTİANE (mürşidimizi) isteriz.</p>
-  <br>
-  <p style="color: #488aff"> İhdinâs sırâtel mustakîm(mustakîme). </p>
-  <p>(Bu istiane'n ile) bizi, SIRATI MUSTAKÎM'e hidayet et (ulaştır).</p>
-  <br>
-  <p style="color: #488aff"> Sırâtallezîne en’amte aleyhim gayril magdûbi aleyhim ve lâd dâllîn(dâllîne). </p>
-  <p>O yol (SIRATI MUSTAKÎM) ki; üzerlerine nimet verdiklerinin yoludur. Üzerlerine gadap duyulmuşların ve dalâlette
-    kalmışların (Allah’a ulaşmayı dilemeyenlerin) yolu değil.</p>
+    <br>
+    <h1>{{selectedSure.name}}</h1>
+    <br>
+
+    <div *ngFor="let ayet of selectedSure.ayetList">
+      <p style="color: #488aff">{{ayet.original}}</p>
+      <p>{{ayet.translation}}</p>
+      <br>
+    </div>
+
+  </ng-template>
 
 
 </ion-content>

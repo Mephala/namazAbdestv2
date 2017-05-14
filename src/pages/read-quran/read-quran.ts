@@ -1,7 +1,7 @@
 import {Component} from "@angular/core";
 import {IonicPage, LoadingController, NavController, NavParams} from "ionic-angular";
 import {Dictionary, WordingProvider} from "../../providers/wording-provider";
-import {Kuran, WebProvider} from "../../providers/web-provider";
+import {Kuran, Sure, WebProvider} from "../../providers/web-provider";
 
 /**
  * Generated class for the ReadQuran page.
@@ -18,6 +18,11 @@ export class ReadQuran {
 
   dictionary: Dictionary;
   kuran: Kuran;
+  selectedSure: Sure;
+  searchResultSureList: Array<Sure> = [];
+  loaded: boolean = false;
+  searchString: string;
+
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public loadingController: LoadingController, public wordingProvider: WordingProvider,
               public webProvider: WebProvider) {
@@ -27,12 +32,14 @@ export class ReadQuran {
     });
     loader.present();
     this.webProvider.getTurkishKuran().then(response => {
-      loader.dismissAll();
       if (response.errorCode == 0) {
         this.kuran = response.data;
+        this.selectedSure = this.kuran.sureList[0]; //Fatiha
+        this.loaded = true;
       } else {
         alert("Failed to get Kuran");
       }
+      loader.dismissAll();
     });
 
   }
@@ -40,6 +47,35 @@ export class ReadQuran {
 
   public searchSure(ev: any) {
     let val = ev.target.value;
+    if (val != null) {
+      while (this.searchResultSureList.length) {
+        this.searchResultSureList.pop(); //empty array.
+      }
+      val = val.toLowerCase();
+      let sureler: Array<Sure> = this.kuran.sureList;
+      for (let sure of sureler) {
+        let sureName = sure.name;
+        sureName = sureName.toLowerCase();
+        if (sureName.includes(val)) {
+          this.searchResultSureList.push(sure);
+          if (this.searchResultSureList.length >= 5) {
+            break;
+          }
+        }
+      }
+    } else {
+      while (this.searchResultSureList.length) {
+        this.searchResultSureList.pop(); //empty array.
+      }
+    }
+  }
+
+  public selectSR(sr: Sure) {
+    while (this.searchResultSureList.length) {
+      this.searchResultSureList.pop();
+    }
+    this.selectedSure = sr;
+    this.searchString = "";
   }
 
 }

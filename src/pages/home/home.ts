@@ -39,7 +39,6 @@ export class HomePage {
             this.webProvider.getStartupData(this.source).then(response => {
               this.loader.dismissAll();
               if (response.errorCode == 0) {
-                console.log("Success:" + JSON.stringify(response.data));
                 this.processStartupData(response.data);
               } else {
                 alert("Fail:" + response.data);
