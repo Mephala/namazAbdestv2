@@ -19,6 +19,9 @@ export class HomePage {
   startupData: StartupData;
   timer: Timer;
   loaded: boolean = false;
+  offlineQuranAvailable: boolean = false;
+  noGPS: boolean = false;
+  noInternet: boolean = false;
 
 
   constructor(public navCtrl: NavController, public locationProvider: LocationProvider,
@@ -49,15 +52,28 @@ export class HomePage {
               if (response.errorCode == 0) {
                 this.processStartupData(response.data);
               } else {
-                alert("Fail:" + response.data);
+                this.noInternet = true;
+                this.showAlert(this.dictionary.failedToReceiveGPSText, this.dictionary.failedToReceiveGPSText, this.dictionary.ok);
+                this.processOfflineStuff();
               }
             });
           } else {
-            alert("Large fail when retrieving location...");
+            this.noGPS = true;
+            this.showAlert(this.dictionary.failedToReceiveGPSText, this.dictionary.failedToReceiveGPSText, this.dictionary.ok);
+            this.processOfflineStuff();
           }
         });
       });
     });
+  }
+
+  public showAlert(title: string, content: string, buttonName: string) {
+    let alert = this.alertController.create({
+      title: title,
+      subTitle: content,
+      buttons: [buttonName]
+    });
+    alert.present();
   }
 
   private processStartupData(data: StartupData) {
@@ -115,6 +131,10 @@ export class HomePage {
 
   public readHadis(hadis: Hadith) {
     this.navCtrl.push('ReadHadithPage', {hadis: hadis});
+  }
+
+  public processOfflineStuff() {
+
   }
 
 }

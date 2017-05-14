@@ -76,8 +76,12 @@ export class WordingProvider {
     this.dictionary.genericErrorMsg = "İşlem başarısız.";
     this.dictionary.settingsSavedSuccess = "Ayarlarınız sistemimize kaydedildi.";
     this.dictionary.settingsSavedError = "Ayarlarınızı kaydedemedik. Lütfen daha sonra deneyiniz.";
-
-
+    this.dictionary.hadisOfTheDay = "Günün Hadisi";
+    this.dictionary.readQuran = "Kuran Okuyun";
+    this.dictionary.failedToReceiveGPSTitle = "Lütfen Konum Bilgisini Aktive Ediniz";
+    this.dictionary.failedToReceiveGPSText = "Cihazınızdan konum bilgisi alamadık. Lütfen en doğru zaman bilgisine ulaşmak için cihazınızın konum bilgisini aktive ediniz.";
+    this.dictionary.checkYourInternetConnection = "İnternet Bağlantınızı Kontrol Ediniz";
+    this.dictionary.activateGpsAndNet = "En güncel namaz vakitlerini görebilmek için lütfen konum bilginizi aktif, internet bağlantınızı çalışır duruma getiriniz";
   }
 
   private createEnglishDictionary() {
@@ -99,6 +103,14 @@ export class WordingProvider {
     this.dictionary.genericErrorMsg = "Failed to process your request";
     this.dictionary.settingsSavedSuccess = "Your settings updated.";
     this.dictionary.settingsSavedError = "Failed to save your settings to our system.Please try again later.";
+    this.dictionary.hadisOfTheDay = "Hadith of the day";
+    this.dictionary.readQuran = "Read Quran";
+    this.dictionary.failedToReceiveGPSTitle = "Please activate your location services";
+    this.dictionary.failedToReceiveGPSText = "We can not receive your device's location properly, please ensure your location services are working in order to receive prayer times correctly";
+    this.dictionary.checkYourInternetConnection = "Please Check Your Internet Connection";
+    this.dictionary.activateGpsAndNet = "Please turn-on your GPS and mobile data to get latest prayer times";
+    this.dictionary.noInternetFailExplanation = "Please turn-on your GPS and mobile data to get latest prayer times";
+    this.dictionary.noInternetFail = "Fail to connect our servers";
   }
 
 }
@@ -144,6 +156,10 @@ export class Dictionary {
   genericErrorMsg: string;
   settingsSavedSuccess: string;
   settingsSavedError: string;
+  hadisOfTheDay: string;
+  readQuran: string;
+  noInternetFailExplanation: string;
+  noInternetFail: string;
 
   constructor() {
   }

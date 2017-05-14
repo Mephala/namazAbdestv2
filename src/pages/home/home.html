@@ -65,23 +65,23 @@
 
     <br>
 
-    <ion-item (click)="readHadis(startupData.hadith[0])" text-wrap>
+    <ion-item (click)="readQuran()" text-wrap>
       <ion-avatar item-left>
-        <img [src]="startupData.hadith[0].avatar">
+        <img src="assets/images/kuranOkuyun.jpg">
       </ion-avatar>
-      <h5 style="color: #488aff; margin-top: 2%">Günün Hadisi</h5>
-      <p>{{startupData.hadith[0].title}}</p>
-      <ion-icon name="md-book" item-right></ion-icon>
+      <p>{{dictionary.readQuran}}</p>
+      <ion-icon name="md-search" item-right color="primary"></ion-icon>
     </ion-item>
 
     <br>
 
-    <ion-item (click)="readQuran()" text-wrap>
+    <ion-item (click)="readHadis(startupData.hadith[0])" text-wrap>
       <ion-avatar item-left>
         <img [src]="startupData.hadith[0].avatar">
       </ion-avatar>
-      <p>KURAN OKUYUN</p>
-      <ion-icon name="md-book" item-right></ion-icon>
+      <h5 style="color: #488aff; margin-top: 2%">{{dictionary.hadisOfTheDay}}</h5>
+      <p>{{startupData.hadith[0].title}}</p>
+      <ion-icon name="md-book" item-right color="primary"></ion-icon>
     </ion-item>
 
 
@@ -95,6 +95,19 @@
     <!--</ion-item>-->
     <!--</ion-list>-->
   </ng-template>
+
+
+  <ion-card *ngIf="noInternet">
+    <img src="assets/images/no-internet.jpg"/>
+    <ion-card-content>
+      <ion-card-title>
+        {{dictionary.noInternetFail}}
+      </ion-card-title>
+      <p>
+        {{dictionary.noInternetFailExplanation}}
+      </p>
+    </ion-card-content>
+  </ion-card>
 
 
   <style>
