@@ -25,6 +25,8 @@ export class ReadQuran {
   loaded: boolean = false;
   searchString: string;
   startupData: StartupData;
+  sureNameList: Array<string> = [];
+  selectedSureName: string;
 
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private nativeStorage: NativeStorage, private adProvider: InterstitialProvider,
@@ -39,16 +41,17 @@ export class ReadQuran {
 
     try {
       if (this.startupData.wantsKuranDownloaded) {
-        console.log("Getting kuran from device storage");
         this.nativeStorage.getItem('kuran').then(data => {
           if (data != null) {
-            console.log("Data is not null");
             this.kuran = data;
-            console.log("Kuran object is retrieved from storage");
+            console.log("Kuran is retrieved from storage");
             this.selectedSure = this.kuran.sureList[0]; //Fatiha
-            console.log("Selected sure is saved");
+            this.selectedSureName = this.selectedSure.name;
+            let sureList: Array<Sure> = this.kuran.sureList;
+            for (let sure of sureList) {
+              this.sureNameList.push(sure.name);
+            }
             this.loaded = true;
-            console.log("Loading Kuran from device storage");
             loader.dismissAll();
           } else {
             console.log("Device storage empty, loading kuran from web.");
@@ -76,6 +79,11 @@ export class ReadQuran {
       if (response.errorCode == 0) {
         this.kuran = response.data;
         this.selectedSure = this.kuran.sureList[0]; //Fatiha
+        this.selectedSureName = this.selectedSure.name;
+        let sureList: Array<Sure> = this.kuran.sureList;
+        for (let sure of sureList) {
+          this.sureNameList.push(sure.name);
+        }
         this.loaded = true;
         if (this.startupData.wantsKuranDownloaded && this.webProvider.source != "dom") {
           this.nativeStorage.setItem('kuran', this.kuran);
@@ -116,6 +124,13 @@ export class ReadQuran {
 
   public sureSelected() {
     this.adProvider.showInterstitial();
+    let sureList: Array<Sure> = this.kuran.sureList;
+    for (let sure of sureList) {
+      if (this.selectedSureName == sure.name) {
+        this.selectedSure = sure;
+        break;
+      }
+    }
   }
 
   public selectSR(sr: Sure) {

@@ -28,8 +28,8 @@
     <ion-item>
       <ion-label floating>Sure Seçiniz</ion-label>
       <ion-select okText="Seç"
-                  cancelText="İptal" [(ngModel)]="selectedSure" (ionChange)="sureSelected()">
-        <ion-option *ngFor="let s of kuran.sureList" [value]="s">{{s.name}}</ion-option>
+                  cancelText="İptal" [(ngModel)]="selectedSureName" (ionChange)="sureSelected()">
+        <ion-option *ngFor="let s of sureNameList" [value]="s">{{s}}</ion-option>
       </ion-select>
     </ion-item>
 

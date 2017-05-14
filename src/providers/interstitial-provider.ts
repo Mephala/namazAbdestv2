@@ -41,6 +41,7 @@ export class InterstitialProvider {
     if (source == "dom") {
       this.adsDisabled = true;
     } else {
+      this.lastAdTimeStamp = new Date().getTime() - 60000;
       if (this.underDevelopment) {
         this.isTest = true;
       }
