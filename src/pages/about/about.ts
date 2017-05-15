@@ -12,7 +12,8 @@ export class AboutPage {
 
   hadisList: Array<Hadith>;
   scrollingEnabled = false;
-  noInternet: boolean = false;
+  noInternet: boolean;
+  loaded: boolean;
   dictionary: Dictionary;
 
   constructor(public navCtrl: NavController, public webProvider: WebProvider, public adProvider: InterstitialProvider, private wordingProvider: WordingProvider) {
@@ -20,7 +21,9 @@ export class AboutPage {
     this.dictionary = this.wordingProvider.dictionary;
     console.log("Internet status:" + this.noInternet);
     if (!this.noInternet) {
+      console.log("Processing load...");
       this.hadisList = this.webProvider.startupData.previousHadith;
+      this.loaded = true;
     }
   }
 

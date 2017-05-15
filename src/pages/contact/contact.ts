@@ -12,12 +12,14 @@ export class ContactPage {
   importantDayList: Array<ImportantDate>;
   dictionary: Dictionary;
   noInternet: boolean = false;
+  loaded: boolean = false;
 
   constructor(public navCtrl: NavController, public webProvider: WebProvider, public wordingProvider: WordingProvider) {
     this.dictionary = this.wordingProvider.dictionary;
     this.noInternet = this.webProvider.noInternet;
     if (this.webProvider.startupData != null) {
       this.importantDayList = this.webProvider.startupData.importantDates;
+      this.loaded = true;
     }
 
   }

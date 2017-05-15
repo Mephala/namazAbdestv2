@@ -23,6 +23,7 @@ export class SettingsPage {
   wantsKuranDL: boolean;
   wantsLocalNotification: boolean;
   noInternet: boolean = false;
+  loaded: boolean = false;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public webProvider: WebProvider, public alertController: AlertController,
               public loadingController: LoadingController, public wordingProvider: WordingProvider, private toastController: ToastController, private nativeStorage: NativeStorage) {
@@ -34,6 +35,7 @@ export class SettingsPage {
       this.wantsSpecialDayMsg = this.startupData.wantsSpecialDayMessages;
       this.wantsKuranDL = this.startupData.wantsKuranDownloaded;
       this.wantsLocalNotification = this.startupData.wantsLocalNotification;
+      this.loaded = true;
     }
   }
 

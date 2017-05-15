@@ -1,14 +1,14 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar color="primary">
     <ion-title>
-      About
+      {{dictionary.hadiths}}
     </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
 
-  <ng-template *ngIf="!noInternet">
+  <ng-template [ngIf]="loaded">
     <ion-list>
       <ion-item *ngFor="let hadis of hadisList" (click)="readHadis(hadis)" text-wrap>
         <ion-avatar item-left>

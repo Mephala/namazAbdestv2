@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {Headers, Http, RequestOptions} from "@angular/http";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/timeout";
-import {LocationProvider, ServiceResponse} from "./location";
+import {LocationDuple, LocationProvider, ServiceResponse} from "./location";
 import {WordingProvider} from "./wording-provider";
 import {Push, PushObject, PushOptions} from "@ionic-native/push";
 
@@ -80,6 +80,30 @@ export class WebProvider {
         this.resolveStartup(resolve);
       }
 
+    });
+  }
+
+  public updateStartupData(locationDuple: LocationDuple): Promise<ServiceResponse> {
+    return new Promise<ServiceResponse>(resolve => {
+      let options = this.getOptions();
+      let lat = locationDuple.lat;
+      let lng = locationDuple.lng;
+      let time = new Date();
+      let day = time.getDate();
+      let month = time.getMonth();
+      let preferredLanguage = this.wordingProvider.preferredLanguage;
+      let response: StartupData;
+      this.http.get(this.serverRoot + "/getStartupData?lat=" + lat + "&longt=" + lng + "&regt=" + this.regt + "&time=" + time +
+        "&day=" + day + "&month=" + month + "&preferredLanguage=" + preferredLanguage + "&callType=cache&version=" + this.version, options).timeout(this.timeout).map(res => {
+        response = res.json();
+      }).subscribe(data => {
+        this.startupData = response;
+        resolve(new ServiceResponse(0, response));
+      }, (err) => {
+        this.noInternet = true;
+        console.log("Failed http request:" + err);
+        resolve(new ServiceResponse(-1, JSON.stringify(err)));
+      });
     });
   }
 

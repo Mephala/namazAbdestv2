@@ -84,6 +84,9 @@ export class WordingProvider {
     this.dictionary.activateGpsAndNet = "En güncel namaz vakitlerini görebilmek için lütfen konum bilginizi aktif, internet bağlantınızı çalışır duruma getiriniz";
     this.dictionary.noInternetFailExplanation = "Lütfen en güncel namaz vakitlerini alabilmek için internet bağlantınızı ve mobil konum izinlerini kontrol ediniz.";
     this.dictionary.noInternetFail = "Sisteme Bağlanılamıyor";
+    this.dictionary.updatingTimes = "Vakitler güncelleniyor...";
+    this.dictionary.locationUpdatedNowGettingTimes = "Konumunuz tespit edildi, sistemden güncel namaz vakitleri alınıyor...";
+    this.dictionary.readQuranTitle = "Kuran-ı Kerim";
   }
 
   private createEnglishDictionary() {
@@ -113,6 +116,9 @@ export class WordingProvider {
     this.dictionary.activateGpsAndNet = "Please turn-on your GPS and mobile data to get latest prayer times";
     this.dictionary.noInternetFailExplanation = "Please turn-on your GPS and mobile data to get latest prayer times";
     this.dictionary.noInternetFail = "Fail to connect our servers";
+    this.dictionary.updatingTimes = "Updating prayer times...";
+    this.dictionary.locationUpdatedNowGettingTimes = "Your location is updated, now connecting servers...";
+    this.dictionary.readQuranTitle = "Holy Quran";
   }
 
 }
@@ -162,6 +168,9 @@ export class Dictionary {
   readQuran: string;
   noInternetFailExplanation: string;
   noInternetFail: string;
+  updatingTimes: string;
+  locationUpdatedNowGettingTimes: string;
+  readQuranTitle: string;
 
   constructor() {
   }

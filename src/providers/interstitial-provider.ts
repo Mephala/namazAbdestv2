@@ -27,33 +27,37 @@ export class InterstitialProvider {
   adsDisabled: boolean = false;
   adThreshold: number;
   lastAdTimeStamp: number;
+  init: boolean = false;
 
   constructor(public http: Http, private admob: AdMob, private platform: Platform) {
     console.log('Hello InterstitialProvider Provider');
   }
 
   public initAds(source: string, threshold: number) {
-    console.log("Initializing Ads with threshold:" + threshold);
-    this.adThreshold = threshold;
-    if (this.adThreshold == null) {
-      this.adsDisabled = true; // Server fail.
-    }
-    if (source == "dom") {
-      this.adsDisabled = true;
-    } else {
-      this.lastAdTimeStamp = new Date().getTime() - 60000;
-      if (this.underDevelopment) {
-        this.isTest = true;
+    if (!this.init) {
+      this.init = true; //preventing multiple inits.
+      console.log("Initializing Ads with threshold:" + threshold);
+      this.adThreshold = threshold;
+      if (this.adThreshold == null) {
+        this.adsDisabled = true; // Server fail.
       }
-      if (this.platform.is('android')) {
-        this.bannerId = this.adMobAndroidBannerId;
-        this.interstitialId = this.adMobAndroidInterstitialId;
+      if (source == "dom") {
+        this.adsDisabled = true;
       } else {
-        this.bannerId = this.adMobIOSBannerId;
-        this.interstitialId = this.admobIOSInterstitialId;
+        this.lastAdTimeStamp = new Date().getTime() - 60000;
+        if (this.underDevelopment) {
+          this.isTest = true;
+        }
+        if (this.platform.is('android')) {
+          this.bannerId = this.adMobAndroidBannerId;
+          this.interstitialId = this.adMobAndroidInterstitialId;
+        } else {
+          this.bannerId = this.adMobIOSBannerId;
+          this.interstitialId = this.admobIOSInterstitialId;
+        }
+        this.initBanner();
+        this.prepInterstitial();
       }
-      this.initBanner();
-      this.prepInterstitial();
     }
   }
 

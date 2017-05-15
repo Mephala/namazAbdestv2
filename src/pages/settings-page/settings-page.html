@@ -6,15 +6,15 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>settingsPage</ion-title>
+  <ion-navbar color="primary">
+    <ion-title>{{dictionary.settingsTabTitle}}</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-  <ng-template *ngIf="!noInternet">
+  <ng-template [ngIf]="loaded">
 
     <ion-list>
       <ion-item>

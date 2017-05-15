@@ -8,7 +8,7 @@ import {
   Platform,
   ToastController
 } from "ionic-angular";
-import {LocationProvider} from "../../providers/location";
+import {LocationDuple, LocationProvider} from "../../providers/location";
 import {Dictionary, WordingProvider} from "../../providers/wording-provider";
 import {Hadith, StartupData, WebProvider} from "../../providers/web-provider";
 import {LocalNotifications} from "@ionic-native/local-notifications";
@@ -30,6 +30,7 @@ export class HomePage {
   offlineQuranAvailable: boolean = false;
   noGPS: boolean = false;
   noInternet: boolean = false;
+  title: string = "";
 
 
   constructor(public navCtrl: NavController, public locationProvider: LocationProvider, public toastController: ToastController,
@@ -49,8 +50,25 @@ export class HomePage {
           this.loader.setContent(loadingStatus);
         }
       });
+      this.events.subscribe('preciseLocationUpdated', locationDuple => {
+        console.log("Updating times according to precise location update");
+        this.webProvider.updateStartupData(locationDuple).then(response => {
+          if (response.errorCode >= 0) {
+            let startupNew: StartupData = response.data;
+            if (startupNew.locationText != this.startupData.locationText) {
+              this.startupData = startupNew;
+              let countDownString: string = this.startupData.countDownRemaining;
+              let timerVals = countDownString.split(":");
+              this.timer = new Timer(Number(timerVals[0]), Number(timerVals[1]), Number(timerVals[2]));
+              this.toastMsg("Location updated");
+            }
+          }
+        });
+      });
+
       this.wordingProvider.init(readySource).then(response => {
         this.dictionary = response.data;
+        this.title = this.dictionary.prayerTime;
         this.loader.setContent(this.dictionary.pleaseWait);
         this.locationProvider.initiate(readySource).then(response => {
           if (response.errorCode >= 0) {
@@ -101,7 +119,34 @@ export class HomePage {
       let timer = this.timer;
       let totalSeconds = (timer.hour * 60 * 60) + (timer.minutes * 60) + timer.seconds;
       if (totalSeconds == 0) {
-        //TODO implement zero reach
+        console.log("Updating times...");
+        let loader = this.loadingController.create({
+          content: this.dictionary.updatingTimes
+        });
+        loader.present();
+        this.locationProvider.getLocationDuple(this.source).then(locationResponse => {
+          if (locationResponse.errorCode == 0) {
+            let ld: LocationDuple = locationResponse.data;
+            loader.setContent(this.dictionary.locationUpdatedNowGettingTimes);
+            this.webProvider.updateStartupData(ld).then(response => {
+              if (response.errorCode >= 0) {
+                this.startupData = response.data;
+                let countDownString: string = this.startupData.countDownRemaining;
+                let timerVals = countDownString.split(":");
+                this.timer = new Timer(Number(timerVals[0]), Number(timerVals[1]), Number(timerVals[2]));
+                this.tickTimer();
+                loader.dismissAll();
+              } else {
+                this.toastMsg(this.dictionary.noInternetFail);
+                loader.dismissAll();
+                //TODO Add offline functionality...
+              }
+            })
+          } else {
+            this.toastMsg(this.dictionary.failedToReceiveGPSText);
+            loader.dismissAll();
+          }
+        });
       } else {
         if (timer.seconds > 0) {
           timer.seconds--;

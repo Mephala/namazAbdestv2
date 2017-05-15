@@ -27,10 +27,13 @@ export class LocationProvider {
         this.nativeStorage.getItem('ld').then(data => {
           if (data != null) {
             this.ld = data;
-            this.getLocationDuple().then(response => {
+            this.getLocationDupleDevice().then(response => {
               if (response.errorCode == 0) {
                 this.ld = response.data;
-                // resolve(new ServiceResponse(0, this.ld));
+                resolve(new ServiceResponse(0, this.ld));
+                // this.ld.lat = 38.78;
+                // this.ld.lng = 34.74; // Yozgat
+                this.events.publish('preciseLocationUpdated', this.ld);
                 this.saveLocationData(this.ld);
               } else {
                 // resolve(new ServiceResponse(2, this.ld));
@@ -42,7 +45,7 @@ export class LocationProvider {
           }
         }, error => {
           this.events.publish('mainLoadingStatus', this.dictionary.gettingReadyForTheFirstTime);
-          this.getLocationDuple().then(response => {
+          this.getLocationDupleDevice().then(response => {
             if (response.errorCode == 0) {
               this.ld = response.data;
               this.saveLocationData(this.ld);
@@ -79,19 +82,33 @@ export class LocationProvider {
     });
   }
 
-  private getLocationDuple(): Promise<ServiceResponse> {
+  public getLocationDuple(source: string): Promise<ServiceResponse> {
     return new Promise<ServiceResponse>(resolve => {
-      this.geolocation.getCurrentPosition().then((resp) => {
-        let ld = new LocationDuple();
-        ld.lat = resp.coords.latitude;
-        ld.lng = resp.coords.longitude;
-        resolve(new ServiceResponse(0, ld));
-      }).catch((error) => {
-        resolve(new ServiceResponse(-2, null));
-        console.log('Failed to retrieve precise location' + JSON.stringify(error));
-        //TODO Push error
-      });
+      if ("dom" == source) {
+        let locationDuple = new LocationDuple();
+        locationDuple.lat = 40.979601;
+        locationDuple.lng = 29.0878477;
+        this.ld = locationDuple;
+        resolve(new ServiceResponse(0, this.ld));
+      } else {
+        this.geolocation.getCurrentPosition().then((resp) => {
+          let ld = new LocationDuple();
+          ld.lat = resp.coords.latitude;
+          ld.lng = resp.coords.longitude;
+          resolve(new ServiceResponse(0, ld));
+        }).catch((error) => {
+          resolve(new ServiceResponse(-2, null));
+          console.log('Failed to retrieve precise location' + JSON.stringify(error));
+          //TODO Push error
+        });
+      }
+
     });
+  }
+
+
+  public getLocationDupleDevice(): Promise<ServiceResponse> {
+    return this.getLocationDuple("device");
   }
 
 }
