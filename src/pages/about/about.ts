@@ -43,7 +43,6 @@ export class AboutPage {
         infiniteScroll.enable(false);
         //TODO Push error.
       } else {
-        console.log("More hadis response:" + JSON.stringify(response));
         let moreHadis: Array<Hadith> = response.data;
         if (moreHadis == null || moreHadis.length == 0) {
           infiniteScroll.enable(false);

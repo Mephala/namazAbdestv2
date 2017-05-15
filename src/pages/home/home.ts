@@ -94,6 +94,11 @@ export class HomePage {
     });
   }
 
+  ionViewWillEnter() {
+    console.log("Tobias");
+  }
+
+
   public showAlert(title: string, content: string, buttonName: string) {
     let alert = this.alertController.create({
       title: title,

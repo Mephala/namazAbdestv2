@@ -1,6 +1,7 @@
 import {Component} from "@angular/core";
 import {IonicPage, NavParams} from "ionic-angular";
 import {Hadith} from "../../providers/web-provider";
+import {Dictionary, WordingProvider} from "../../providers/wording-provider";
 
 /**
  * Generated class for the ReadHadithPage page.
@@ -16,8 +17,10 @@ import {Hadith} from "../../providers/web-provider";
 export class ReadHadithPage {
 
   hadis: Hadith;
+  dictionary: Dictionary;
 
-  constructor(public navParams: NavParams) {
+  constructor(public navParams: NavParams, private wordingProvider: WordingProvider) {
+    this.dictionary = this.wordingProvider.dictionary;
     this.hadis = this.navParams.get("hadis");
   }
 
