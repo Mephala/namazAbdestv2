@@ -20,6 +20,7 @@ import {SettingsPage} from "../pages/settings-page/settings-page";
 import {LocalNotifications} from "@ionic-native/local-notifications";
 import {AdMob} from "@ionic-native/admob";
 import {InterstitialProvider} from "../providers/interstitial-provider";
+import {MonthlyCalendarProvider} from "../providers/monthly-calendar-provider";
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import {InterstitialProvider} from "../providers/interstitial-provider";
     LocalNotifications,
     AdMob,
     InterstitialProvider,
+    MonthlyCalendarProvider,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

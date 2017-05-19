@@ -5,6 +5,7 @@ import "rxjs/add/operator/timeout";
 import {LocationDuple, LocationProvider, ServiceResponse} from "./location";
 import {WordingProvider} from "./wording-provider";
 import {Push, PushObject, PushOptions} from "@ionic-native/push";
+import {CalendarResponse} from "./monthly-calendar-provider";
 
 /*
  Generated class for the WebProvider provider.
@@ -89,12 +90,14 @@ export class WebProvider {
       let lat = locationDuple.lat;
       let lng = locationDuple.lng;
       let time = new Date();
+      let timeStamp = time.getTime();
+      console.log("Startup timestamp:" + timeStamp);
       let day = time.getDate();
       let month = time.getMonth();
       let preferredLanguage = this.wordingProvider.preferredLanguage;
       let response: StartupData;
       this.http.get(this.serverRoot + "/getStartupData?lat=" + lat + "&longt=" + lng + "&regt=" + this.regt + "&time=" + time +
-        "&day=" + day + "&month=" + month + "&preferredLanguage=" + preferredLanguage + "&callType=cache&version=" + this.version, options).timeout(this.timeout).map(res => {
+        "&day=" + day + "&month=" + month + "&preferredLanguage=" + preferredLanguage + "&timeStamp=" + timeStamp + "&callType=cache&version=" + this.version, options).timeout(this.timeout).map(res => {
         response = res.json();
       }).subscribe(data => {
         this.startupData = response;
@@ -113,12 +116,14 @@ export class WebProvider {
     let lat = locationDuple.lat;
     let lng = locationDuple.lng;
     let time = new Date();
+    let timeStamp = time.getTime();
+    console.log("Startup timestamp:" + timeStamp);
     let day = time.getDate();
     let month = time.getMonth();
     let preferredLanguage = this.wordingProvider.preferredLanguage;
     let response: StartupData;
     this.http.get(this.serverRoot + "/getStartupData?lat=" + lat + "&longt=" + lng + "&regt=" + this.regt + "&time=" + time +
-      "&day=" + day + "&month=" + month + "&preferredLanguage=" + preferredLanguage + "&callType=cache&version=" + this.version, options).timeout(this.timeout).map(res => {
+      "&day=" + day + "&month=" + month + "&preferredLanguage=" + preferredLanguage + "&timeStamp=" + timeStamp + "&callType=cache&version=" + this.version, options).timeout(this.timeout).map(res => {
       response = res.json();
     }).subscribe(data => {
       this.startupData = response;
@@ -182,6 +187,23 @@ export class WebProvider {
         resolve(new ServiceResponse(0, null));
       }, (err) => {
         console.log("Failed http request:" + err);
+        resolve(new ServiceResponse(-1, JSON.stringify(err)));
+      });
+    });
+  }
+
+  public getCalendars(ld: LocationDuple): Promise<ServiceResponse> {
+    return new Promise<ServiceResponse>(resolve => {
+      let options = this.getOptions();
+      let cresponse: Array<CalendarResponse>;
+      let date = new Date();
+      let timeStamp = date.getTime();
+      this.http.get(this.serverRoot + "/getMonthlyNamazTimes?lat=" + ld.lat + "&longt=" + ld.lng + "&timeStamp=" + timeStamp + "&time=" + date, options).timeout(this.timeout).map(res => {
+        cresponse = res.json();
+      }).subscribe(data => {
+        resolve(new ServiceResponse(0, cresponse));
+      }, (err) => {
+        alert("Failed http request:" + err);
         resolve(new ServiceResponse(-1, JSON.stringify(err)));
       });
     });

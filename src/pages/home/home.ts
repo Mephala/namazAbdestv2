@@ -13,6 +13,7 @@ import {Dictionary, WordingProvider} from "../../providers/wording-provider";
 import {Hadith, StartupData, WebProvider} from "../../providers/web-provider";
 import {LocalNotifications} from "@ionic-native/local-notifications";
 import {InterstitialProvider} from "../../providers/interstitial-provider";
+import {MonthlyCalendarProvider} from "../../providers/monthly-calendar-provider";
 
 @Component({
   selector: 'page-home',
@@ -34,7 +35,7 @@ export class HomePage {
 
 
   constructor(public navCtrl: NavController, public locationProvider: LocationProvider, public toastController: ToastController,
-              public wordingProvider: WordingProvider, private adProvider: InterstitialProvider,
+              public wordingProvider: WordingProvider, private adProvider: InterstitialProvider, private monthlyCalendarProvider: MonthlyCalendarProvider,
               public alertController: AlertController, public loadingController: LoadingController, private localNotifications: LocalNotifications,
               public events: Events, public platform: Platform, public webProvider: WebProvider) {
     this.createLoadingMsg("");
@@ -50,26 +51,54 @@ export class HomePage {
           this.loader.setContent(loadingStatus);
         }
       });
-      this.events.subscribe('preciseLocationUpdated', locationDuple => {
-        console.log("Updating times according to precise location update");
-        this.webProvider.updateStartupData(locationDuple).then(response => {
-          if (response.errorCode >= 0) {
-            let startupNew: StartupData = response.data;
-            if (startupNew.locationText != this.startupData.locationText) {
-              this.startupData = startupNew;
-              let countDownString: string = this.startupData.countDownRemaining;
-              let timerVals = countDownString.split(":");
-              this.timer = new Timer(Number(timerVals[0]), Number(timerVals[1]), Number(timerVals[2]));
-              this.toastMsg("Location updated");
-            }
-          }
-        });
-      });
+      this.subscribePreciseLocationUpdateEvent();
 
       this.wordingProvider.init(readySource).then(response => {
         this.dictionary = response.data;
         this.title = this.dictionary.prayerTime;
         this.loader.setContent(this.dictionary.pleaseWait);
+        this.monthlyCalendarProvider.getCalendars(this.source).then(response => {
+          if (response.errorCode == 0) {
+
+            this.timer = this.monthlyCalendarProvider.calculateTimer();
+            this.loader.dismissAll(); // showing saved times.
+          } else {
+            setTimeout(() => {
+              if (this.locationProvider.ld == null) {
+                this.locationProvider.initiate(this.source).then(response => {
+                  if (response.errorCode >= 0) {
+                    console.log("Calculating monthly calendars for the first time");
+                    this.webProvider.getCalendars(this.locationProvider.ld).then(response => {
+                      if (response.errorCode >= 0) {
+                        this.monthlyCalendarProvider.saveCalendars(this.source, response.data);
+                        let Timer: Timer = this.monthlyCalendarProvider.calculateTimer();
+                        console.log("Miko");
+                      } else {
+                        console.log("Failed to retrieve calendars response:" + response.errorCode);
+                      }
+                    });
+
+                  } else {
+                    //No Location, No saved monthly calendar...
+                  }
+                });
+              } else {
+                console.log("Location provider is ready, getting monthly calendars..");
+                this.webProvider.getCalendars(this.locationProvider.ld).then(response => {
+                  if (response.errorCode >= 0) {
+                    this.monthlyCalendarProvider.saveCalendars(this.source, response.data);
+                    let Timer: Timer = this.monthlyCalendarProvider.calculateTimer();
+                  } else {
+                    console.log("Failed to retrieve calendars response:" + response.errorCode);
+                  }
+                });
+              }
+            }, 5000);
+          }
+
+        });
+
+
         this.locationProvider.initiate(readySource).then(response => {
           if (response.errorCode >= 0) {
             console.log("Code:" + response.errorCode + ", lat:" + response.data.lat + ", lng:" + response.data.lng);
@@ -90,6 +119,65 @@ export class HomePage {
             this.processOfflineStuff();
           }
         });
+      });
+    });
+  }
+
+  private initMonthlyCalendars() {
+    this.monthlyCalendarProvider.getCalendars(this.source).then(response => {
+      if (response.errorCode == 0) {
+
+        this.timer = this.monthlyCalendarProvider.calculateTimer();
+        this.loader.dismissAll(); // showing saved times.
+      } else {
+        if (this.locationProvider.ld == null) {
+          this.locationProvider.initiate(this.source).then(response => {
+            if (response.errorCode >= 0) {
+              console.log("Calculating monthly calendars for the first time");
+              this.webProvider.getCalendars(this.locationProvider.ld).then(response => {
+                if (response.errorCode >= 0) {
+                  this.monthlyCalendarProvider.saveCalendars(this.source, response.data);
+                  let Timer: Timer = this.monthlyCalendarProvider.calculateTimer();
+                  console.log("Miko");
+                } else {
+                  console.log("Failed to retrieve calendars response:" + response.errorCode);
+                }
+              });
+
+            } else {
+              //No Location, No saved monthly calendar...
+            }
+          });
+        } else {
+          console.log("Location provider is ready, getting monthly calendars..");
+          this.webProvider.getCalendars(this.locationProvider.ld).then(response => {
+            if (response.errorCode >= 0) {
+              this.monthlyCalendarProvider.saveCalendars(this.source, response.data);
+              let Timer: Timer = this.monthlyCalendarProvider.calculateTimer();
+              console.log("Miko");
+            } else {
+              console.log("Failed to retrieve calendars response:" + response.errorCode);
+            }
+          });
+        }
+      }
+    });
+  }
+
+  private subscribePreciseLocationUpdateEvent() {
+    this.events.subscribe('preciseLocationUpdated', locationDuple => {
+      console.log("Updating times according to precise location update");
+      this.webProvider.updateStartupData(locationDuple).then(response => {
+        if (response.errorCode >= 0) {
+          let startupNew: StartupData = response.data;
+          if (startupNew.locationText != this.startupData.locationText) {
+            this.startupData = startupNew;
+            let countDownString: string = this.startupData.countDownRemaining;
+            let timerVals = countDownString.split(":");
+            this.timer = new Timer(Number(timerVals[0]), Number(timerVals[1]), Number(timerVals[2]));
+            this.toastMsg("Location updated");
+          }
+        }
       });
     });
   }
