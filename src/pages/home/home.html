@@ -96,6 +96,56 @@
     <!--</ion-list>-->
   </ng-template>
 
+  <ng-template [ngIf]="!loaded && offlineLoaded">
+    <h2>{{startupData.namazText}}</h2>
+    <ion-card>
+      <ion-item class="no-bottom-border item">
+        <button ion-button large full clear class="timer-button timer-text">{{timer.displayTime()}}</button>
+      </ion-item>
+      <!--<ion-item class="no-bottom-border" *ngIf="timeInSeconds && timeInSeconds > 0">-->
+      <!--<button ion-button icon-left clear color="danger" small (click)="initTimer()" item-left *ngIf="!timer.runTimer && (timer.hasStarted || timer.hasFinished) || timer.hasFinished">-->
+      <!--<ion-icon name="refresh"></ion-icon>-->
+      <!--Reset-->
+      <!--</button>-->
+      <!--<button ion-button icon-left clear small color="primary" (click)="pauseTimer()" item-right *ngIf="timer.runTimer && timer.hasStarted && !timer.hasFinished">-->
+      <!--<ion-icon name="pause"></ion-icon>-->
+      <!--Pause-->
+      <!--</button>-->
+      <!--<button ion-button icon-left clear small color="primary" (click)="resumeTimer()" item-right *ngIf="!timer.runTimer && timer.hasStarted && !timer.hasFinished">-->
+      <!--<ion-icon name="play"></ion-icon>-->
+      <!--Resume-->
+      <!--</button>-->
+      <!--<button ion-button icon-left clear small color="primary" (click)="startTimer()" item-right *ngIf="!timer.hasStarted">-->
+      <!--<ion-icon name="play"></ion-icon>-->
+      <!--Start-->
+      <!--</button>-->
+      <!--</ion-item>-->
+    </ion-card>
+
+    <br>
+    <ion-grid no-padding>
+      <ion-row>
+        <ion-col col-2><b [style.color]="getClassColor(startupData.imsakClass)">{{startupData.imsakText}}</b></ion-col>
+        <ion-col col-2><b [style.color]="getClassColor(startupData.gunesClass)">{{startupData.gunesText}}</b></ion-col>
+        <ion-col col-2><b [style.color]="getClassColor(startupData.ogleClass)">{{startupData.ogleText}}</b></ion-col>
+        <ion-col col-2><b [style.color]="getClassColor(startupData.ikindiClass)">{{startupData.ikindiText}}</b>
+        </ion-col>
+        <ion-col col-2><b [style.color]="getClassColor(startupData.aksamClass)">{{startupData.aksamText}}</b></ion-col>
+        <ion-col col-2><b [style.color]="getClassColor(startupData.yatsiClass)">{{startupData.yatsiText}}</b></ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-2><b [style.color]="getClassColor(startupData.imsakClass)">{{startupData.imsakTime}}</b></ion-col>
+        <ion-col col-2><b [style.color]="getClassColor(startupData.gunesClass)">{{startupData.gunesTime}}</b></ion-col>
+        <ion-col col-2><b [style.color]="getClassColor(startupData.ogleClass)">{{startupData.ogleTime}}</b></ion-col>
+        <ion-col col-2><b [style.color]="getClassColor(startupData.ikindiClass)">{{startupData.ikindiTime}}</b>
+        </ion-col>
+        <ion-col col-2><b [style.color]="getClassColor(startupData.aksamClass)">{{startupData.aksamTime}}</b></ion-col>
+        <ion-col col-2><b [style.color]="getClassColor(startupData.yatsiClass)">{{startupData.yatsiTime}}</b></ion-col>
+      </ion-row>
+    </ion-grid>
+
+  </ng-template>
+
 
   <ion-card *ngIf="noInternet">
     <img src="assets/images/no-internet.jpg"/>

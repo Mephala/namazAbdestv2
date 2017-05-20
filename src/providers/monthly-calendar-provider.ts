@@ -1,10 +1,10 @@
 import {Injectable} from "@angular/core";
 import {Http} from "@angular/http";
 import "rxjs/add/operator/map";
-import {WebProvider} from "./web-provider";
+import {StartupData, WebProvider} from "./web-provider";
 import {NativeStorage} from "@ionic-native/native-storage";
 import {ServiceResponse} from "./location";
-import {Timer} from "../pages/home/home";
+import {Dictionary, WordingProvider} from "./wording-provider";
 
 /*
  Generated class for the MonthlyCalendarProvider provider.
@@ -16,12 +16,14 @@ import {Timer} from "../pages/home/home";
 export class MonthlyCalendarProvider {
 
   calendars: Array<CalendarResponse>;
+  dictionary: Dictionary;
 
-  constructor(public http: Http, private webProvider: WebProvider, private nativeStorage: NativeStorage) {
+  constructor(public http: Http, private webProvider: WebProvider, private nativeStorage: NativeStorage, private wordingProvider: WordingProvider) {
     console.log('Hello MonthlyCalendarProvider Provider');
   }
 
   public getCalendars(source: string): Promise<ServiceResponse> {
+    this.dictionary = this.wordingProvider.dictionary;
     return new Promise<ServiceResponse>(resolve => {
       if (source == "dom") {
         this.calendars = null;
@@ -49,7 +51,7 @@ export class MonthlyCalendarProvider {
   }
 
 
-  public calculateTimer(): Timer {
+  public calculateTimer(): StartupData {
     for (let cr of this.calendars) {
       let cresponse: CalendarResponse = cr;
       let datums: Array<Datum> = cresponse.data;
@@ -65,9 +67,81 @@ export class MonthlyCalendarProvider {
     return null;
   }
 
-  private calculateTimerFromTimings(datum: Datum): Timer {
+  private calculateTimerFromTimings(datum: Datum): StartupData {
     console.log("Found timing:" + JSON.stringify(datum));
-    return null;
+    let namazText = "";
+    let startupData = new StartupData();
+    startupData.namazText = namazText;
+    startupData.imsakText = this.dictionary.imsakText;
+    startupData.imsakTime = datum.timings.Imsak.split(" ")[0];
+    startupData.gunesText = this.dictionary.gunesText;
+    startupData.gunesTime = datum.timings.Sunrise.split(" ")[0];
+    startupData.ogleText = this.dictionary.ogleText;
+    startupData.ogleTime = datum.timings.Dhuhr.split(" ")[0];
+    startupData.ikindiText = this.dictionary.ikindiText;
+    startupData.ikindiTime = datum.timings.Asr.split(" ")[0];
+    startupData.aksamText = this.dictionary.aksamText;
+    startupData.aksamTime = datum.timings.Sunset.split(" ")[0];
+    startupData.yatsiText = this.dictionary.yatsiText;
+    startupData.yatsiTime = datum.timings.Isha.split(" ")[0];
+    let timings = datum.timings;
+    if (timings.imsakTS > 0) {
+      namazText = this.dictionary.timeUntilImsak;
+      startupData.imsakClass = "subdued";
+      startupData.gunesClass = "subdued";
+      startupData.ogleClass = "subdued";
+      startupData.ikindiClass = "subdued";
+      startupData.aksamClass = "subdued";
+      startupData.yatsiClass = "subduedd";
+      startupData.offlineTimerRemainingTS = timings.imsakTS;
+    } else if (timings.sunriseTS > 0) {
+      namazText = this.dictionary.timeUntilGunes;
+      startupData.imsakClass = "subduedd";
+      startupData.gunesClass = "subdued";
+      startupData.ogleClass = "subdued";
+      startupData.ikindiClass = "subdued";
+      startupData.aksamClass = "subdued";
+      startupData.yatsiClass = "subdued";
+      startupData.offlineTimerRemainingTS = timings.sunriseTS;
+    } else if (timings.dhuhrTS > 0) {
+      namazText = this.dictionary.timeUntilOgle;
+      startupData.imsakClass = "subdued";
+      startupData.gunesClass = "subduedd";
+      startupData.ogleClass = "subdued";
+      startupData.ikindiClass = "subdued";
+      startupData.aksamClass = "subdued";
+      startupData.yatsiClass = "subdued";
+      startupData.offlineTimerRemainingTS = timings.dhuhrTS;
+    } else if (timings.asrTS > 0) {
+      namazText = this.dictionary.timeUntilIkindi;
+      startupData.imsakClass = "subdued";
+      startupData.gunesClass = "subdued";
+      startupData.ogleClass = "subduedd";
+      startupData.ikindiClass = "subdued";
+      startupData.aksamClass = "subdued";
+      startupData.yatsiClass = "subdued";
+      startupData.offlineTimerRemainingTS = timings.asrTS;
+    } else if (timings.sunsetTS > 0) {
+      namazText = this.dictionary.timeUntilAksam;
+      startupData.imsakClass = "subdued";
+      startupData.gunesClass = "subdued";
+      startupData.ogleClass = "subdued";
+      startupData.ikindiClass = "subduedd";
+      startupData.aksamClass = "subdued";
+      startupData.yatsiClass = "subdued";
+      startupData.offlineTimerRemainingTS = timings.sunsetTS;
+    } else {
+      namazText = this.dictionary.timeUntilYatsi;
+      startupData.imsakClass = "subdued";
+      startupData.gunesClass = "subdued";
+      startupData.ogleClass = "subdued";
+      startupData.ikindiClass = "subdued";
+      startupData.aksamClass = "subduedd";
+      startupData.yatsiClass = "subdued";
+      startupData.offlineTimerRemainingTS = timings.ishaTS;
+    }
+    startupData.namazText = namazText;
+    return startupData;
   }
 }
 
@@ -89,19 +163,19 @@ export class Datum {
 }
 
 export class CTimings {
-  fajr: string;
-  sunrise: string;
+  Fajr: string;
+  Sunrise: string;
   sunriseTS: number;
-  dhuhr: string;
+  Dhuhr: string;
   dhuhrTS: number;
-  asr: string;
+  Asr: string;
   asrTS: number;
-  sunset: string;
+  Sunset: string;
   sunsetTS: number;
-  maghrib: string;
-  isha: string;
+  Maghrib: string;
+  Isha: string;
   ishaTS: number;
-  imsak: string;
+  Imsak: string;
   imsakTS: number;
   midnight: string;
 

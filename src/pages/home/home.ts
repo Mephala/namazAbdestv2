@@ -28,6 +28,7 @@ export class HomePage {
   startupData: StartupData;
   timer: Timer;
   loaded: boolean = false;
+  offlineLoaded: boolean = false;
   offlineQuranAvailable: boolean = false;
   noGPS: boolean = false;
   noInternet: boolean = false;
@@ -57,46 +58,7 @@ export class HomePage {
         this.dictionary = response.data;
         this.title = this.dictionary.prayerTime;
         this.loader.setContent(this.dictionary.pleaseWait);
-        this.monthlyCalendarProvider.getCalendars(this.source).then(response => {
-          if (response.errorCode == 0) {
-
-            this.timer = this.monthlyCalendarProvider.calculateTimer();
-            this.loader.dismissAll(); // showing saved times.
-          } else {
-            setTimeout(() => {
-              if (this.locationProvider.ld == null) {
-                this.locationProvider.initiate(this.source).then(response => {
-                  if (response.errorCode >= 0) {
-                    console.log("Calculating monthly calendars for the first time");
-                    this.webProvider.getCalendars(this.locationProvider.ld).then(response => {
-                      if (response.errorCode >= 0) {
-                        this.monthlyCalendarProvider.saveCalendars(this.source, response.data);
-                        let Timer: Timer = this.monthlyCalendarProvider.calculateTimer();
-                        console.log("Miko");
-                      } else {
-                        console.log("Failed to retrieve calendars response:" + response.errorCode);
-                      }
-                    });
-
-                  } else {
-                    //No Location, No saved monthly calendar...
-                  }
-                });
-              } else {
-                console.log("Location provider is ready, getting monthly calendars..");
-                this.webProvider.getCalendars(this.locationProvider.ld).then(response => {
-                  if (response.errorCode >= 0) {
-                    this.monthlyCalendarProvider.saveCalendars(this.source, response.data);
-                    let Timer: Timer = this.monthlyCalendarProvider.calculateTimer();
-                  } else {
-                    console.log("Failed to retrieve calendars response:" + response.errorCode);
-                  }
-                });
-              }
-            }, 5000);
-          }
-
-        });
+        this.processOfflineTimes();
 
 
         this.locationProvider.initiate(readySource).then(response => {
@@ -110,59 +72,116 @@ export class HomePage {
                 this.noInternet = true;
                 //TODO Implement this after offline namaz vakitleri is available
                 // this.showAlert(this.dictionary.failedToReceiveGPSText, this.dictionary.failedToReceiveGPSText, this.dictionary.ok);
-                this.processOfflineStuff();
               }
             });
           } else {
             this.noGPS = true;
             this.showAlert(this.dictionary.failedToReceiveGPSText, this.dictionary.failedToReceiveGPSText, this.dictionary.ok);
-            this.processOfflineStuff();
           }
         });
       });
     });
   }
 
-  private initMonthlyCalendars() {
+  private processOfflineTimes() {
     this.monthlyCalendarProvider.getCalendars(this.source).then(response => {
       if (response.errorCode == 0) {
-
-        this.timer = this.monthlyCalendarProvider.calculateTimer();
+        alert("Loading from offline sources...");
+        this.startupData = this.monthlyCalendarProvider.calculateTimer();
+        this.processOfflineStartup();
         this.loader.dismissAll(); // showing saved times.
       } else {
-        if (this.locationProvider.ld == null) {
-          this.locationProvider.initiate(this.source).then(response => {
-            if (response.errorCode >= 0) {
-              console.log("Calculating monthly calendars for the first time");
-              this.webProvider.getCalendars(this.locationProvider.ld).then(response => {
-                if (response.errorCode >= 0) {
-                  this.monthlyCalendarProvider.saveCalendars(this.source, response.data);
-                  let Timer: Timer = this.monthlyCalendarProvider.calculateTimer();
-                  console.log("Miko");
-                } else {
-                  console.log("Failed to retrieve calendars response:" + response.errorCode);
-                }
-              });
+        setTimeout(() => {
+          if (this.locationProvider.ld == null) {
+            this.locationProvider.initiate(this.source).then(response => {
+              if (response.errorCode >= 0) {
+                console.log("Calculating monthly calendars for the first time");
+                this.webProvider.getCalendars(this.locationProvider.ld).then(response => {
+                  if (response.errorCode >= 0) {
+                    this.monthlyCalendarProvider.saveCalendars(this.source, response.data);
+                    let Timer: StartupData = this.monthlyCalendarProvider.calculateTimer();
+                    console.log("Miko");
+                  } else {
+                    console.log("Failed to retrieve calendars response:" + response.errorCode);
+                  }
+                });
 
-            } else {
-              //No Location, No saved monthly calendar...
-            }
-          });
-        } else {
-          console.log("Location provider is ready, getting monthly calendars..");
-          this.webProvider.getCalendars(this.locationProvider.ld).then(response => {
-            if (response.errorCode >= 0) {
-              this.monthlyCalendarProvider.saveCalendars(this.source, response.data);
-              let Timer: Timer = this.monthlyCalendarProvider.calculateTimer();
-              console.log("Miko");
-            } else {
-              console.log("Failed to retrieve calendars response:" + response.errorCode);
-            }
-          });
-        }
+              } else {
+                //No Location, No saved monthly calendar...
+              }
+            });
+          } else {
+            console.log("Location provider is ready, getting monthly calendars..");
+            this.webProvider.getCalendars(this.locationProvider.ld).then(response => {
+              if (response.errorCode >= 0) {
+                this.monthlyCalendarProvider.saveCalendars(this.source, response.data);
+                this.startupData = this.monthlyCalendarProvider.calculateTimer();
+              } else {
+                console.log("Failed to retrieve calendars response:" + response.errorCode);
+              }
+            });
+          }
+        }, 5000);
       }
+
     });
   }
+
+  public processOfflineStartup() {
+    let remainingTime = this.startupData.offlineTimerRemainingTS;
+    let hours = 1000 * 60 * 60;
+    let minutes = 1000 * 60;
+    let seconds = 1000;
+    let hour = remainingTime / hours;
+    remainingTime = remainingTime - (hour * hours);
+    let minute = remainingTime / minutes;
+    remainingTime = remainingTime - (minute * minutes);
+    let second = remainingTime / seconds;
+    this.timer = new Timer(hour, minute, second);
+    this.tickTimer();
+    this.offlineLoaded = true;
+  }
+
+  // private initMonthlyCalendars() {
+  //   this.monthlyCalendarProvider.getCalendars(this.source).then(response => {
+  //     if (response.errorCode == 0) {
+  //
+  //       this.timer = this.monthlyCalendarProvider.calculateTimer();
+  //       this.loader.dismissAll(); // showing saved times.
+  //     } else {
+  //       if (this.locationProvider.ld == null) {
+  //         this.locationProvider.initiate(this.source).then(response => {
+  //           if (response.errorCode >= 0) {
+  //             console.log("Calculating monthly calendars for the first time");
+  //             this.webProvider.getCalendars(this.locationProvider.ld).then(response => {
+  //               if (response.errorCode >= 0) {
+  //                 this.monthlyCalendarProvider.saveCalendars(this.source, response.data);
+  //                 let Timer: Timer = this.monthlyCalendarProvider.calculateTimer();
+  //                 console.log("Miko");
+  //               } else {
+  //                 console.log("Failed to retrieve calendars response:" + response.errorCode);
+  //               }
+  //             });
+  //
+  //           } else {
+  //             //No Location, No saved monthly calendar...
+  //           }
+  //         });
+  //       } else {
+  //         console.log("Location provider is ready, getting monthly calendars..");
+  //         this.webProvider.getCalendars(this.locationProvider.ld).then(response => {
+  //           if (response.errorCode >= 0) {
+  //             this.monthlyCalendarProvider.saveCalendars(this.source, response.data);
+  //             let Timer: Timer = this.monthlyCalendarProvider.calculateTimer();
+  //             console.log("Miko");
+  //           } else {
+  //             console.log("Failed to retrieve calendars response:" + response.errorCode);
+  //           }
+  //         });
+  //       }
+  //     }
+  //   });
+  // }
 
   private subscribePreciseLocationUpdateEvent() {
     this.events.subscribe('preciseLocationUpdated', locationDuple => {
@@ -280,9 +299,7 @@ export class HomePage {
     this.navCtrl.push('ReadHadithPage', {hadis: hadis});
   }
 
-  public processOfflineStuff() {
 
-  }
 
   public toastMsg(msg: string) {
     let toast = this.toastController.create({

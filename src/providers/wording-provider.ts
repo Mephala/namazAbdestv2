@@ -87,6 +87,18 @@ export class WordingProvider {
     this.dictionary.updatingTimes = "Vakitler güncelleniyor...";
     this.dictionary.locationUpdatedNowGettingTimes = "Konumunuz tespit edildi, sistemden güncel namaz vakitleri alınıyor...";
     this.dictionary.readQuranTitle = "Kuran-ı Kerim";
+    this.dictionary.imsakText = "İmsak";
+    this.dictionary.gunesText = "Güneş";
+    this.dictionary.ogleText = "Öğle";
+    this.dictionary.ikindiText = "İkindi";
+    this.dictionary.aksamText = "Akşam";
+    this.dictionary.yatsiText = "Yatsı";
+    this.dictionary.timeUntilImsak = "İmsak vaktine kalan süre:";
+    this.dictionary.timeUntilGunes = "Gün doğumuna kalan süre:";
+    this.dictionary.timeUntilOgle = "Öğle vaktine kalan süre:";
+    this.dictionary.timeUntilIkindi = "İkindi vaktine kalan süre:";
+    this.dictionary.timeUntilAksam = "Akşam vaktine kalan süre:";
+    this.dictionary.timeUntilYatsi = "Yatsı vaktine kalan süre:";
   }
 
   private createEnglishDictionary() {
@@ -119,41 +131,34 @@ export class WordingProvider {
     this.dictionary.updatingTimes = "Updating prayer times...";
     this.dictionary.locationUpdatedNowGettingTimes = "Your location is updated, now connecting servers...";
     this.dictionary.readQuranTitle = "Holy Quran";
+    this.dictionary.imsakText = "Imsak";
+    this.dictionary.gunesText = "Sun";
+    this.dictionary.ogleText = "Dhuhr";
+    this.dictionary.ikindiText = "Asr";
+    this.dictionary.aksamText = "Maghrib";
+    this.dictionary.yatsiText = "Isha";
+    this.dictionary.timeUntilImsak = "Remaining time until Imsak:";
+    this.dictionary.timeUntilGunes = "Remaining time until Sunrise:";
+    this.dictionary.timeUntilOgle = "Remaining time until Dhuhr:";
+    this.dictionary.timeUntilIkindi = "Remaining time until Asr:";
+    this.dictionary.timeUntilAksam = "Remaining time until Maghrib:";
+    this.dictionary.timeUntilYatsi = "Remaining time until Isha:";
   }
 
 }
 
 export class Dictionary {
-  compassFunctionalityTutorial: string;
-  kibleLocatorTutorialMsg: string;
-  kibleLocatorHeadingMessage: string;
   wantDailyHadisToggleString: string;
-  kibleLocatorMsg: string;
   wantsSpecialDayMessagesToggleString: string;
   settingsTabTitle: string;
-  gunes: string;
-  ogle: string;
-  ikindi: string;
-  aksam: string;
-  yatsi: string;
   failedToReceiveGPSTitle: string;
   failedToReceiveGPSText: string;
-  gatheringInformation: string;
   checkYourInternetConnection: string;
   activateGpsAndNet: string;
   gettingReadyForTheFirstTime: string;
-  successfullyCreatedCachesForTheFirstTime: string;
-  yourLocationIsSavedToOurServersForTheFirstUse: string;
-  failedToWriteToDisk: string;
-  pleaseAllowDiskWriting: string;
   prayerTime: string;
   hadiths: string;
   importantDays: string;
-  back: string;
-  errorMsg: string;
-  disabledGpsTerminalMsg: string;
-  disabledNetworkTerminalMsg: string;
-  disabledGpsNonTerminalMsg: string;
   pleaseWait: string;
   localNotifications: string;
   downloadKuran: string;
@@ -171,6 +176,18 @@ export class Dictionary {
   updatingTimes: string;
   locationUpdatedNowGettingTimes: string;
   readQuranTitle: string;
+  imsakText: string;
+  gunesText: string;
+  ogleText: string;
+  ikindiText: string;
+  aksamText: string;
+  yatsiText: string;
+  timeUntilImsak: string;
+  timeUntilGunes: string;
+  timeUntilOgle: string;
+  timeUntilIkindi: string;
+  timeUntilAksam: string;
+  timeUntilYatsi: string;
 
   constructor() {
   }
