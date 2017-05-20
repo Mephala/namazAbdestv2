@@ -33,6 +33,7 @@ export class HomePage {
   noGPS: boolean = false;
   noInternet: boolean = false;
   title: string = "";
+  offlineTimer: Timer;
 
 
   constructor(public navCtrl: NavController, public locationProvider: LocationProvider, public toastController: ToastController,
@@ -86,7 +87,6 @@ export class HomePage {
   private processOfflineTimes() {
     this.monthlyCalendarProvider.getCalendars(this.source).then(response => {
       if (response.errorCode == 0) {
-        alert("Loading from offline sources...");
         this.startupData = this.monthlyCalendarProvider.calculateTimer();
         this.processOfflineStartup();
         this.loader.dismissAll(); // showing saved times.
@@ -99,7 +99,6 @@ export class HomePage {
                 this.webProvider.getCalendars(this.locationProvider.ld).then(response => {
                   if (response.errorCode >= 0) {
                     this.monthlyCalendarProvider.saveCalendars(this.source, response.data);
-                    let Timer: StartupData = this.monthlyCalendarProvider.calculateTimer();
                     console.log("Miko");
                   } else {
                     console.log("Failed to retrieve calendars response:" + response.errorCode);
@@ -129,16 +128,23 @@ export class HomePage {
 
   public processOfflineStartup() {
     let remainingTime = this.startupData.offlineTimerRemainingTS;
+    console.log("Remaining time:" + remainingTime);
     let hours = 1000 * 60 * 60;
     let minutes = 1000 * 60;
     let seconds = 1000;
     let hour = remainingTime / hours;
+    hour = Math.floor(hour);
+    console.log("Hour:" + hour);
     remainingTime = remainingTime - (hour * hours);
     let minute = remainingTime / minutes;
+    minute = Math.floor(minute);
+    console.log("Minute:" + minute);
     remainingTime = remainingTime - (minute * minutes);
     let second = remainingTime / seconds;
-    this.timer = new Timer(hour, minute, second);
-    this.tickTimer();
+    second = Math.floor(second);
+    console.log("Second:" + second);
+    this.offlineTimer = new Timer(hour, minute, second);
+    this.tickOfflineTimer();
     this.offlineLoaded = true;
   }
 
@@ -275,6 +281,31 @@ export class HomePage {
     }, 1000);
   }
 
+  private tickOfflineTimer() {
+    //TODO implement home&back functionality.
+    setTimeout(() => {
+      let timer = this.offlineTimer;
+      let totalSeconds = (timer.hour * 60 * 60) + (timer.minutes * 60) + timer.seconds;
+      if (totalSeconds == 0) {
+        //TODO implement this.
+      } else {
+        if (timer.seconds > 0) {
+          timer.seconds--;
+        } else if (timer.minutes > 0) {
+          timer.minutes--;
+          timer.seconds += 59;
+        } else {
+          timer.hour--;
+          timer.minutes += 59;
+          timer.seconds += 59;
+        }
+        if (!this.loaded) {
+          this.tickOfflineTimer();
+        }
+      }
+    }, 1000);
+  }
+
   public getClassColor(className: string) {
     if (className == "subduedd") {
       return "#488aff";
@@ -298,7 +329,6 @@ export class HomePage {
   public readHadis(hadis: Hadith) {
     this.navCtrl.push('ReadHadithPage', {hadis: hadis});
   }
-
 
 
   public toastMsg(msg: string) {
