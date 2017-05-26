@@ -69,6 +69,7 @@ export class HomePage {
               this.loader.dismissAll();
               if (response.errorCode == 0) {
                 this.processStartupData(response.data);
+                console.log("WebSource live calculations are finished");
               } else {
                 this.noInternet = true;
                 //TODO Implement this after offline namaz vakitleri is available
@@ -114,7 +115,7 @@ export class HomePage {
             this.webProvider.getCalendars(this.locationProvider.ld).then(response => {
               if (response.errorCode >= 0) {
                 this.monthlyCalendarProvider.saveCalendars(this.source, response.data);
-                this.startupData = this.monthlyCalendarProvider.calculateTimer();
+                console.log("offline processing ended");
               } else {
                 console.log("Failed to retrieve calendars response:" + response.errorCode);
               }
