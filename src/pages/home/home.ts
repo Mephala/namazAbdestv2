@@ -14,6 +14,7 @@ import {Hadith, StartupData, WebProvider} from "../../providers/web-provider";
 import {LocalNotifications} from "@ionic-native/local-notifications";
 import {InterstitialProvider} from "../../providers/interstitial-provider";
 import {MonthlyCalendarProvider} from "../../providers/monthly-calendar-provider";
+import {AppRate} from "@ionic-native/app-rate";
 
 @Component({
   selector: 'page-home',
@@ -39,7 +40,7 @@ export class HomePage {
   constructor(public navCtrl: NavController, public locationProvider: LocationProvider, public toastController: ToastController,
               public wordingProvider: WordingProvider, private adProvider: InterstitialProvider, private monthlyCalendarProvider: MonthlyCalendarProvider,
               public alertController: AlertController, public loadingController: LoadingController, private localNotifications: LocalNotifications,
-              public events: Events, public platform: Platform, public webProvider: WebProvider) {
+              public events: Events, public platform: Platform, public webProvider: WebProvider, private appRate: AppRate) {
     this.createLoadingMsg("");
     this.platform.ready().then((readySource) => {
       this.source = readySource;
@@ -47,6 +48,19 @@ export class HomePage {
       setTimeout(() => {
         this.adProvider.showInterstitial();
       }, 30000);
+      setTimeout(() => {
+        console.log("RATEMYAPP!!!");
+        if (this.source != "dom") {
+          this.appRate.preferences.storeAppURL = {
+            ios: '4214214124',
+            android: 'market://details?id=com.ionicframework.myapp244359'
+          };
+
+          this.appRate.promptForRating(true);
+        }
+      }, 10000);
+
+
       console.log('Platform ready from', readySource);
       this.events.subscribe('mainLoadingStatus', loadingStatus => {
         if (loadingStatus != null) {
