@@ -1,6 +1,5 @@
 {
   "name": "namazAbdestv2",
   "app_id": "4f444e3e",
-  "v2": true,
-  "typescript": true
+  "type": "ionic-angular"
 }
