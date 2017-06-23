@@ -91,6 +91,7 @@ export class HomePage {
               }
             });
           } else {
+            this.loader.dismissAll();
             this.noGPS = true;
             this.showAlert(this.dictionary.failedToReceiveGPSText, this.dictionary.failedToReceiveGPSText, this.dictionary.ok);
           }

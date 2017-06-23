@@ -44,9 +44,11 @@ export class LocationProvider {
             resolve(new ServiceResponse(-2, null));
           }
         }, error => {
+          console.log("Finding location for the first time...");
           this.events.publish('mainLoadingStatus', this.dictionary.gettingReadyForTheFirstTime);
           this.getLocationDupleDevice().then(response => {
             if (response.errorCode == 0) {
+              console.log("Location found successfully...");
               this.ld = response.data;
               this.saveLocationData(this.ld);
               resolve(new ServiceResponse(0, this.ld));
