@@ -128,7 +128,6 @@ export class HomePage {
                 this.webProvider.getCalendars(this.locationProvider.ld).then(response => {
                   if (response.errorCode >= 0) {
                     this.monthlyCalendarProvider.saveCalendars(this.source, response.data);
-                    console.log("Miko");
                   } else {
                     console.log("Failed to retrieve calendars response:" + response.errorCode);
                   }
