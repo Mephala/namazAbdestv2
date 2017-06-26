@@ -45,59 +45,72 @@ export class HomePage {
     this.platform.ready().then((readySource) => {
       this.source = readySource;
       this.webProvider.source = readySource;
-      setTimeout(() => {
-        this.adProvider.showInterstitial();
-      }, 30000);
-      setTimeout(() => {
-        console.log("RATEMYAPP!!!");
-        if (this.source != "dom") {
-          this.appRate.preferences.storeAppURL = {
-            ios: '4214214124',
-            android: 'market://details?id=com.ionicframework.myapp244359'
-          };
-
-          this.appRate.promptForRating(true);
-        }
-      }, 10000);
-
-
+      this.initAppStartAdds();
+      this.initAppStartRateMe();
       console.log('Platform ready from', readySource);
-      this.events.subscribe('mainLoadingStatus', loadingStatus => {
-        if (loadingStatus != null) {
-          this.loader.setContent(loadingStatus);
-        }
-      });
+      this.subscribeLoadingStatus();
       this.subscribePreciseLocationUpdateEvent();
+      this.startMainProcess(readySource);
+    });
+  }
 
-      this.wordingProvider.init(readySource).then(response => {
-        this.dictionary = response.data;
-        this.title = this.dictionary.prayerTime;
-        this.loader.setContent(this.dictionary.pleaseWait);
-        this.processOfflineTimes();
+  private startMainProcess(readySource) {
+    this.wordingProvider.init(readySource).then(response => {
+      this.dictionary = response.data;
+      this.title = this.dictionary.prayerTime;
+      this.loader.setContent(this.dictionary.pleaseWait);
+      this.processOfflineTimes();
 
 
-        this.locationProvider.initiate(readySource).then(response => {
-          if (response.errorCode >= 0) {
-            console.log("Code:" + response.errorCode + ", lat:" + response.data.lat + ", lng:" + response.data.lng);
-            this.webProvider.getStartupData(this.source).then(response => {
-              this.loader.dismissAll();
-              if (response.errorCode == 0) {
-                this.processStartupData(response.data);
-                console.log("WebSource live calculations are finished");
-              } else {
-                this.noInternet = true;
-                //TODO Implement this after offline namaz vakitleri is available
-                // this.showAlert(this.dictionary.failedToReceiveGPSText, this.dictionary.failedToReceiveGPSText, this.dictionary.ok);
-              }
-            });
-          } else {
+      this.locationProvider.initiate(readySource).then(response => {
+        if (response.errorCode >= 0) {
+          console.log("Code:" + response.errorCode + ", lat:" + response.data.lat + ", lng:" + response.data.lng);
+          this.webProvider.getStartupData(this.source).then(response => {
             this.loader.dismissAll();
-            this.noGPS = true;
-            this.showAlert(this.dictionary.failedToReceiveGPSText, this.dictionary.failedToReceiveGPSText, this.dictionary.ok);
-          }
-        });
+            if (response.errorCode == 0) {
+              this.processStartupData(response.data);
+              console.log("WebSource live calculations are finished");
+            } else {
+              this.noInternet = true;
+              //TODO Implement this after offline namaz vakitleri is available
+              // this.showAlert(this.dictionary.failedToReceiveGPSText, this.dictionary.failedToReceiveGPSText, this.dictionary.ok);
+            }
+          });
+        } else {
+          this.loader.dismissAll();
+          this.noGPS = true;
+          this.showAlert(this.dictionary.failedToReceiveGPSText, this.dictionary.failedToReceiveGPSText, this.dictionary.ok);
+        }
       });
     });
+  }
+
+  private subscribeLoadingStatus() {
+    this.events.subscribe('mainLoadingStatus', loadingStatus => {
+      if (loadingStatus != null) {
+        this.loader.setContent(loadingStatus);
+      }
+    });
+  }
+
+  private initAppStartRateMe() {
+    setTimeout(() => {
+      console.log("RATEMYAPP!!!");
+      if (this.source != "dom") {
+        this.appRate.preferences.storeAppURL = {
+          ios: '4214214124',
+          android: 'market://details?id=com.ionicframework.myapp244359'
+        };
+
+        this.appRate.promptForRating(true);
+      }
+    }, 10000);
+  }
+
+  private initAppStartAdds() {
+    setTimeout(() => {
+      this.adProvider.showInterstitial();
+    }, 30000);
   }
 
   private processOfflineTimes() {
