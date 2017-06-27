@@ -144,10 +144,22 @@
       </ion-row>
     </ion-grid>
 
+    <br>
+
+    <ion-card>
+      <p style="text-align:center"><b>{{startupData.locationText}}</b></p>
+      <p style="text-align:center"><b>{{startupData.gregorianDateString}}</b></p>
+    </ion-card>
+
+    <ion-item text-wrap>
+      <ion-icon name="md-calendar" color="primary" item-left></ion-icon>
+      <p>{{dictionary.currentlyShowingOfflineData}}</p>
+    </ion-item>
+
   </ng-template>
 
 
-  <ion-card *ngIf="noInternet">
+  <ion-card *ngIf="noInternet && !offlineLoaded">
     <img src="assets/images/no-internet.jpg"/>
     <ion-card-content>
       <ion-card-title>

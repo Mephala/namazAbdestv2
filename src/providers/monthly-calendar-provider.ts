@@ -67,7 +67,10 @@ export class MonthlyCalendarProvider {
               let timing: CTimings = datum.timings;
               if (timing.ishaTS > 0) {
                 //Found current datum
-                resolve(new ServiceResponse(0, this.calculateTimerFromTimings(datum)));
+                let startupData: StartupData = this.calculateTimerFromTimings(datum);
+                startupData.locationText = cr.clientLocationText;
+                startupData.gregorianDateString = datum.date.readable;
+                resolve(new ServiceResponse(0, startupData));
               }
             }
           }
@@ -185,6 +188,7 @@ export class MonthlyCalendarProvider {
 
 export class CalendarResponse {
   data: Array<Datum>;
+  clientLocationText: string;
 
   constructor() {
   }
