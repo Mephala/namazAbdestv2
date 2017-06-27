@@ -116,42 +116,61 @@ export class HomePage {
   private processOfflineTimes() {
     this.monthlyCalendarProvider.getCalendars(this.source).then(response => {
       if (response.errorCode == 0) {
-        this.startupData = this.monthlyCalendarProvider.calculateTimer();
-        this.processOfflineStartup();
-        this.loader.dismissAll(); // showing saved times.
-      } else {
-        setTimeout(() => {
-          if (this.locationProvider.ld == null) {
-            this.locationProvider.initiate(this.source).then(response => {
-              if (response.errorCode >= 0) {
-                console.log("Calculating monthly calendars for the first time");
-                this.webProvider.getCalendars(this.locationProvider.ld).then(response => {
-                  if (response.errorCode >= 0) {
-                    this.monthlyCalendarProvider.saveCalendars(this.source, response.data);
-                  } else {
-                    console.log("Failed to retrieve calendars response:" + response.errorCode);
-                  }
-                });
-
-              } else {
-                //No Location, No saved monthly calendar...
-              }
-            });
+        this.monthlyCalendarProvider.calculateTimer().then(response => {
+          if (response.errorCode == 0) {
+            this.startupData = response.data;
+            this.processOfflineStartup();
+            this.loader.dismissAll(); // showing saved times.
           } else {
-            console.log("Location provider is ready, getting monthly calendars..");
-            this.webProvider.getCalendars(this.locationProvider.ld).then(response => {
+            //TODO inspect codes.
+            this.fetchAndSaveOfflineMonthlyCalendar();
+          }
+        });
+      } else {
+        this.fetchAndSaveOfflineMonthlyCalendar();
+      }
+
+    });
+  }
+
+  private fetchAndSaveOfflineMonthlyCalendar() {
+    setTimeout(() => {
+      let date = new Date();
+      let timeStamp = date.getTime();
+      if (this.locationProvider.ld == null) {
+        this.locationProvider.initiate(this.source).then(response => {
+          if (response.errorCode >= 0) {
+            console.log("Calculating monthly calendars for the first time");
+            this.webProvider.getCalendars(this.locationProvider.ld, timeStamp, date).then(response => {
               if (response.errorCode >= 0) {
-                this.monthlyCalendarProvider.saveCalendars(this.source, response.data);
-                console.log("offline processing ended");
+                this.saveCalendarData(response, timeStamp);
               } else {
                 console.log("Failed to retrieve calendars response:" + response.errorCode);
               }
             });
-          }
-        }, 5000);
-      }
 
-    });
+          } else {
+            //TODO Do something.
+            //No Location, No saved monthly calendar...
+          }
+        });
+      } else {
+        console.log("Location provider is ready, getting monthly calendars..");
+        this.webProvider.getCalendars(this.locationProvider.ld, timeStamp, date).then(response => {
+          if (response.errorCode >= 0) {
+            this.saveCalendarData(response, timeStamp);
+            console.log("offline processing ended");
+          } else {
+            console.log("Failed to retrieve calendars response:" + response.errorCode);
+          }
+        });
+      }
+    }, 5000);
+  }
+
+  private saveCalendarData(response, timeStamp: number) {
+    this.monthlyCalendarProvider.saveCalendars(this.source, response.data);
+    this.monthlyCalendarProvider.saveCalendarTS(timeStamp);
   }
 
   public processOfflineStartup() {

@@ -51,20 +51,53 @@ export class MonthlyCalendarProvider {
   }
 
 
-  public calculateTimer(): StartupData {
+  public calculateTimer(): Promise<ServiceResponse> {
+    return new Promise<ServiceResponse>(resolve => {
+      this.nativeStorage.getItem("lastCalendarCalculationTS").then(data => {
+        let prevTS: number = data;
+        let now: number = new Date().getTime();
+        let offset: number = now - prevTS;
+        this.applyOffsetToCalendars(offset);
+        this.nativeStorage.setItem("lastCalendarCalculationTS", now).then(() => {
+          for (let cr of this.calendars) {
+            let cresponse: CalendarResponse = cr;
+            let datums: Array<Datum> = cresponse.data;
+            for (let dt of datums) {
+              let datum: Datum = dt;
+              let timing: CTimings = datum.timings;
+              if (timing.ishaTS > 0) {
+                //Found current datum
+                resolve(new ServiceResponse(0, this.calculateTimerFromTimings(datum)));
+              }
+            }
+          }
+          resolve(new ServiceResponse(-2, null));  // couldn't find what we look. Perhaps the client didn't connect to servers within 30 days ?
+        }, error => {
+          console.log("Failed to save calculation ts into device. Saved calendar is useless.");
+          this.nativeStorage.remove("calendars");
+          resolve(new ServiceResponse(-3, null));
+        });
+      }, error => {
+        console.log("Failed to obtain last calendar calculationTS. Saved calendar is obsolete.");
+        this.nativeStorage.remove("calendars");
+        resolve(new ServiceResponse(-1, null));
+      });
+    });
+  }
+
+  private applyOffsetToCalendars(offset: number) {
     for (let cr of this.calendars) {
-      let cresponse: CalendarResponse = cr;
-      let datums: Array<Datum> = cresponse.data;
+      let datums: Array<Datum> = cr.data;
       for (let dt of datums) {
-        let datum: Datum = dt;
-        let timing: CTimings = datum.timings;
-        if (timing.ishaTS > 0) {
-          //Found current datum
-          return this.calculateTimerFromTimings(datum);
-        }
+        let timings: CTimings = dt.timings;
+        timings.imsakTS = timings.imsakTS - offset;
+        timings.sunriseTS = timings.sunriseTS - offset;
+        timings.dhuhrTS = timings.dhuhrTS - offset;
+        timings.asrTS = timings.asrTS - offset;
+        timings.sunsetTS = timings.sunsetTS - offset;
+        timings.ishaTS = timings.ishaTS - offset;
       }
     }
-    return null;
   }
 
   private calculateTimerFromTimings(datum: Datum): StartupData {
@@ -142,6 +175,10 @@ export class MonthlyCalendarProvider {
     }
     startupData.namazText = namazText;
     return startupData;
+  }
+
+  public saveCalendarTS(timeStamp: number) {
+    this.nativeStorage.setItem("lastCalendarCalculationTS", timeStamp);
   }
 }
 
