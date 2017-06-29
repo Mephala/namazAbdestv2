@@ -51,8 +51,16 @@ export class HomePage {
       this.subscribeLoadingStatus();
       this.subscribePreciseLocationUpdateEvent();
       this.startMainProcess(readySource);
+      this.subscribeResume();
     });
   }
+
+  private subscribeResume() {
+    this.platform.resume.subscribe(() => {
+      this.resume();
+    });
+  }
+
 
   private startMainProcess(readySource) {
     this.wordingProvider.init(readySource).then(response => {
@@ -175,7 +183,14 @@ export class HomePage {
 
   public processOfflineStartup() {
     let remainingTime = this.startupData.offlineTimerRemainingTS;
-    console.log("Remaining time:" + remainingTime);
+    let {hour, minute, second} = this.calculateTimerFields(remainingTime);
+    this.offlineTimer = new Timer(hour, minute, second);
+    this.tickOfflineTimer();
+    this.offlineLoaded = true;
+  }
+
+  private calculateTimerFields(remainingTime: number) {
+    console.log("Calculating remaining time:" + remainingTime);
     let hours = 1000 * 60 * 60;
     let minutes = 1000 * 60;
     let seconds = 1000;
@@ -190,51 +205,9 @@ export class HomePage {
     let second = remainingTime / seconds;
     second = Math.floor(second);
     console.log("Second:" + second);
-    this.offlineTimer = new Timer(hour, minute, second);
-    this.tickOfflineTimer();
-    this.offlineLoaded = true;
+    return {hour, minute, second};
   }
 
-  // private initMonthlyCalendars() {
-  //   this.monthlyCalendarProvider.getCalendars(this.source).then(response => {
-  //     if (response.errorCode == 0) {
-  //
-  //       this.timer = this.monthlyCalendarProvider.calculateTimer();
-  //       this.loader.dismissAll(); // showing saved times.
-  //     } else {
-  //       if (this.locationProvider.ld == null) {
-  //         this.locationProvider.initiate(this.source).then(response => {
-  //           if (response.errorCode >= 0) {
-  //             console.log("Calculating monthly calendars for the first time");
-  //             this.webProvider.getCalendars(this.locationProvider.ld).then(response => {
-  //               if (response.errorCode >= 0) {
-  //                 this.monthlyCalendarProvider.saveCalendars(this.source, response.data);
-  //                 let Timer: Timer = this.monthlyCalendarProvider.calculateTimer();
-  //                 console.log("Miko");
-  //               } else {
-  //                 console.log("Failed to retrieve calendars response:" + response.errorCode);
-  //               }
-  //             });
-  //
-  //           } else {
-  //             //No Location, No saved monthly calendar...
-  //           }
-  //         });
-  //       } else {
-  //         console.log("Location provider is ready, getting monthly calendars..");
-  //         this.webProvider.getCalendars(this.locationProvider.ld).then(response => {
-  //           if (response.errorCode >= 0) {
-  //             this.monthlyCalendarProvider.saveCalendars(this.source, response.data);
-  //             let Timer: Timer = this.monthlyCalendarProvider.calculateTimer();
-  //             console.log("Miko");
-  //           } else {
-  //             console.log("Failed to retrieve calendars response:" + response.errorCode);
-  //           }
-  //         });
-  //       }
-  //     }
-  //   });
-  // }
 
   private subscribePreciseLocationUpdateEvent() {
     this.events.subscribe('preciseLocationUpdated', locationDuple => {
@@ -254,8 +227,31 @@ export class HomePage {
     });
   }
 
-  ionViewWillEnter() {
-    console.log("Tobias");
+
+  private resume() {
+    console.log("Resuming app.");
+    if (this.offlineLoaded && !this.loaded) {
+      //Running on offline mode.
+      this.monthlyCalendarProvider.calculateTimer().then(response => {
+        this.processOfflineResume(response);
+      });
+    } else if (this.loaded) {
+
+      //Running on online mode.
+    }
+  }
+
+  private processOfflineResume(response) {
+    if (response.errorCode == 0) {
+      this.startupData = response.data;
+      let remaining = this.startupData.offlineTimerRemainingTS;
+      let {hour, minute, second} = this.calculateTimerFields(remaining);
+      this.offlineTimer.hour = hour;
+      this.offlineTimer.minutes = minute;
+      this.offlineTimer.seconds = second;
+    } else {
+      //TODO implement
+    }
   }
 
 

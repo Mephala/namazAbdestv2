@@ -104,6 +104,7 @@ export class WebProvider {
         response = res.json();
       }).subscribe(data => {
         this.startupData = response;
+        this.assignDateParams(time);
         resolve(new ServiceResponse(0, response));
       }, (err) => {
         this.noInternet = true;
@@ -130,12 +131,19 @@ export class WebProvider {
       response = res.json();
     }).subscribe(data => {
       this.startupData = response;
+      this.assignDateParams(time);
       resolve(new ServiceResponse(0, response));
     }, (err) => {
       this.noInternet = true;
       console.log("Failed http request:" + err);
       resolve(new ServiceResponse(-1, JSON.stringify(err)));
     });
+  }
+
+  private assignDateParams(time: Date) {
+    this.startupData.month = time.getMonth();
+    this.startupData.year = time.getFullYear();
+    this.startupData.day = time.getDay();
   }
 
   public loadMoreHadis(lastHadisId: string, hadisCount: number): Promise<ServiceResponse> {
@@ -269,6 +277,9 @@ export class StartupData {
   wantsKuranDownloaded: boolean;
   adThreshold: number;
   offlineTimerRemainingTS: number;
+  day: number;
+  month: number;
+  year: number;
 
   constructor() {
 
