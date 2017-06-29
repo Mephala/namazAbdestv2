@@ -311,10 +311,13 @@ export class HomePage {
     let targetTs: number = this.getTsOfTime(time);
     let differ: number = targetTs - nowTs;
     let hours = differ / (1000 * 60 * 60);
+    hours = Math.floor(hours);
     differ = differ - (hours * 1000 * 60 * 60);
     let minutes = differ / (1000 * 60);
+    minutes = Math.floor(minutes);
     differ = differ - (minutes * 1000 * 60);
     let seconds = differ / 1000;
+    seconds = Math.floor(seconds);
     timer.hour = hours;
     timer.minutes = minutes;
     timer.seconds = seconds;
@@ -346,7 +349,6 @@ export class HomePage {
     let ishaMinute: number = Number(ishaTime.split(":")[1]);
     sdDate.setMinutes(ishaMinute);
     sdDate.setHours(ishaHour);
-    alert("sdDate:" + sdDate + ", now:" + now);
     let sdTS = sdDate.getTime();
     return nowTS >= sdTS;
   }
