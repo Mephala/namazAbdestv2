@@ -236,9 +236,119 @@ export class HomePage {
         this.processOfflineResume(response);
       });
     } else if (this.loaded) {
-
-      //Running on online mode.
+      //Running on online mode
+      let requireReFetch: boolean = this.isRefetchReq();
+      if (requireReFetch) {
+        this.updateTimes();
+      } else {
+        this.updateOnlineTimerWithoutFetch();
+      }
     }
+  }
+
+  private updateOnlineTimerWithoutFetch() {
+    let now: Date = new Date();
+    let sd: StartupData = this.startupData;
+    let imsakTime: string = sd.imsakTime;
+    let gunesTime: string = sd.gunesTime;
+    let ogleTime: string = sd.ogleTime;
+    let ikindiTime: string = sd.ikindiTime;
+    let aksamTime: string = sd.aksamTime;
+    let yatsiTime: string = sd.yatsiTime;
+    if (this.beforeTime(now, imsakTime)) {
+      this.adjustTimer(now, this.timer, imsakTime);
+      this.startupData.imsakClass = "subdued";
+      this.startupData.gunesClass = "subdued";
+      this.startupData.ogleClass = "subdued";
+      this.startupData.ikindiClass = "subdued";
+      this.startupData.aksamClass = "subdued";
+      this.startupData.yatsiClass = "subduedd";
+    } else if (this.beforeTime(now, gunesTime)) {
+      this.adjustTimer(now, this.timer, gunesTime);
+      this.startupData.imsakClass = "subduedd";
+      this.startupData.gunesClass = "subdued";
+      this.startupData.ogleClass = "subdued";
+      this.startupData.ikindiClass = "subdued";
+      this.startupData.aksamClass = "subdued";
+      this.startupData.yatsiClass = "subdued";
+    } else if (this.beforeTime(now, ogleTime)) {
+      this.adjustTimer(now, this.timer, ogleTime);
+      this.startupData.imsakClass = "subdued";
+      this.startupData.gunesClass = "subduedd";
+      this.startupData.ogleClass = "subdued";
+      this.startupData.ikindiClass = "subdued";
+      this.startupData.aksamClass = "subdued";
+      this.startupData.yatsiClass = "subdued";
+    } else if (this.beforeTime(now, ikindiTime)) {
+      this.adjustTimer(now, this.timer, ikindiTime);
+      this.startupData.imsakClass = "subdued";
+      this.startupData.gunesClass = "subdued";
+      this.startupData.ogleClass = "subduedd";
+      this.startupData.ikindiClass = "subdued";
+      this.startupData.aksamClass = "subdued";
+      this.startupData.yatsiClass = "subdued";
+    } else if (this.beforeTime(now, aksamTime)) {
+      this.adjustTimer(now, this.timer, aksamTime);
+      this.startupData.imsakClass = "subdued";
+      this.startupData.gunesClass = "subdued";
+      this.startupData.ogleClass = "subdued";
+      this.startupData.ikindiClass = "subduedd";
+      this.startupData.aksamClass = "subdued";
+      this.startupData.yatsiClass = "subdued";
+    } else {
+      this.adjustTimer(now, this.timer, yatsiTime);
+      this.startupData.imsakClass = "subdued";
+      this.startupData.gunesClass = "subdued";
+      this.startupData.ogleClass = "subdued";
+      this.startupData.ikindiClass = "subdued";
+      this.startupData.aksamClass = "subduedd";
+      this.startupData.yatsiClass = "subdued";
+    }
+  }
+
+  private adjustTimer(now: Date, timer: Timer, time: string) {
+    let nowTs: number = now.getTime();
+    let targetTs: number = this.getTsOfTime(time);
+    let differ: number = targetTs - nowTs;
+    let hours = differ / (1000 * 60 * 60);
+    differ = differ - (hours * 1000 * 60 * 60);
+    let minutes = differ / (1000 * 60);
+    differ = differ - (minutes * 1000 * 60);
+    let seconds = differ / 1000;
+    timer.hour = hours;
+    timer.minutes = minutes;
+    timer.seconds = seconds;
+  }
+
+  private beforeTime(now: Date, time: string): boolean {
+    let tmpTs: number = this.getTsOfTime(time);
+    return now.getTime() <= tmpTs;
+  }
+
+  private getTsOfTime(time: string): number {
+    let tmp: Date = new Date();
+    let vals = time.split(":");
+    let hours: number = Number(vals[0]);
+    let minutes: number = Number(vals[1]);
+    tmp.setHours(hours);
+    tmp.setMinutes(minutes);
+    let tmpTs: number = tmp.getTime();
+    return tmpTs;
+  }
+
+  private isRefetchReq(): boolean {
+    let now: Date = new Date();
+    let nowTS: number = now.getTime();
+    let sdDate: Date = new Date();
+    sdDate.setFullYear(this.startupData.year, this.startupData.month, this.startupData.day);
+    let ishaTime: string = this.startupData.yatsiTime;
+    let ishaHour: number = Number(ishaTime.split(":")[0]);
+    let ishaMinute: number = Number(ishaTime.split(":")[1]);
+    sdDate.setMinutes(ishaMinute);
+    sdDate.setHours(ishaHour);
+    alert("sdDate:" + sdDate + ", now:" + now);
+    let sdTS = sdDate.getTime();
+    return nowTS >= sdTS;
   }
 
   private processOfflineResume(response) {
@@ -279,35 +389,8 @@ export class HomePage {
     setTimeout(() => {
       let timer = this.timer;
       let totalSeconds = (timer.hour * 60 * 60) + (timer.minutes * 60) + timer.seconds;
-      if (totalSeconds == 0) {
-        console.log("Updating times...");
-        let loader = this.loadingController.create({
-          content: this.dictionary.updatingTimes
-        });
-        loader.present();
-        this.locationProvider.getLocationDuple(this.source).then(locationResponse => {
-          if (locationResponse.errorCode == 0) {
-            let ld: LocationDuple = locationResponse.data;
-            loader.setContent(this.dictionary.locationUpdatedNowGettingTimes);
-            this.webProvider.updateStartupData(ld).then(response => {
-              if (response.errorCode >= 0) {
-                this.startupData = response.data;
-                let countDownString: string = this.startupData.countDownRemaining;
-                let timerVals = countDownString.split(":");
-                this.timer = new Timer(Number(timerVals[0]), Number(timerVals[1]), Number(timerVals[2]));
-                this.tickTimer();
-                loader.dismissAll();
-              } else {
-                this.toastMsg(this.dictionary.noInternetFail);
-                loader.dismissAll();
-                //TODO Add offline functionality...
-              }
-            })
-          } else {
-            this.toastMsg(this.dictionary.failedToReceiveGPSText);
-            loader.dismissAll();
-          }
-        });
+      if (totalSeconds == 0 || this.timer.displayTime() == "00:00:00") {
+        this.updateTimes();
       } else {
         if (timer.seconds > 0) {
           timer.seconds--;
@@ -319,9 +402,78 @@ export class HomePage {
           timer.minutes += 59;
           timer.seconds += 59;
         }
-        this.tickTimer();
       }
+      this.tickTimer();
     }, 1000);
+  }
+
+  private updateTimes() {
+    let refetchNeeded: boolean = this.isRefetchReq();
+    if (refetchNeeded) {
+      this.updateTimesFromServer();
+    } else {
+      if (this.startupData.imsakClass == "subduedd") {
+        this.startupData.imsakClass = "subdued";
+        this.startupData.gunesClass = "subduedd";
+        this.updateTimer(this.startupData.ogleTime, this.timer);
+      } else if (this.startupData.gunesClass == "subduedd") {
+        this.startupData.gunesClass = "subdued";
+        this.startupData.ogleClass = "subduedd";
+        this.updateTimer(this.startupData.ikindiTime, this.timer);
+      } else if (this.startupData.ogleClass == "subduedd") {
+        this.startupData.ogleClass = "subdued";
+        this.startupData.ikindiClass = "subduedd";
+        this.updateTimer(this.startupData.aksamTime, this.timer);
+      } else if (this.startupData.yatsiClass == "subduedd") {
+        this.startupData.yatsiClass = "subdued";
+        this.startupData.imsakClass = "subduedd";
+        this.updateTimer(this.startupData.gunesTime, this.timer);
+      } else if (this.startupData.ikindiClass == "subduedd") {
+        this.startupData.ikindiClass = "subdued";
+        this.startupData.aksamClass = "subduedd";
+        this.updateTimer(this.startupData.yatsiTime, this.timer);
+      } else {
+        //TODO push error, this branching should never occur.
+      }
+    }
+  }
+
+  private updateTimer(nextTime: string, timer: Timer) {
+    let times = nextTime.split(":");
+    let hour: number = Number(times[0]);
+    let minutes: number = Number(times[1]);
+    timer.hour = hour;
+    timer.minutes = minutes;
+  }
+
+  private updateTimesFromServer() {
+    console.log("Updating times...");
+    let loader = this.loadingController.create({
+      content: this.dictionary.updatingTimes
+    });
+    loader.present();
+    this.locationProvider.getLocationDuple(this.source).then(locationResponse => {
+      if (locationResponse.errorCode == 0) {
+        let ld: LocationDuple = locationResponse.data;
+        loader.setContent(this.dictionary.locationUpdatedNowGettingTimes);
+        this.webProvider.updateStartupData(ld).then(response => {
+          if (response.errorCode >= 0) {
+            this.startupData = response.data;
+            let countDownString: string = this.startupData.countDownRemaining;
+            let timerVals = countDownString.split(":");
+            this.timer = new Timer(Number(timerVals[0]), Number(timerVals[1]), Number(timerVals[2]));
+            loader.dismissAll();
+          } else {
+            this.toastMsg(this.dictionary.noInternetFail);
+            loader.dismissAll();
+            //TODO Add offline functionality...
+          }
+        })
+      } else {
+        this.toastMsg(this.dictionary.failedToReceiveGPSText);
+        loader.dismissAll();
+      }
+    });
   }
 
   private tickOfflineTimer() {

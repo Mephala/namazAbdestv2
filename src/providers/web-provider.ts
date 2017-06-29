@@ -143,7 +143,7 @@ export class WebProvider {
   private assignDateParams(time: Date) {
     this.startupData.month = time.getMonth();
     this.startupData.year = time.getFullYear();
-    this.startupData.day = time.getDay();
+    this.startupData.day = time.getDate();
   }
 
   public loadMoreHadis(lastHadisId: string, hadisCount: number): Promise<ServiceResponse> {
