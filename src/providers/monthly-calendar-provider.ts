@@ -53,55 +53,53 @@ export class MonthlyCalendarProvider {
 
   public calculateTimer(): Promise<ServiceResponse> {
     return new Promise<ServiceResponse>(resolve => {
-      this.nativeStorage.getItem("lastCalendarCalculationTS").then(data => {
-        let prevTS: number = data;
-        let now: number = new Date().getTime();
-        let offset: number = now - prevTS;
-        this.applyOffsetToCalendars(offset);
-        this.nativeStorage.setItem("lastCalendarCalculationTS", now).then(() => {
-          for (let cr of this.calendars) {
-            let cresponse: CalendarResponse = cr;
-            let datums: Array<Datum> = cresponse.data;
-            for (let dt of datums) {
-              let datum: Datum = dt;
-              let timing: CTimings = datum.timings;
-              if (timing.ishaTS > 0) {
-                //Found current datum
-                let startupData: StartupData = this.calculateTimerFromTimings(datum);
-                startupData.locationText = cr.clientLocationText;
-                startupData.gregorianDateString = datum.date.readable;
-                resolve(new ServiceResponse(0, startupData));
-              }
-            }
+      let date: Date = new Date();
+      let nowTS = date.getTime();
+      let found: boolean = false;
+      for (let cr of this.calendars) {
+        let cresponse: CalendarResponse = cr;
+        let datums: Array<Datum> = cresponse.data;
+        for (let dt of datums) {
+          let datum: Datum = dt;
+          let timing: CTimings = datum.timings;
+          let cdate = datum.date;
+          let year: number = cdate.year;
+          let month: number = cdate.month;
+          let day: number = cdate.day;
+          let ishaDate: Date = new Date();
+          ishaDate.setFullYear(year, month, day);
+          let ishaTime = timing.Isha;
+          this.assignHourAndMinutes(ishaTime, ishaDate);
+          let ishaTS = ishaDate.getTime();
+          if (ishaTS > nowTS) {
+            found = true;
+            //Found current datum
+            let startupData: StartupData = this.calculateTimerFromTimings(datum);
+            startupData.locationText = cr.clientLocationText;
+            startupData.gregorianDateString = datum.date.readable;
+            resolve(new ServiceResponse(0, startupData));
+            break;
           }
-          resolve(new ServiceResponse(-2, null));  // couldn't find what we look. Perhaps the client didn't connect to servers within 30 days ?
-        }, error => {
-          console.log("Failed to save calculation ts into device. Saved calendar is useless.");
-          this.nativeStorage.remove("calendars");
-          resolve(new ServiceResponse(-3, null));
-        });
-      }, error => {
-        console.log("Failed to obtain last calendar calculationTS. Saved calendar is obsolete.");
-        this.nativeStorage.remove("calendars");
+
+        }
+      }
+
+      if (!found) {
+        //Calendar is too old.
         resolve(new ServiceResponse(-1, null));
-      });
+      }
     });
   }
 
-  private applyOffsetToCalendars(offset: number) {
-    for (let cr of this.calendars) {
-      let datums: Array<Datum> = cr.data;
-      for (let dt of datums) {
-        let timings: CTimings = dt.timings;
-        timings.imsakTS = timings.imsakTS - offset;
-        timings.sunriseTS = timings.sunriseTS - offset;
-        timings.dhuhrTS = timings.dhuhrTS - offset;
-        timings.asrTS = timings.asrTS - offset;
-        timings.sunsetTS = timings.sunsetTS - offset;
-        timings.ishaTS = timings.ishaTS - offset;
-      }
-    }
+  private assignHourAndMinutes(ishaTime: string, ishaDate: Date) {
+    let hm: Array<string> = ishaTime.split(":");
+    let hour: number = Number(hm[0]);
+    let minute: number = Number(hm[1]);
+    ishaDate.setHours(hour);
+    ishaDate.setMinutes(minute);
+    // return {hm, hour, minute};
   }
+
 
   private calculateTimerFromTimings(datum: Datum): StartupData {
     console.log("Found timing:" + JSON.stringify(datum));
@@ -120,8 +118,51 @@ export class MonthlyCalendarProvider {
     startupData.aksamTime = datum.timings.Sunset.split(" ")[0];
     startupData.yatsiText = this.dictionary.yatsiText;
     startupData.yatsiTime = datum.timings.Isha.split(" ")[0];
+    let imsak: boolean = false;
+    let gunes: boolean = false;
+    let ogle: boolean = false;
+    let ikindi: boolean = false;
+    let aksam: boolean = false;
     let timings = datum.timings;
-    if (timings.imsakTS > 0) {
+    let now: Date = new Date();
+    let nowTS = now.getTime();
+    let pDate: Date = new Date();
+    this.assignHourAndMinutes(timings.Imsak, pDate);
+    let pTS = pDate.getTime();
+    let yatsiTS: number;
+    if (pTS >= nowTS) {
+      imsak = true;
+    } else {
+      this.assignHourAndMinutes(timings.Sunrise, pDate);
+      pTS = pDate.getTime();
+      if (pTS >= nowTS) {
+        gunes = true;
+      } else {
+        this.assignHourAndMinutes(timings.Dhuhr, pDate);
+        pTS = pDate.getTime();
+        if (pTS >= nowTS) {
+          ogle = true;
+        } else {
+          this.assignHourAndMinutes(timings.Asr, pDate);
+          pTS = pDate.getTime();
+          if (pTS >= nowTS) {
+            ikindi = true;
+          } else {
+            this.assignHourAndMinutes(timings.Sunset, pDate);
+            pTS = pDate.getTime();
+            if (pTS >= nowTS) {
+              aksam = true;
+            } else {
+              this.assignHourAndMinutes(timings.Isha, pDate);
+              yatsiTS = pDate.getTime();
+            }
+          }
+        }
+      }
+    }
+
+
+    if (imsak) {
       namazText = this.dictionary.timeUntilImsak;
       startupData.imsakClass = "subdued";
       startupData.gunesClass = "subdued";
@@ -129,8 +170,8 @@ export class MonthlyCalendarProvider {
       startupData.ikindiClass = "subdued";
       startupData.aksamClass = "subdued";
       startupData.yatsiClass = "subduedd";
-      startupData.offlineTimerRemainingTS = timings.imsakTS;
-    } else if (timings.sunriseTS > 0) {
+      startupData.offlineTimerRemainingTS = pTS - nowTS;
+    } else if (gunes) {
       namazText = this.dictionary.timeUntilGunes;
       startupData.imsakClass = "subduedd";
       startupData.gunesClass = "subdued";
@@ -138,8 +179,8 @@ export class MonthlyCalendarProvider {
       startupData.ikindiClass = "subdued";
       startupData.aksamClass = "subdued";
       startupData.yatsiClass = "subdued";
-      startupData.offlineTimerRemainingTS = timings.sunriseTS;
-    } else if (timings.dhuhrTS > 0) {
+      startupData.offlineTimerRemainingTS = pTS - nowTS;
+    } else if (ogle) {
       namazText = this.dictionary.timeUntilOgle;
       startupData.imsakClass = "subdued";
       startupData.gunesClass = "subduedd";
@@ -147,8 +188,8 @@ export class MonthlyCalendarProvider {
       startupData.ikindiClass = "subdued";
       startupData.aksamClass = "subdued";
       startupData.yatsiClass = "subdued";
-      startupData.offlineTimerRemainingTS = timings.dhuhrTS;
-    } else if (timings.asrTS > 0) {
+      startupData.offlineTimerRemainingTS = pTS - nowTS;
+    } else if (ikindi) {
       namazText = this.dictionary.timeUntilIkindi;
       startupData.imsakClass = "subdued";
       startupData.gunesClass = "subdued";
@@ -156,8 +197,8 @@ export class MonthlyCalendarProvider {
       startupData.ikindiClass = "subdued";
       startupData.aksamClass = "subdued";
       startupData.yatsiClass = "subdued";
-      startupData.offlineTimerRemainingTS = timings.asrTS;
-    } else if (timings.sunsetTS > 0) {
+      startupData.offlineTimerRemainingTS = pTS - nowTS;
+    } else if (aksam) {
       namazText = this.dictionary.timeUntilAksam;
       startupData.imsakClass = "subdued";
       startupData.gunesClass = "subdued";
@@ -165,7 +206,7 @@ export class MonthlyCalendarProvider {
       startupData.ikindiClass = "subduedd";
       startupData.aksamClass = "subdued";
       startupData.yatsiClass = "subdued";
-      startupData.offlineTimerRemainingTS = timings.sunsetTS;
+      startupData.offlineTimerRemainingTS = pTS - nowTS;
     } else {
       namazText = this.dictionary.timeUntilYatsi;
       startupData.imsakClass = "subdued";
@@ -174,7 +215,7 @@ export class MonthlyCalendarProvider {
       startupData.ikindiClass = "subdued";
       startupData.aksamClass = "subduedd";
       startupData.yatsiClass = "subdued";
-      startupData.offlineTimerRemainingTS = timings.ishaTS;
+      startupData.offlineTimerRemainingTS = yatsiTS;
     }
     startupData.namazText = namazText;
     return startupData;
@@ -227,6 +268,9 @@ export class CTimings {
 
 export class CDate {
   readable: string;
+  year: number;
+  month: number;
+  day: number;
 
   constructor() {
   }

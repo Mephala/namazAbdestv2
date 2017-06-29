@@ -17,8 +17,8 @@ import {CalendarResponse} from "./monthly-calendar-provider";
 export class WebProvider {
 
   appToken: string = "21891fh8291f2812192819h8129f8h34729fh7))_(8128ddh218hf7fh71f21hj1299d218912777898"; //default
-  serverRoot: string = "http://192.168.0.103:8080/namazAppServer";
-  // serverRoot: string = "http://ec2-52-27-157-90.us-west-2.compute.amazonaws.com";
+  // serverRoot: string = "http://192.168.0.103:8080/namazAppServer";
+  serverRoot: string = "http://ec2-52-27-157-90.us-west-2.compute.amazonaws.com";
   version: string = "2.0.0";
   timeout: number = 30000;
   startupData: StartupData;
@@ -199,7 +199,9 @@ export class WebProvider {
     return new Promise<ServiceResponse>(resolve => {
       let options = this.getOptions();
       let cresponse: Array<CalendarResponse>;
-      this.http.get(this.serverRoot + "/getMonthlyNamazTimes?lat=" + ld.lat + "&longt=" + ld.lng + "&timeStamp=" + timeStamp + "&time=" + date + "&preferredLanguage=" + this.wordingProvider.preferredLanguage, options).timeout(this.timeout).map(res => {
+      this.http.get(this.serverRoot + "/getMonthlyNamazTimes?lat=" + ld.lat + "&longt=" + ld.lng + "&timeStamp=" + timeStamp + "&time=" + date + "&preferredLanguage=" +
+        this.wordingProvider.preferredLanguage + "&year=" + date.getFullYear() + "&month=" + date.getMonth() + "&day=" + date.getDay() + "&hour=" + date.getHours() + "&minute=" + date.getMinutes()
+        + "&second=" + date.getSeconds() + "&tzOffset=" + date.getTimezoneOffset(), options).timeout(this.timeout).map(res => {
         cresponse = res.json();
       }).subscribe(data => {
         resolve(new ServiceResponse(0, cresponse));

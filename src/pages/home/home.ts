@@ -45,9 +45,9 @@ export class HomePage {
     this.platform.ready().then((readySource) => {
       this.source = readySource;
       this.webProvider.source = readySource;
+      console.log('Platform ready from', readySource);
       this.initAppStartAdds();
       this.initAppStartRateMe();
-      console.log('Platform ready from', readySource);
       this.subscribeLoadingStatus();
       this.subscribePreciseLocationUpdateEvent();
       this.startMainProcess(readySource);
