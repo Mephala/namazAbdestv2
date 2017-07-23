@@ -100,6 +100,10 @@ export class WordingProvider {
     this.dictionary.timeUntilAksam = "Akşam vaktine kalan süre:";
     this.dictionary.timeUntilYatsi = "Yatsı vaktine kalan süre:";
     this.dictionary.currentlyShowingOfflineData = "Şu anda sistemimize son bağlandığınız lokasyona ait namaz vakitlerini görmektesiniz. Yeniden bağlantı kurulduğunda lokasyon ve namaz bilgileri güncellenecektir.";
+    this.dictionary.mosques = "Camiiler";
+    this.dictionary.updatingYourLocation = "Konum bilginiz yenileniyor...";
+    this.dictionary.findingMosquesNearby = "Yakındaki camiler bulunuyor...";
+    this.dictionary.navigate = "Adres Tarifi";
   }
 
   private createEnglishDictionary() {
@@ -145,6 +149,10 @@ export class WordingProvider {
     this.dictionary.timeUntilAksam = "Remaining time until Maghrib:";
     this.dictionary.timeUntilYatsi = "Remaining time until Isha:";
     this.dictionary.currentlyShowingOfflineData = "You are no viewing offline data based on your last known location to our servers. After connection established with our servers, your location information and prayer times will updated. ";
+    this.dictionary.mosques = "Mosques";
+    this.dictionary.updatingYourLocation = "Updating your location information...";
+    this.dictionary.findingMosquesNearby = "Getting nearby mosques...";
+    this.dictionary.navigate = "Navigate";
   }
 
 }
@@ -191,6 +199,10 @@ export class Dictionary {
   timeUntilAksam: string;
   timeUntilYatsi: string;
   currentlyShowingOfflineData: string;
+  mosques: string;
+  updatingYourLocation: string;
+  findingMosquesNearby: string;
+  navigate: string;
 
   constructor() {
   }

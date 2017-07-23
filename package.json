@@ -24,6 +24,7 @@
         "@ionic-native/core": "3.12.1",
         "@ionic-native/geolocation": "^3.6.1",
         "@ionic-native/globalization": "^3.6.1",
+        "@ionic-native/launch-navigator": "^4.1.0",
         "@ionic-native/local-notifications": "^3.8.0",
         "@ionic-native/native-storage": "^3.6.1",
         "@ionic-native/push": "^3.7.0",
@@ -33,11 +34,13 @@
         "@ionic/cloud-angular": "^0.12.0",
         "@ionic/storage": "2.0.1",
         "cordova-android": "^6.2.3",
-        "cordova-plugin-admobpro": "^2.28.3",
+        "cordova-plugin-actionsheet": "^2.3.3",
+        "cordova-plugin-admobpro": "^2.29.21",
+        "cordova-plugin-app-event": "file:node_modules/cordova-plugin-app-event",
         "cordova-plugin-apprate": "^1.3.0",
         "cordova-plugin-compat": "^1.1.0",
-        "cordova-plugin-console": "^1.0.5",
-        "cordova-plugin-device": "^1.1.4",
+        "cordova-plugin-console": "^1.0.7",
+        "cordova-plugin-device": "^1.1.6",
         "cordova-plugin-dialogs": "^1.3.3",
         "cordova-plugin-extension": "^1.5.1",
         "cordova-plugin-geolocation": "^2.4.3",
@@ -45,22 +48,23 @@
         "cordova-plugin-inappbrowser": "^1.7.1",
         "cordova-plugin-nativestorage": "^2.2.2",
         "cordova-plugin-splashscreen": "^4.0.3",
-        "cordova-plugin-statusbar": "^2.2.1",
-        "cordova-plugin-whitelist": "^1.3.1",
+        "cordova-plugin-statusbar": "^2.2.3",
+        "cordova-plugin-whitelist": "^1.3.2",
         "de.appplant.cordova.plugin.local-notification": "^0.8.5",
-        "ionic-angular": "3.4.2",
+        "ionic-angular": "3.5.3",
         "ionic-plugin-keyboard": "^2.2.1",
         "ionicons": "3.0.0",
         "phonegap-plugin-push": "^1.10.5",
         "rxjs": "5.4.0",
         "sw-toolbox": "3.4.0",
-        "typescript": "^2.3.4",
-        "zone.js": "^0.8.12"
+        "typescript": "2.3.4",
+        "uk.co.workingedge.phonegap.plugin.launchnavigator": "^4.0.3",
+        "zone.js": "0.8.12"
     },
     "devDependencies": {
-        "@ionic/app-scripts": "1.3.7",
+        "@ionic/app-scripts": "2.0.2",
         "@ionic/cli-plugin-cordova": "1.4.0",
-        "@ionic/cli-plugin-ionic-angular": "1.3.1",
+        "@ionic/cli-plugin-ionic-angular": "1.3.2",
         "typescript": "2.3.4"
     },
     "cordovaPlugins": [
@@ -89,7 +93,8 @@
             "cordova-plugin-apprate": {},
             "phonegap-plugin-push": {
                 "SENDER_ID": "85075801930"
-            }
+            },
+            "uk.co.workingedge.phonegap.plugin.launchnavigator": {}
         },
         "platforms": [
             "android"

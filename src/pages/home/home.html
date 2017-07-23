@@ -65,6 +65,17 @@
 
     <br>
 
+    <ion-item (click)="readHadis(startupData.hadith[0])" text-wrap>
+      <ion-avatar item-left>
+        <img [src]="startupData.hadith[0].avatar">
+      </ion-avatar>
+      <h5 style="color: #488aff; margin-top: 2%">{{dictionary.hadisOfTheDay}}</h5>
+      <p>{{startupData.hadith[0].title}}</p>
+      <ion-icon name="md-book" item-right color="primary"></ion-icon>
+    </ion-item>
+
+    <br>
+
     <ion-item (click)="readQuran()" text-wrap>
       <ion-avatar item-left>
         <img src="assets/images/kuranOkuyun.jpg">
@@ -75,15 +86,14 @@
 
     <br>
 
-    <ion-item (click)="readHadis(startupData.hadith[0])" text-wrap>
-      <ion-avatar item-left>
-        <img [src]="startupData.hadith[0].avatar">
-      </ion-avatar>
-      <h5 style="color: #488aff; margin-top: 2%">{{dictionary.hadisOfTheDay}}</h5>
-      <p>{{startupData.hadith[0].title}}</p>
-      <ion-icon name="md-book" item-right color="primary"></ion-icon>
-    </ion-item>
 
+    <ion-item (click)="showClosestMosques()" text-wrap>
+      <ion-avatar item-left>
+        <img src="assets/images/mosqueIcon.jpg">
+      </ion-avatar>
+      <p>Yakininizdaki camiler</p>
+      <ion-icon name="md-pin" item-right color="primary"></ion-icon>
+    </ion-item>
 
     <!--<ion-list>-->
     <!--<ion-item text-wrap>-->

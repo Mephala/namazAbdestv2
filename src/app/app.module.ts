@@ -22,6 +22,8 @@ import {AdMob} from "@ionic-native/admob";
 import {InterstitialProvider} from "../providers/interstitial-provider";
 import {MonthlyCalendarProvider} from "../providers/monthly-calendar-provider";
 import {AppRate} from "@ionic-native/app-rate";
+import {NearbyMosquesPage} from "../pages/nearby-mosques/nearby-mosques";
+import {LaunchNavigator} from '@ionic-native/launch-navigator';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,8 @@ import {AppRate} from "@ionic-native/app-rate";
     ContactPage,
     HomePage,
     TabsPage,
-    SettingsPage
+    SettingsPage,
+    NearbyMosquesPage
   ],
   imports: [
     BrowserModule,
@@ -44,7 +47,8 @@ import {AppRate} from "@ionic-native/app-rate";
     ContactPage,
     HomePage,
     TabsPage,
-    SettingsPage
+    SettingsPage,
+    NearbyMosquesPage
   ],
   providers: [
     StatusBar,
@@ -61,6 +65,7 @@ import {AppRate} from "@ionic-native/app-rate";
     InterstitialProvider,
     MonthlyCalendarProvider,
     AppRate,
+    LaunchNavigator,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

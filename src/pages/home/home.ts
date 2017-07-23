@@ -15,6 +15,7 @@ import {LocalNotifications} from "@ionic-native/local-notifications";
 import {InterstitialProvider} from "../../providers/interstitial-provider";
 import {MonthlyCalendarProvider} from "../../providers/monthly-calendar-provider";
 import {AppRate} from "@ionic-native/app-rate";
+import {NearbyMosquesPage} from "../nearby-mosques/nearby-mosques";
 
 @Component({
   selector: 'page-home',
@@ -534,6 +535,10 @@ export class HomePage {
       duration: 3000
     });
     toast.present();
+  }
+
+  public showClosestMosques() {
+    this.navCtrl.push(NearbyMosquesPage);
   }
 
 }
