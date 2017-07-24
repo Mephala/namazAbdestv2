@@ -295,6 +295,7 @@ export class StartupData {
   day: number;
   month: number;
   year: number;
+  historyToday: Array<string>;
 
   constructor() {
 

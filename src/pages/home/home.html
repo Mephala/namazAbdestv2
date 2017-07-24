@@ -63,6 +63,8 @@
     </ion-card>
 
 
+
+
     <br>
 
     <ion-item (click)="readHadis(startupData.hadith[0])" text-wrap>
@@ -91,9 +93,18 @@
       <ion-avatar item-left>
         <img src="assets/images/mosqueIcon.jpg">
       </ion-avatar>
-      <p>Yakininizdaki camiler</p>
+      <p>{{dictionary.nearbyMosques}}</p>
       <ion-icon name="md-pin" item-right color="primary"></ion-icon>
     </ion-item>
+
+    <ng-template [ngIf]="eventsTodayEnabled">
+      <ion-card>
+        <ion-card-header style="text-align:center">
+          {{dictionary.eventsOccuredToday}}
+        </ion-card-header>
+        <p style="text-align:center" *ngFor="let event of startupData.historyToday"><b>{{event}}</b></p>
+      </ion-card>
+    </ng-template>
 
     <!--<ion-list>-->
     <!--<ion-item text-wrap>-->

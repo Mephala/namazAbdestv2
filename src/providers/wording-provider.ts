@@ -105,6 +105,8 @@ export class WordingProvider {
     this.dictionary.updatingYourLocation = "Konum bilginiz yenileniyor...";
     this.dictionary.findingMosquesNearby = "Yakındaki camiler bulunuyor...";
     this.dictionary.navigate = "Adres Tarifi";
+    this.dictionary.nearbyMosques = "Yakınınızdaki camiiler";
+    this.dictionary.eventsOccuredToday = "Tarihte Bugün";
   }
 
   private createEnglishDictionary() {
@@ -154,6 +156,8 @@ export class WordingProvider {
     this.dictionary.updatingYourLocation = "Updating your location information...";
     this.dictionary.findingMosquesNearby = "Getting nearby mosques...";
     this.dictionary.navigate = "Navigate";
+    this.dictionary.nearbyMosques = "Nearby Mosques";
+    this.dictionary.eventsOccuredToday = "Historical events for today";
   }
 
 }
@@ -204,6 +208,8 @@ export class Dictionary {
   updatingYourLocation: string;
   findingMosquesNearby: string;
   navigate: string;
+  nearbyMosques: string;
+  eventsOccuredToday: string;
 
   constructor() {
   }

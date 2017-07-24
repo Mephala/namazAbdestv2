@@ -36,6 +36,7 @@ export class HomePage {
   noInternet: boolean = false;
   title: string = "";
   offlineTimer: Timer;
+  eventsTodayEnabled:boolean;
 
 
   constructor(public navCtrl: NavController, public locationProvider: LocationProvider, public toastController: ToastController,
@@ -391,6 +392,7 @@ export class HomePage {
     let timerVals = countDownString.split(":");
     this.timer = new Timer(Number(timerVals[0]), Number(timerVals[1]), Number(timerVals[2]));
     this.tickTimer();
+    this.eventsTodayEnabled = this.startupData.historyToday!=null && this.startupData.historyToday.length>0;
     this.loaded = true;
   }
 
