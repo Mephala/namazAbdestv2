@@ -245,6 +245,7 @@ export class HomePage {
         this.updateOnlineTimerWithoutFetch();
       }
     }
+    //TODO Add location change control. ( Postponed it to later sprint )
   }
 
   private updateOnlineTimerWithoutFetch() {
