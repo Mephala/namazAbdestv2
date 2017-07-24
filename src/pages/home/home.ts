@@ -264,6 +264,7 @@ export class HomePage {
       this.startupData.ikindiClass = "subdued";
       this.startupData.aksamClass = "subdued";
       this.startupData.yatsiClass = "subduedd";
+      this.startupData.namazText = this.dictionary.timeUntilImsak;
     } else if (this.beforeTime(now, gunesTime)) {
       this.adjustTimer(now, this.timer, gunesTime);
       this.startupData.imsakClass = "subduedd";
@@ -272,6 +273,7 @@ export class HomePage {
       this.startupData.ikindiClass = "subdued";
       this.startupData.aksamClass = "subdued";
       this.startupData.yatsiClass = "subdued";
+      this.startupData.namazText = this.dictionary.timeUntilGunes;
     } else if (this.beforeTime(now, ogleTime)) {
       this.adjustTimer(now, this.timer, ogleTime);
       this.startupData.imsakClass = "subdued";
@@ -280,6 +282,7 @@ export class HomePage {
       this.startupData.ikindiClass = "subdued";
       this.startupData.aksamClass = "subdued";
       this.startupData.yatsiClass = "subdued";
+      this.startupData.namazText = this.dictionary.timeUntilOgle;
     } else if (this.beforeTime(now, ikindiTime)) {
       this.adjustTimer(now, this.timer, ikindiTime);
       this.startupData.imsakClass = "subdued";
@@ -288,6 +291,7 @@ export class HomePage {
       this.startupData.ikindiClass = "subdued";
       this.startupData.aksamClass = "subdued";
       this.startupData.yatsiClass = "subdued";
+      this.startupData.namazText = this.dictionary.timeUntilIkindi;
     } else if (this.beforeTime(now, aksamTime)) {
       this.adjustTimer(now, this.timer, aksamTime);
       this.startupData.imsakClass = "subdued";
@@ -296,6 +300,7 @@ export class HomePage {
       this.startupData.ikindiClass = "subduedd";
       this.startupData.aksamClass = "subdued";
       this.startupData.yatsiClass = "subdued";
+      this.startupData.namazText = this.dictionary.timeUntilAksam;
     } else {
       this.adjustTimer(now, this.timer, yatsiTime);
       this.startupData.imsakClass = "subdued";
@@ -304,6 +309,7 @@ export class HomePage {
       this.startupData.ikindiClass = "subdued";
       this.startupData.aksamClass = "subduedd";
       this.startupData.yatsiClass = "subdued";
+      this.startupData.namazText = this.dictionary.timeUntilYatsi;
     }
   }
 

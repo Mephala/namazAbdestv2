@@ -39,7 +39,8 @@ export class WordingProvider {
         });
       } else {
         console.log("Test configuration detected. Returning turkish dictionary as test defaults");
-        this.preferredLanguage = "tr-test";
+        // this.preferredLanguage = "tr-test";
+        this.preferredLanguage = "en-US";
         this.createTurkishDictionary();
         this.events.publish('wordingsConstructed', this.dictionary);
         resolve(new ServiceResponse(0, this.dictionary));
@@ -142,7 +143,7 @@ export class WordingProvider {
     this.dictionary.ikindiText = "Asr";
     this.dictionary.aksamText = "Maghrib";
     this.dictionary.yatsiText = "Isha";
-    this.dictionary.timeUntilImsak = "Remaining time until Imsak:";
+    this.dictionary.timeUntilImsak = "Remaining time until Suhr:";
     this.dictionary.timeUntilGunes = "Remaining time until Sunrise:";
     this.dictionary.timeUntilOgle = "Remaining time until Dhuhr:";
     this.dictionary.timeUntilIkindi = "Remaining time until Asr:";
