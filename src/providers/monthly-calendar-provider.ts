@@ -74,6 +74,7 @@ export class MonthlyCalendarProvider {
           if (ishaTS > nowTS) {
             found = true;
             //Found current datum
+            console.log("Found offline datum:" + JSON.stringify(datum));
             let startupData: StartupData = this.calculateTimerFromTimings(datum);
             startupData.locationText = cr.clientLocationText;
             startupData.gregorianDateString = datum.date.readable;

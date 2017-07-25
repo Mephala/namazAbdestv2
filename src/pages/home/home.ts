@@ -13,7 +13,7 @@ import {Dictionary, WordingProvider} from "../../providers/wording-provider";
 import {Hadith, StartupData, WebProvider} from "../../providers/web-provider";
 import {LocalNotifications} from "@ionic-native/local-notifications";
 import {InterstitialProvider} from "../../providers/interstitial-provider";
-import {MonthlyCalendarProvider} from "../../providers/monthly-calendar-provider";
+import {CalendarResponse, MonthlyCalendarProvider} from "../../providers/monthly-calendar-provider";
 import {AppRate} from "@ionic-native/app-rate";
 import {NearbyMosquesPage} from "../nearby-mosques/nearby-mosques";
 
@@ -36,7 +36,8 @@ export class HomePage {
   noInternet: boolean = false;
   title: string = "";
   offlineTimer: Timer;
-  eventsTodayEnabled:boolean;
+  eventsTodayEnabled: boolean;
+  onlyOffline = true;
 
 
   constructor(public navCtrl: NavController, public locationProvider: LocationProvider, public toastController: ToastController,
@@ -66,32 +67,60 @@ export class HomePage {
 
   private startMainProcess(readySource) {
     this.wordingProvider.init(readySource).then(response => {
-      this.dictionary = response.data;
-      this.title = this.dictionary.prayerTime;
-      this.loader.setContent(this.dictionary.pleaseWait);
-      this.processOfflineTimes();
 
+      if (this.onlyOffline) {
+        this.startupOfflineOnly();
+      } else {
+        this.startupRegularOnlineOfflineMix(response, readySource);
+      }
 
-      this.locationProvider.initiate(readySource).then(response => {
-        if (response.errorCode >= 0) {
-          console.log("Code:" + response.errorCode + ", lat:" + response.data.lat + ", lng:" + response.data.lng);
-          this.webProvider.getStartupData(this.source).then(response => {
-            this.loader.dismissAll();
-            if (response.errorCode == 0) {
-              this.processStartupData(response.data);
-              console.log("WebSource live calculations are finished");
-            } else {
-              this.noInternet = true;
-              //TODO Implement this after offline namaz vakitleri is available
-              // this.showAlert(this.dictionary.failedToReceiveGPSText, this.dictionary.failedToReceiveGPSText, this.dictionary.ok);
-            }
-          });
-        } else {
-          this.loader.dismissAll();
-          this.noGPS = true;
-          this.showAlert(this.dictionary.failedToReceiveGPSText, this.dictionary.failedToReceiveGPSText, this.dictionary.ok);
-        }
+    });
+  }
+
+  private startupOfflineOnly() {
+    this.locationProvider.getLocationDuple("dom").then(response => {
+      console.log("Location fetched.");
+      let ld: LocationDuple = response.data;
+      let date = new Date();
+      this.webProvider.getCalendars(ld, date.getDay(), date).then(response => {
+        console.log("Calendar response retrieved from server for offline only processing...");
+        let cr: Array<CalendarResponse> = response.data;
+        this.monthlyCalendarProvider.calendars = cr;
+        this.monthlyCalendarProvider.calculateTimer().then(response => {
+          console.log("Calculating offline times for offline only mode is completed.");
+          this.startupData = response.data;
+          this.processOfflineStartup();
+          this.loader.dismissAll(); // showing saved times.
+        });
       });
+    });
+
+  }
+
+  private startupRegularOnlineOfflineMix(response, readySource) {
+    this.dictionary = response.data;
+    this.title = this.dictionary.prayerTime;
+    this.loader.setContent(this.dictionary.pleaseWait);
+    this.processOfflineTimes();
+    this.locationProvider.initiate(readySource).then(response => {
+      if (response.errorCode >= 0) {
+        console.log("Code:" + response.errorCode + ", lat:" + response.data.lat + ", lng:" + response.data.lng);
+        this.webProvider.getStartupData(this.source).then(response => {
+          this.loader.dismissAll();
+          if (response.errorCode == 0) {
+            this.processStartupData(response.data);
+            console.log("WebSource live calculations are finished");
+          } else {
+            this.noInternet = true;
+            //TODO Implement this after offline namaz vakitleri is available
+            // this.showAlert(this.dictionary.failedToReceiveGPSText, this.dictionary.failedToReceiveGPSText, this.dictionary.ok);
+          }
+        });
+      } else {
+        this.loader.dismissAll();
+        this.noGPS = true;
+        this.showAlert(this.dictionary.failedToReceiveGPSText, this.dictionary.failedToReceiveGPSText, this.dictionary.ok);
+      }
     });
   }
 
@@ -392,7 +421,7 @@ export class HomePage {
     let timerVals = countDownString.split(":");
     this.timer = new Timer(Number(timerVals[0]), Number(timerVals[1]), Number(timerVals[2]));
     this.tickTimer();
-    this.eventsTodayEnabled = this.startupData.historyToday!=null && this.startupData.historyToday.length>0;
+    this.eventsTodayEnabled = this.startupData.historyToday != null && this.startupData.historyToday.length > 0;
     this.loaded = true;
   }
 
