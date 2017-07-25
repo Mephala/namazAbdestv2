@@ -48,7 +48,7 @@ export class WebProvider {
 
               const options: PushOptions = {
                 android: {
-                  senderID: '950472212062'
+                  senderID: '925153129457'
                 },
                 ios: {
                   alert: 'true',
@@ -60,7 +60,11 @@ export class WebProvider {
 
               const pushObject: PushObject = this.push.init(options);
 
-              pushObject.on('notification').subscribe((notification: any) => console.log('Received a notification', notification));
+              pushObject.on('notification').subscribe((notification: any) => {
+                console.log('Received a notification', notification);
+                alert('Received a notification:' + notification);
+                alert('Notification as json:' + JSON.stringify(notification));
+              });
 
               pushObject.on('registration').subscribe((registration: any) => {
                 this.regt = registration.registrationId;
@@ -220,11 +224,12 @@ export class WebProvider {
       });
     });
   }
-  public getMosques(ld: LocationDuple, preferredLanguage:string): Promise<ServiceResponse> {
+
+  public getMosques(ld: LocationDuple, preferredLanguage: string): Promise<ServiceResponse> {
     return new Promise<ServiceResponse>(resolve => {
       let options = this.getOptions();
       let cresponse: Array<Mosque>;
-      this.http.get(this.serverRoot + "/getNearbyMosques?lat=" + ld.lat + "&lng=" + ld.lng +"&preferredLanguage=" + preferredLanguage, options).timeout(this.timeout).map(res => {
+      this.http.get(this.serverRoot + "/getNearbyMosques?lat=" + ld.lat + "&lng=" + ld.lng + "&preferredLanguage=" + preferredLanguage, options).timeout(this.timeout).map(res => {
         cresponse = res.json();
       }).subscribe(data => {
         resolve(new ServiceResponse(0, cresponse));

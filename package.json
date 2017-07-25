@@ -27,7 +27,7 @@
         "@ionic-native/launch-navigator": "^4.1.0",
         "@ionic-native/local-notifications": "^3.8.0",
         "@ionic-native/native-storage": "^3.6.1",
-        "@ionic-native/push": "^3.7.0",
+        "@ionic-native/push": "^3.14.0",
         "@ionic-native/splash-screen": "3.12.1",
         "@ionic-native/status-bar": "3.12.1",
         "@ionic-native/streaming-media": "^3.7.0",
@@ -91,10 +91,10 @@
             "de.appplant.cordova.plugin.local-notification": {},
             "ionic-plugin-keyboard": {},
             "cordova-plugin-apprate": {},
+            "uk.co.workingedge.phonegap.plugin.launchnavigator": {},
             "phonegap-plugin-push": {
-                "SENDER_ID": "85075801930"
-            },
-            "uk.co.workingedge.phonegap.plugin.launchnavigator": {}
+                "SENDER_ID": "925153129457"
+            }
         },
         "platforms": [
             "android"
