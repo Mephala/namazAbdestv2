@@ -38,7 +38,7 @@ export class HomePage {
   title: string = "";
   offlineTimer: Timer;
   eventsTodayEnabled: boolean;
-  onlyOffline = false;
+  onlyOffline = true;
 
 
   constructor(public navCtrl: NavController, public locationProvider: LocationProvider, public toastController: ToastController,
