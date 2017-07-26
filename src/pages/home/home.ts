@@ -38,7 +38,7 @@ export class HomePage {
   title: string = "";
   offlineTimer: Timer;
   eventsTodayEnabled: boolean;
-  onlyOffline = true;
+  onlyOffline = false;
 
 
   constructor(public navCtrl: NavController, public locationProvider: LocationProvider, public toastController: ToastController,
@@ -187,6 +187,9 @@ export class HomePage {
             this.startupData = response.data;
             this.processOfflineStartup();
             this.loader.dismissAll(); // showing saved times.
+
+            //Saving current new calendar to filesystem.
+            this.saveNewCalendarBasedOnNewLocation();
           } else {
             //TODO inspect codes.
             this.fetchAndSaveOfflineMonthlyCalendar();
@@ -196,6 +199,22 @@ export class HomePage {
         this.fetchAndSaveOfflineMonthlyCalendar();
       }
 
+    });
+  }
+
+  private saveNewCalendarBasedOnNewLocation() {
+//After showing offline times, trying to refresh offline times for current location.
+    this.locationProvider.getLocationDuple(this.source).then(response => {
+      if (response.errorCode == 0) {
+        let newLd: LocationDuple = response.data;
+        let date: Date = new Date();
+        this.webProvider.getCalendars(newLd, date.getTime(), date).then(response => {
+          if (response.errorCode == 0) {
+            //New calendars based on current location is fetched. Now saving it to filesystem.
+            this.monthlyCalendarProvider.saveCalendars(this.source, response.data);
+          }
+        });
+      }
     });
   }
 
