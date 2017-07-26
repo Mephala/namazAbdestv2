@@ -20,7 +20,7 @@ export class ReadHadithPage {
   hadis: Hadith;
   dictionary: Dictionary;
 
-  constructor(public navParams: NavParams, private wordingProvider: WordingProvider, public events: Events, private ga:GoogleAnalytics) {
+  constructor(public navParams: NavParams, private wordingProvider: WordingProvider, public events: Events, private ga: GoogleAnalytics) {
     this.dictionary = this.wordingProvider.dictionary;
     this.hadis = this.navParams.get("hadis");
   }
@@ -36,10 +36,12 @@ export class ReadHadithPage {
       .then(() => {
         console.log('Google analytics is ready now');
         this.ga.trackView('hadisReadScreen');
+        this.ga.trackEvent("hadisReadEvent", "reading_" + this.hadis.id, this.hadis.id);
         // Tracker is ready
         // You can now track pages or set additional information such as AppVersion or UserId
       })
-      .catch(e => {console.log('Error starting GoogleAnalytics', e)
+      .catch(e => {
+        console.log('Error starting GoogleAnalytics', e)
 
       });
   }
