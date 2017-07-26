@@ -52,6 +52,9 @@ export class MonthlyCalendarProvider {
 
 
   public calculateTimer(): Promise<ServiceResponse> {
+    if (this.dictionary == null) {
+      this.dictionary = this.wordingProvider.dictionary;
+    }
     return new Promise<ServiceResponse>(resolve => {
       let date: Date = new Date();
       let nowTS = date.getTime();
@@ -76,6 +79,7 @@ export class MonthlyCalendarProvider {
             //Found current datum
             console.log("Found offline datum:" + JSON.stringify(datum));
             let startupData: StartupData = this.calculateTimerFromTimings(datum);
+            console.log("Monthly Calendar Provider calculated startupData:" + JSON.stringify(startupData));
             startupData.locationText = cr.clientLocationText;
             startupData.gregorianDateString = datum.date.readable;
             resolve(new ServiceResponse(0, startupData));
@@ -162,7 +166,11 @@ export class MonthlyCalendarProvider {
       }
     }
 
-
+    console.log("now:" + now);
+    console.log("pDate:" + pDate);
+    console.log("pTS:" + pTS);
+    console.log("nowTS:" + nowTS);
+    console.log("Remaining time (pTs - nowTS ) :" + (pTS - nowTS));
     if (imsak) {
       namazText = this.dictionary.timeUntilImsak;
       startupData.imsakClass = "subdued";
@@ -171,7 +179,6 @@ export class MonthlyCalendarProvider {
       startupData.ikindiClass = "subdued";
       startupData.aksamClass = "subdued";
       startupData.yatsiClass = "subduedd";
-      startupData.offlineTimerRemainingTS = pTS - nowTS;
     } else if (gunes) {
       namazText = this.dictionary.timeUntilGunes;
       startupData.imsakClass = "subduedd";
@@ -180,7 +187,6 @@ export class MonthlyCalendarProvider {
       startupData.ikindiClass = "subdued";
       startupData.aksamClass = "subdued";
       startupData.yatsiClass = "subdued";
-      startupData.offlineTimerRemainingTS = pTS - nowTS;
     } else if (ogle) {
       namazText = this.dictionary.timeUntilOgle;
       startupData.imsakClass = "subdued";
@@ -189,7 +195,6 @@ export class MonthlyCalendarProvider {
       startupData.ikindiClass = "subdued";
       startupData.aksamClass = "subdued";
       startupData.yatsiClass = "subdued";
-      startupData.offlineTimerRemainingTS = pTS - nowTS;
     } else if (ikindi) {
       namazText = this.dictionary.timeUntilIkindi;
       startupData.imsakClass = "subdued";
@@ -198,7 +203,6 @@ export class MonthlyCalendarProvider {
       startupData.ikindiClass = "subdued";
       startupData.aksamClass = "subdued";
       startupData.yatsiClass = "subdued";
-      startupData.offlineTimerRemainingTS = pTS - nowTS;
     } else if (aksam) {
       namazText = this.dictionary.timeUntilAksam;
       startupData.imsakClass = "subdued";
@@ -207,7 +211,6 @@ export class MonthlyCalendarProvider {
       startupData.ikindiClass = "subduedd";
       startupData.aksamClass = "subdued";
       startupData.yatsiClass = "subdued";
-      startupData.offlineTimerRemainingTS = pTS - nowTS;
     } else {
       namazText = this.dictionary.timeUntilYatsi;
       startupData.imsakClass = "subdued";
@@ -216,8 +219,8 @@ export class MonthlyCalendarProvider {
       startupData.ikindiClass = "subdued";
       startupData.aksamClass = "subduedd";
       startupData.yatsiClass = "subdued";
-      startupData.offlineTimerRemainingTS = yatsiTS;
     }
+    startupData.offlineTimerRemainingTS = yatsiTS;
     startupData.namazText = namazText;
     return startupData;
   }

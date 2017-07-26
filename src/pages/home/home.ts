@@ -44,7 +44,7 @@ export class HomePage {
   constructor(public navCtrl: NavController, public locationProvider: LocationProvider, public toastController: ToastController,
               public wordingProvider: WordingProvider, private adProvider: InterstitialProvider, private monthlyCalendarProvider: MonthlyCalendarProvider,
               public alertController: AlertController, public loadingController: LoadingController, private localNotifications: LocalNotifications,
-              public events: Events, public platform: Platform, public webProvider: WebProvider, private appRate: AppRate,private ga: GoogleAnalytics) {
+              public events: Events, public platform: Platform, public webProvider: WebProvider, private appRate: AppRate, private ga: GoogleAnalytics) {
     this.createLoadingMsg("");
     this.platform.ready().then((readySource) => {
       this.source = readySource;
@@ -72,7 +72,8 @@ export class HomePage {
         // Tracker is ready
         // You can now track pages or set additional information such as AppVersion or UserId
       })
-      .catch(e => {console.log('Error starting GoogleAnalytics', e)
+      .catch(e => {
+        console.log('Error starting GoogleAnalytics', e)
 
       });
   }
@@ -91,11 +92,11 @@ export class HomePage {
   }
 
 
-
-
   private startMainProcess(readySource) {
     this.wordingProvider.init(readySource).then(response => {
-
+      this.dictionary = response.data;
+      this.title = this.dictionary.prayerTime;
+      this.loader.setContent(this.dictionary.pleaseWait);
       if (this.onlyOffline) {
         this.startupOfflineOnly();
       } else {
@@ -117,6 +118,7 @@ export class HomePage {
         this.monthlyCalendarProvider.calculateTimer().then(response => {
           console.log("Calculating offline times for offline only mode is completed.");
           this.startupData = response.data;
+          console.log("Startup data for offline times:" + JSON.stringify(this.startupData));
           this.processOfflineStartup();
           this.loader.dismissAll(); // showing saved times.
         });
@@ -126,9 +128,6 @@ export class HomePage {
   }
 
   private startupRegularOnlineOfflineMix(response, readySource) {
-    this.dictionary = response.data;
-    this.title = this.dictionary.prayerTime;
-    this.loader.setContent(this.dictionary.pleaseWait);
     this.processOfflineTimes();
     this.locationProvider.initiate(readySource).then(response => {
       if (response.errorCode >= 0) {
