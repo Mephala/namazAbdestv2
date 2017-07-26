@@ -7,6 +7,7 @@ import {WordingProvider} from "./wording-provider";
 import {Push, PushObject, PushOptions} from "@ionic-native/push";
 import {CalendarResponse} from "./monthly-calendar-provider";
 import {Mosque} from "../pages/nearby-mosques/nearby-mosques";
+import {Events} from "ionic-angular";
 
 /*
  Generated class for the WebProvider provider.
@@ -29,7 +30,7 @@ export class WebProvider {
   source: string;
   noInternet: boolean = false;
 
-  constructor(public http: Http, public locationProvider: LocationProvider, public wordingProvider: WordingProvider, private push: Push) {
+  constructor(public http: Http, public locationProvider: LocationProvider, public wordingProvider: WordingProvider, private push: Push, public events: Events) {
     console.log('Hello WebProvider Provider');
   }
 
@@ -61,9 +62,15 @@ export class WebProvider {
               const pushObject: PushObject = this.push.init(options);
 
               pushObject.on('notification').subscribe((notification: any) => {
-                console.log('Received a notification', notification);
-                alert('Received a notification:' + notification);
-                alert('Notification as json:' + JSON.stringify(notification));
+
+                let pushNotificationMessage = JSON.parse(notification.additionalData.payload.hadisId);
+                if (pushNotificationMessage.type == 0) {
+                  if (notification.additionalData.coldstart) {
+                    //Uygulama kapaliyken geldiyse goster
+                    this.events.publish("hadisNotificationReceived", pushNotificationMessage.data);
+                  }
+                }
+
               });
 
               pushObject.on('registration').subscribe((registration: any) => {
@@ -347,6 +354,16 @@ export class Sure {
 
 export class Kuran {
   sureList: Array<Sure>;
+
+  constructor() {
+  }
+}
+
+export class PushNotificationMessage {
+  type: number;
+  data: any;
+  title: string;
+  message: string;
 
   constructor() {
   }

@@ -37,7 +37,7 @@ export class HomePage {
   title: string = "";
   offlineTimer: Timer;
   eventsTodayEnabled: boolean;
-  onlyOffline = true;
+  onlyOffline = false;
 
 
   constructor(public navCtrl: NavController, public locationProvider: LocationProvider, public toastController: ToastController,
@@ -48,7 +48,7 @@ export class HomePage {
     this.platform.ready().then((readySource) => {
       this.source = readySource;
       this.webProvider.source = readySource;
-      console.log('Platform ready from', readySource);
+      this.subscribeNotificationEvents();
       this.initAppStartAdds();
       this.initAppStartRateMe();
       this.subscribeLoadingStatus();
@@ -61,6 +61,13 @@ export class HomePage {
   private subscribeResume() {
     this.platform.resume.subscribe(() => {
       this.resume();
+    });
+  }
+
+
+  private subscribeNotificationEvents() {
+    this.events.subscribe("hadisNotificationReceived", hadis => {
+      this.navCtrl.push('ReadHadithPage', {hadis: hadis});
     });
   }
 
