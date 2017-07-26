@@ -16,6 +16,7 @@ import {InterstitialProvider} from "../../providers/interstitial-provider";
 import {CalendarResponse, MonthlyCalendarProvider} from "../../providers/monthly-calendar-provider";
 import {AppRate} from "@ionic-native/app-rate";
 import {NearbyMosquesPage} from "../nearby-mosques/nearby-mosques";
+import {GoogleAnalytics} from "@ionic-native/google-analytics";
 
 @Component({
   selector: 'page-home',
@@ -43,7 +44,7 @@ export class HomePage {
   constructor(public navCtrl: NavController, public locationProvider: LocationProvider, public toastController: ToastController,
               public wordingProvider: WordingProvider, private adProvider: InterstitialProvider, private monthlyCalendarProvider: MonthlyCalendarProvider,
               public alertController: AlertController, public loadingController: LoadingController, private localNotifications: LocalNotifications,
-              public events: Events, public platform: Platform, public webProvider: WebProvider, private appRate: AppRate) {
+              public events: Events, public platform: Platform, public webProvider: WebProvider, private appRate: AppRate,private ga: GoogleAnalytics) {
     this.createLoadingMsg("");
     this.platform.ready().then((readySource) => {
       this.source = readySource;
@@ -58,6 +59,24 @@ export class HomePage {
     });
   }
 
+  ionViewDidEnter() {
+    console.log('Mainpage loaded.');
+    this.initAnalytics();
+  }
+
+  private initAnalytics() {
+    this.ga.startTrackerWithId('UA-58168418-2')
+      .then(() => {
+        console.log('Google analytics is ready now');
+        this.ga.trackView('v2Main');
+        // Tracker is ready
+        // You can now track pages or set additional information such as AppVersion or UserId
+      })
+      .catch(e => {console.log('Error starting GoogleAnalytics', e)
+
+      });
+  }
+
   private subscribeResume() {
     this.platform.resume.subscribe(() => {
       this.resume();
@@ -70,6 +89,8 @@ export class HomePage {
       this.navCtrl.push('ReadHadithPage', {hadis: hadis});
     });
   }
+
+
 
 
   private startMainProcess(readySource) {

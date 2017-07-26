@@ -24,6 +24,7 @@ import {MonthlyCalendarProvider} from "../providers/monthly-calendar-provider";
 import {AppRate} from "@ionic-native/app-rate";
 import {NearbyMosquesPage} from "../pages/nearby-mosques/nearby-mosques";
 import {LaunchNavigator} from '@ionic-native/launch-navigator';
+import {GoogleAnalytics} from "@ionic-native/google-analytics";
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import {LaunchNavigator} from '@ionic-native/launch-navigator';
     MonthlyCalendarProvider,
     AppRate,
     LaunchNavigator,
+    GoogleAnalytics,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

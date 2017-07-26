@@ -4,6 +4,7 @@ import {Dictionary, WordingProvider} from "../../providers/wording-provider";
 import {Kuran, StartupData, Sure, WebProvider} from "../../providers/web-provider";
 import {NativeStorage} from "@ionic-native/native-storage";
 import {InterstitialProvider} from "../../providers/interstitial-provider";
+import {GoogleAnalytics} from "@ionic-native/google-analytics";
 
 /**
  * Generated class for the ReadQuran page.
@@ -31,7 +32,7 @@ export class ReadQuran {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private nativeStorage: NativeStorage, private adProvider: InterstitialProvider,
               public loadingController: LoadingController, public wordingProvider: WordingProvider,
-              public webProvider: WebProvider) {
+              public webProvider: WebProvider, private ga:GoogleAnalytics) {
     this.dictionary = this.wordingProvider.dictionary;
     this.startupData = this.webProvider.startupData;
     let loader = this.loadingController.create({
@@ -72,6 +73,24 @@ export class ReadQuran {
       this.loadQuranFromWeb(loader);
     }
 
+  }
+
+  ionViewDidEnter() {
+    console.log('ionViewDidLoad ReadQuranPage loaded.');
+    this.initAnalytics();
+  }
+
+  private initAnalytics() {
+    this.ga.startTrackerWithId('UA-58168418-2')
+      .then(() => {
+        console.log('Google analytics is ready now');
+        this.ga.trackView('ReadQuran');
+        // Tracker is ready
+        // You can now track pages or set additional information such as AppVersion or UserId
+      })
+      .catch(e => {console.log('Error starting GoogleAnalytics', e)
+
+      });
   }
 
   private loadQuranFromWeb(loader: Loading) {

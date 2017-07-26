@@ -4,6 +4,7 @@ import {Dictionary, WordingProvider} from "../../providers/wording-provider";
 import {LocationDuple, LocationProvider} from "../../providers/location";
 import {WebProvider} from "../../providers/web-provider";
 import {LaunchNavigator, LaunchNavigatorOptions} from '@ionic-native/launch-navigator';
+import {GoogleAnalytics} from "@ionic-native/google-analytics";
 
 /**
  * Generated class for the NearbyMosquesPage page.
@@ -24,7 +25,7 @@ export class NearbyMosquesPage {
   load: boolean;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public wordingProvider: WordingProvider, public locationProvider: LocationProvider,
-              public webProvider: WebProvider, public loadingController: LoadingController, public platform: Platform, private launchNavigator: LaunchNavigator) {
+              public webProvider: WebProvider, public loadingController: LoadingController, public platform: Platform, private launchNavigator: LaunchNavigator, private ga:GoogleAnalytics) {
     this.dictionary = this.wordingProvider.dictionary;
     this.load = false;
     this.loader = this.loadingController.create({
@@ -59,8 +60,22 @@ export class NearbyMosquesPage {
   }
 
 
-  ionViewDidLoad() {
+  ionViewDidEnter() {
     console.log('ionViewDidLoad NearbyMosquesPage');
+    this.initAnalytics();
+  }
+
+  private initAnalytics() {
+    this.ga.startTrackerWithId('UA-58168418-2')
+      .then(() => {
+        console.log('Google analytics is ready now');
+        this.ga.trackView('NearbyMosques');
+        // Tracker is ready
+        // You can now track pages or set additional information such as AppVersion or UserId
+      })
+      .catch(e => {console.log('Error starting GoogleAnalytics', e)
+
+      });
   }
 
   public navigateTo(lat: number, lng: number) {
