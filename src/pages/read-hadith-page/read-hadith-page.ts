@@ -36,7 +36,7 @@ export class ReadHadithPage {
       .then(() => {
         console.log('Google analytics is ready now');
         this.ga.trackView('hadisReadScreen');
-        this.ga.trackEvent("hadisReadEvent", "reading_" + this.hadis.id, this.hadis.id);
+        this.ga.trackEvent("HadisEvents", "HadisReadEvent", this.hadis.id);
         // Tracker is ready
         // You can now track pages or set additional information such as AppVersion or UserId
       })
