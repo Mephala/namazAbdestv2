@@ -72,13 +72,14 @@ export class MonthlyCalendarProvider {
           let ishaDate: Date = new Date();
           ishaDate.setFullYear(year, month, day);
           let ishaTime = timing.Isha;
-          this.assignHourAndMinutes(ishaTime, ishaDate);
+          this.assignHourAndMinutes(ishaTime, ishaDate, day, month, year);
           let ishaTS = ishaDate.getTime();
           if (ishaTS > nowTS) {
             found = true;
             //Found current datum
+            console.log("Found date for timings, day:" + day + ", month:" + month + ", year:" + year);
             console.log("Found offline datum:" + JSON.stringify(datum));
-            let startupData: StartupData = this.calculateTimerFromTimings(datum);
+            let startupData: StartupData = this.calculateTimerFromTimings(datum, day, month, year);
             console.log("Monthly Calendar Provider calculated startupData:" + JSON.stringify(startupData));
             startupData.locationText = cr.clientLocationText;
             startupData.gregorianDateString = datum.date.readable;
@@ -96,17 +97,20 @@ export class MonthlyCalendarProvider {
     });
   }
 
-  private assignHourAndMinutes(ishaTime: string, ishaDate: Date) {
+  private assignHourAndMinutes(ishaTime: string, namazDate: Date, day: number, month: number, year: number) {
     let hm: Array<string> = ishaTime.split(":");
     let hour: number = Number(hm[0]);
     let minute: number = Number(hm[1]);
-    ishaDate.setHours(hour);
-    ishaDate.setMinutes(minute);
+    namazDate.setHours(hour);
+    namazDate.setMinutes(minute);
+    namazDate.setDate(day);
+    namazDate.setMonth(month);
+    namazDate.setFullYear(year);
     // return {hm, hour, minute};
   }
 
 
-  private calculateTimerFromTimings(datum: Datum): StartupData {
+  private calculateTimerFromTimings(datum: Datum, day: number, month: number, year: number): StartupData {
     console.log("Found timing:" + JSON.stringify(datum));
     let namazText = "";
     let startupData = new StartupData();
@@ -132,45 +136,38 @@ export class MonthlyCalendarProvider {
     let now: Date = new Date();
     let nowTS = now.getTime();
     let pDate: Date = new Date();
-    this.assignHourAndMinutes(timings.Imsak, pDate);
+    this.assignHourAndMinutes(timings.Imsak, pDate, day, month, year);
     let pTS = pDate.getTime();
-    let yatsiTS: number;
     if (pTS >= nowTS) {
       imsak = true;
     } else {
-      this.assignHourAndMinutes(timings.Sunrise, pDate);
+      this.assignHourAndMinutes(timings.Sunrise, pDate, day, month, year);
       pTS = pDate.getTime();
       if (pTS >= nowTS) {
         gunes = true;
       } else {
-        this.assignHourAndMinutes(timings.Dhuhr, pDate);
+        this.assignHourAndMinutes(timings.Dhuhr, pDate, day, month, year);
         pTS = pDate.getTime();
         if (pTS >= nowTS) {
           ogle = true;
         } else {
-          this.assignHourAndMinutes(timings.Asr, pDate);
+          this.assignHourAndMinutes(timings.Asr, pDate, day, month, year);
           pTS = pDate.getTime();
           if (pTS >= nowTS) {
             ikindi = true;
           } else {
-            this.assignHourAndMinutes(timings.Sunset, pDate);
+            this.assignHourAndMinutes(timings.Sunset, pDate, day, month, year);
             pTS = pDate.getTime();
             if (pTS >= nowTS) {
               aksam = true;
             } else {
-              this.assignHourAndMinutes(timings.Isha, pDate);
-              yatsiTS = pDate.getTime();
+              this.assignHourAndMinutes(timings.Isha, pDate, day, month, year);
+              pTS = pDate.getTime();
             }
           }
         }
       }
     }
-
-    console.log("now:" + now);
-    console.log("pDate:" + pDate);
-    console.log("pTS:" + pTS);
-    console.log("nowTS:" + nowTS);
-    console.log("Remaining time (pTs - nowTS ) :" + (pTS - nowTS));
     if (imsak) {
       namazText = this.dictionary.timeUntilImsak;
       startupData.imsakClass = "subdued";
@@ -220,7 +217,7 @@ export class MonthlyCalendarProvider {
       startupData.aksamClass = "subduedd";
       startupData.yatsiClass = "subdued";
     }
-    startupData.offlineTimerRemainingTS = yatsiTS;
+    startupData.offlineTimerRemainingTS = pTS - nowTS;
     startupData.namazText = namazText;
     return startupData;
   }
