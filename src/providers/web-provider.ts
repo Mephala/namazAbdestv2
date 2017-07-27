@@ -40,7 +40,7 @@ export class WebProvider {
     return new Promise<ServiceResponse>(resolve => {
 
       if (source != "dom") {
-        // to check if we have permission
+        // to check if we have permission.
         this.push.hasPermission()
           .then((res: any) => {
 
