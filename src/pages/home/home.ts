@@ -44,7 +44,7 @@ export class HomePage {
   constructor(public navCtrl: NavController, public locationProvider: LocationProvider, public toastController: ToastController,
               public wordingProvider: WordingProvider, private adProvider: InterstitialProvider, private monthlyCalendarProvider: MonthlyCalendarProvider,
               public alertController: AlertController, public loadingController: LoadingController, private localNotifications: LocalNotifications,
-              public events: Events, public platform: Platform, public webProvider: WebProvider, private appRate: AppRate, private ga: GoogleAnalytics) {
+              public events: Events, public platform: Platform, public webProvider: WebProvider, private appRate: AppRate, public ga: GoogleAnalytics) {
     this.createLoadingMsg("");
     this.platform.ready().then((readySource) => {
       this.source = readySource;
@@ -164,16 +164,58 @@ export class HomePage {
 
   private initAppStartRateMe() {
     setTimeout(() => {
-      console.log("RATEMYAPP!!!");
-      if (this.source != "dom") {
-        this.appRate.preferences.storeAppURL = {
-          ios: '4214214124',
-          android: 'market://details?id=com.ionicframework.myapp244359'
+      if (this.source != "dom" && this.startupData != null && this.startupData.rateMyAppPrompt) {
+
+        console.log("Prompting for rate my app.");
+        this.appRate.preferences = {
+          displayAppName: this.dictionary.appName,
+          storeAppURL: {
+            ios: '<my_app_id>',
+            android: 'market://details?id=com.ionicframework.myapp244359'
+            // windows: 'ms-windows-store://pdp/?ProductId=<the apps Store ID>',
+            // blackberry: 'appworld://content/[App Id]/',
+            // windows8: 'ms-windows-store:Review?name=<the Package Family Name of the application>'
+          },
+          customLocale: {
+            title: "Would you mind rating %@?",
+            message: "It won’t take more than a minute and helps to promote our app. Thanks for your support!",
+            cancelButtonLabel: "No, Thanks",
+            laterButtonLabel: "Remind Me Later",
+            rateButtonLabel: "Rate It Now",
+            yesButtonLabel: "Yes!",
+            noButtonLabel: "Not really",
+            appRatePromptTitle: 'Do you like using %@',
+            feedbackPromptTitle: 'Mind giving us some feedback?',
+          },
+          callbacks: {
+            onButtonClicked: (buttonIndex) => {
+              // rate 1
+              // snooze 2
+              // never 3
+              if (1 == buttonIndex) {
+                this.ga.trackEvent("RateEvent", "Positive_Rate");
+
+                this.webProvider.rateAppFinished("RATE");
+              } else if (2 == buttonIndex) {
+                this.ga.trackEvent("RateEvent", "Snooze_Rate");
+
+              } else {
+                this.ga.trackEvent("RateEvent", "Never_Rate");
+                this.webProvider.rateAppFinished("NEVER");
+              }
+            }
+          }
         };
 
         this.appRate.promptForRating(true);
+      } else {
+        console.log("Not prompting rate my app.")
       }
     }, 10000);
+  }
+
+  private cb1() {
+    alert(this)
   }
 
   private initAppStartAdds() {

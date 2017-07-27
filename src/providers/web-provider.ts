@@ -20,8 +20,8 @@ import {NativeStorage} from "@ionic-native/native-storage";
 export class WebProvider {
 
   appToken: string = "21891fh8291f2812192819h8129f8h34729fh7))_(8128ddh218hf7fh71f21hj1299d218912777898"; //default
-  // serverRoot: string = "http://192.168.0.103:8080/namazAppServer";
-  serverRoot: string = "http://ec2-52-27-157-90.us-west-2.compute.amazonaws.com";
+  serverRoot: string = "http://192.168.0.103:8080/namazAppServer";
+  // serverRoot: string = "http://ec2-52-27-157-90.us-west-2.compute.amazonaws.com";
   version: string = "2.0.0";
   timeout: number = 30000;
   startupData: StartupData;
@@ -234,6 +234,21 @@ export class WebProvider {
     });
   }
 
+  public rateAppFinished(result: string) {
+    try {
+      let options = this.getOptions();
+      this.http.get(this.serverRoot + "/rateAppCompleted?result=" + result, options).timeout(this.timeout).map(res => {
+      }).subscribe(data => {
+      }, (err) => {
+        console.log("Failed http request:" + err);
+        //TODO Push err
+      });
+    } catch (err) {
+      console.log("Failed to make rate my app request. err:" + err);
+      //TODO Push err
+    }
+  }
+
   public getMosques(ld: LocationDuple, preferredLanguage: string): Promise<ServiceResponse> {
     return new Promise<ServiceResponse>(resolve => {
       let options = this.getOptions();
@@ -332,6 +347,7 @@ export class StartupData {
   month: number;
   year: number;
   historyToday: Array<string>;
+  rateMyAppPrompt: boolean;
 
   constructor() {
 

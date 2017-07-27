@@ -107,6 +107,7 @@ export class WordingProvider {
     this.dictionary.navigate = "Adres Tarifi";
     this.dictionary.nearbyMosques = "Yakınınızdaki camiiler";
     this.dictionary.eventsOccuredToday = "Tarihte Bugün";
+    this.dictionary.appName = "Namaz Vakitleri ve Dini Bilgiler";
   }
 
   private createEnglishDictionary() {
@@ -158,6 +159,7 @@ export class WordingProvider {
     this.dictionary.navigate = "Navigate";
     this.dictionary.nearbyMosques = "Nearby Mosques";
     this.dictionary.eventsOccuredToday = "Historical events for today";
+    this.dictionary.appName = "Salah Times and Islamic Information";
   }
 
 }
@@ -210,6 +212,7 @@ export class Dictionary {
   navigate: string;
   nearbyMosques: string;
   eventsOccuredToday: string;
+  appName: string;
 
   constructor() {
   }
