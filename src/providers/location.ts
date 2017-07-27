@@ -3,6 +3,7 @@ import {Events} from "ionic-angular";
 import {NativeStorage} from "@ionic-native/native-storage";
 import {Geolocation} from "@ionic-native/geolocation";
 import {Dictionary, WordingProvider} from "./wording-provider";
+import {WebProvider} from "./web-provider";
 
 /*
  Generated class for the LocationProvider provider.

@@ -30,10 +30,11 @@ export class MonthlyCalendarProvider {
         resolve(new ServiceResponse(-1, null));
       } else {
         this.nativeStorage.getItem("calendars").then(data => {
+          console.log("Monthly-calendar is found in storage. Showing it quickly.");
           this.calendars = data;
           resolve(new ServiceResponse(0, this.calendars));
         }, error => {
-          console.log("Calendar not saved in storage.");
+          console.log("Calendar not saved in storage. err:" + error);
           resolve(new ServiceResponse(-2, null));
         });
       }
@@ -59,6 +60,7 @@ export class MonthlyCalendarProvider {
       let date: Date = new Date();
       let nowTS = date.getTime();
       let found: boolean = false;
+      console.log("Searching in calendars:" + JSON.stringify(this.calendars));
       for (let cr of this.calendars) {
         let cresponse: CalendarResponse = cr;
         let datums: Array<Datum> = cresponse.data;
@@ -97,8 +99,9 @@ export class MonthlyCalendarProvider {
     });
   }
 
-  private assignHourAndMinutes(ishaTime: string, namazDate: Date, day: number, month: number, year: number) {
-    let hm: Array<string> = ishaTime.split(":");
+  private assignHourAndMinutes(namazTime: string, namazDate: Date, day: number, month: number, year: number) {
+    namazTime = namazTime.split(" ")[0];
+    let hm: Array<string> = namazTime.split(":");
     let hour: number = Number(hm[0]);
     let minute: number = Number(hm[1]);
     namazDate.setHours(hour);

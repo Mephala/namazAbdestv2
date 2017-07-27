@@ -63,8 +63,6 @@
     </ion-card>
 
 
-
-
     <br>
 
     <ion-item (click)="readHadis(startupData.hadith[0])" text-wrap>
@@ -175,6 +173,16 @@
     <ion-item text-wrap>
       <ion-icon name="md-calendar" color="primary" item-left></ion-icon>
       <p>{{dictionary.currentlyShowingOfflineData}}</p>
+    </ion-item>
+
+    <br>
+
+    <ion-item (click)="readQuran()" text-wrap>
+      <ion-avatar item-left>
+        <img src="assets/images/kuranOkuyun.jpg">
+      </ion-avatar>
+      <p>{{dictionary.readQuran}}</p>
+      <ion-icon name="md-search" item-right color="primary"></ion-icon>
     </ion-item>
 
   </ng-template>

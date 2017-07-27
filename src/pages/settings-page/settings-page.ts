@@ -58,10 +58,12 @@ export class SettingsPage {
       let msg = "";
       if (response.errorCode == 0) {
         msg = this.dictionary.settingsSavedSuccess;
+        this.removeQuranFromStorageIfNecessary();
         this.webProvider.startupData.wantsLocalNotification = this.wantsLocalNotification;
         this.webProvider.startupData.wantsDailyHadis = this.wantsDailyHadis;
         this.webProvider.startupData.wantsKuranDownloaded = this.wantsKuranDL;
         this.webProvider.startupData.wantsSpecialDayMessages = this.wantsSpecialDayMsg;
+        this.webProvider.saveWantsKuranOfflineSettings(this.wantsKuranDL);
       } else {
         msg = this.dictionary.settingsSavedError;
       }
@@ -74,6 +76,18 @@ export class SettingsPage {
     });
   }
 
+
+  private removeQuranFromStorageIfNecessary() {
+    if (this.webProvider.startupData.wantsKuranDownloaded && !this.wantsKuranDL) {
+      try {
+        //Decided not to keep Quran on phone. Deleting from native storage.
+        this.nativeStorage.remove("kuran");
+      } catch (err) {
+        //TODO Push error
+        console.log("Failed to remove kuran from local Storage. err:" + err);
+      }
+    }
+  }
 
   public saveSettingsQuran() {
     if (this.wantsKuranDL = false) {

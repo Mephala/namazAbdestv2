@@ -61,7 +61,10 @@ export class HomePage {
 
   ionViewDidEnter() {
     console.log('Mainpage loaded.');
-    this.initAnalytics();
+    this.platform.ready().then((readySource) => {
+      this.initAnalytics();
+    });
+
   }
 
   private initAnalytics() {
@@ -73,7 +76,7 @@ export class HomePage {
         // You can now track pages or set additional information such as AppVersion or UserId
       })
       .catch(e => {
-        console.log('Error starting GoogleAnalytics', e)
+        console.log('Error starting GoogleAnalytics. err:' + e);
 
       });
   }
@@ -184,18 +187,22 @@ export class HomePage {
       if (response.errorCode == 0) {
         this.monthlyCalendarProvider.calculateTimer().then(response => {
           if (response.errorCode == 0) {
+            console.log("Offline calendar fetched from monthlyCalendarProvider");
             this.startupData = response.data;
+            this.webProvider.startupData = this.startupData; // For other functions to share startup data.
             this.processOfflineStartup();
             this.loader.dismissAll(); // showing saved times.
 
             //Saving current new calendar to filesystem.
             this.saveNewCalendarBasedOnNewLocation();
           } else {
+            console.log("Fetching calendar calculate timer response not good, respCode:" + response.errorCode);
             //TODO inspect codes.
             this.fetchAndSaveOfflineMonthlyCalendar();
           }
         });
       } else {
+        console.log("Fetching calendar response not good, respCode:" + response.errorCode);
         this.fetchAndSaveOfflineMonthlyCalendar();
       }
 
@@ -203,19 +210,25 @@ export class HomePage {
   }
 
   private saveNewCalendarBasedOnNewLocation() {
-//After showing offline times, trying to refresh offline times for current location.
-    this.locationProvider.getLocationDuple(this.source).then(response => {
-      if (response.errorCode == 0) {
-        let newLd: LocationDuple = response.data;
-        let date: Date = new Date();
-        this.webProvider.getCalendars(newLd, date.getTime(), date).then(response => {
-          if (response.errorCode == 0) {
-            //New calendars based on current location is fetched. Now saving it to filesystem.
-            this.monthlyCalendarProvider.saveCalendars(this.source, response.data);
-          }
-        });
-      }
-    });
+    try {
+      //After showing offline times, trying to refresh offline times for current location.
+      this.locationProvider.getLocationDuple(this.source).then(response => {
+        if (response.errorCode == 0) {
+          let newLd: LocationDuple = response.data;
+          let date: Date = new Date();
+          this.webProvider.getCalendars(newLd, date.getTime(), date).then(response => {
+            if (response.errorCode == 0) {
+              //New calendars based on current location is fetched. Now saving it to filesystem.
+              this.monthlyCalendarProvider.saveCalendars(this.source, response.data);
+            }
+          });
+        }
+      });
+    } catch (err) {
+      //TODO Push failure
+      console.log("Failed to retrieve new monthly calendar timings. err:" + err);
+    }
+
   }
 
   private fetchAndSaveOfflineMonthlyCalendar() {
@@ -229,6 +242,7 @@ export class HomePage {
             this.webProvider.getCalendars(this.locationProvider.ld, timeStamp, date).then(response => {
               if (response.errorCode >= 0) {
                 this.saveCalendarData(response, timeStamp);
+                console.log("Monthly calendars are saved to storage.");
               } else {
                 console.log("Failed to retrieve calendars response:" + response.errorCode);
               }

@@ -8,6 +8,7 @@ import {Push, PushObject, PushOptions} from "@ionic-native/push";
 import {CalendarResponse} from "./monthly-calendar-provider";
 import {Mosque} from "../pages/nearby-mosques/nearby-mosques";
 import {Events} from "ionic-angular";
+import {NativeStorage} from "@ionic-native/native-storage";
 
 /*
  Generated class for the WebProvider provider.
@@ -30,7 +31,7 @@ export class WebProvider {
   source: string;
   noInternet: boolean = false;
 
-  constructor(public http: Http, public locationProvider: LocationProvider, public wordingProvider: WordingProvider, private push: Push, public events: Events) {
+  constructor(public http: Http, public locationProvider: LocationProvider, public wordingProvider: WordingProvider, private push: Push, public events: Events, private nativeStorage: NativeStorage) {
     console.log('Hello WebProvider Provider');
   }
 
@@ -125,7 +126,6 @@ export class WebProvider {
       });
     });
   }
-
 
 
   private resolveStartup(resolve) {
@@ -228,7 +228,7 @@ export class WebProvider {
       }).subscribe(data => {
         resolve(new ServiceResponse(0, cresponse));
       }, (err) => {
-        alert("Failed http request:" + err);
+        console.log("Failed http request:" + err);
         resolve(new ServiceResponse(-1, JSON.stringify(err)));
       });
     });
@@ -249,13 +249,35 @@ export class WebProvider {
     });
   }
 
-
-  public handlePush(source: string) {
-
-    if (source != "dom") {
-
+  public saveWantsKuranOfflineSettings(value: boolean) {
+    if (value != null) {
+      this.nativeStorage.setItem("wantsQuranEnabledOffline", value).then(() => {
+        console.log("Offline Quran read settings are saved as :" + value);
+      }, error => {
+        console.log("Offline Quran read settings failed to be saved on device:" + value);
+      });
     }
+  }
 
+
+  public getWantsKuranOfflineSettings(): Promise<ServiceResponse> {
+    return new Promise<ServiceResponse>(resolve => {
+      try {
+        this.nativeStorage.getItem("wantsQuranEnabledOffline").then(data => {
+          if (data == null) {
+            resolve(new ServiceResponse(-1, null));
+          }
+          resolve(new ServiceResponse(0, data));
+        }, error => {
+          //TODO add error push here
+          console.log("Failed to get offline data from native storage");
+          resolve(new ServiceResponse(-2, null));
+        });
+      } catch (err) {
+        console.log("Failed to read from DB , err:" + err);
+        resolve(new ServiceResponse(-3, null));
+      }
+    });
   }
 
 }

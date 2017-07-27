@@ -32,7 +32,7 @@ export class ReadQuran {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private nativeStorage: NativeStorage, private adProvider: InterstitialProvider,
               public loadingController: LoadingController, public wordingProvider: WordingProvider,
-              public webProvider: WebProvider, private ga:GoogleAnalytics) {
+              public webProvider: WebProvider, private ga: GoogleAnalytics) {
     this.dictionary = this.wordingProvider.dictionary;
     this.startupData = this.webProvider.startupData;
     let loader = this.loadingController.create({
@@ -40,6 +40,22 @@ export class ReadQuran {
     });
     loader.present();
 
+    if (this.startupData.wantsKuranDownloaded == null) {
+      //Must be working in offline mode. Retrieving settings value from storage.
+      this.webProvider.getWantsKuranOfflineSettings().then(response => {
+        if (response.errorCode == 0) {
+          this.startupData.wantsKuranDownloaded = response.data;
+          this.loadQuran(loader);
+        } else {
+          //TODO add alerts based on error codes.
+        }
+      })
+    } else {
+      this.loadQuran(loader);
+    }
+  }
+
+  private loadQuran(loader: Loading) {
     try {
       if (this.startupData.wantsKuranDownloaded) {
         this.nativeStorage.getItem('kuran').then(data => {
@@ -59,6 +75,13 @@ export class ReadQuran {
             this.loadQuranFromWeb(loader);
           }
         }, error => {
+          //This might be first time user reading Quran from app, checking native storage for settings value; if it does not exist, set it.
+          this.webProvider.getWantsKuranOfflineSettings().then(response => {
+            if (response.errorCode != 0) {
+              //settings does not exist or can't be fetched. Trying to set it nevertheless.
+              this.webProvider.saveWantsKuranOfflineSettings(true);
+            }
+          });
           console.log("Error fetching kuran from storage:" + error);
           console.log("Getting kuran from web....");
           this.loadQuranFromWeb(loader);
@@ -69,10 +92,9 @@ export class ReadQuran {
       }
     } catch (err) {
       //TODO push err
-      console.log("Device storage is not accessible. Getting kuran from web.");
+      console.log("Device storage is not accessible. Getting kuran from web. Problem:" + err);
       this.loadQuranFromWeb(loader);
     }
-
   }
 
   ionViewDidEnter() {
@@ -88,7 +110,8 @@ export class ReadQuran {
         // Tracker is ready
         // You can now track pages or set additional information such as AppVersion or UserId
       })
-      .catch(e => {console.log('Error starting GoogleAnalytics', e)
+      .catch(e => {
+        console.log('Error starting GoogleAnalytics', e)
 
       });
   }
@@ -105,10 +128,15 @@ export class ReadQuran {
         }
         this.loaded = true;
         if (this.startupData.wantsKuranDownloaded && this.webProvider.source != "dom") {
-          this.nativeStorage.setItem('kuran', this.kuran);
+          console.log("Saving quran.");
+          this.nativeStorage.setItem('kuran', this.kuran).then(() => {
+            console.log("Saved quran")
+          }, error => {
+            console.log("Failed to save quran, problem:" + error + " , str:" + JSON.stringify(error));
+          });
         }
       } else {
-        alert("Failed to get Kuran");
+        console.log("Failed to get Kuran");
       }
       console.log("Fetched kuran from web. Dismissing loader");
       loader.dismissAll();
