@@ -1,9 +1,10 @@
 import {Injectable} from "@angular/core";
 import {Events} from "ionic-angular";
 import {NativeStorage} from "@ionic-native/native-storage";
-import {Geolocation} from "@ionic-native/geolocation";
+import {Geolocation, GeolocationOptions} from "@ionic-native/geolocation";
 import {Dictionary, WordingProvider} from "./wording-provider";
 import {WebProvider} from "./web-provider";
+import {AlertProvider} from "./alert/alert";
 
 /*
  Generated class for the LocationProvider provider.
@@ -16,8 +17,10 @@ export class LocationProvider {
 
   ld: LocationDuple;
   dictionary: Dictionary;
+  locationUpdateTimeout = 15000;
+  maximumLocationAge = 1800000; // 30 minutes of location cache is allowed.
 
-  constructor(public events: Events, private geolocation: Geolocation, private nativeStorage: NativeStorage, public wordingProvider: WordingProvider) {
+  constructor(public events: Events, private geolocation: Geolocation, private nativeStorage: NativeStorage, public wordingProvider: WordingProvider, private alertProvider: AlertProvider) {
 
   }
 
@@ -86,6 +89,14 @@ export class LocationProvider {
   }
 
   public getLocationDuple(source: string): Promise<ServiceResponse> {
+    let options: GeolocationOptions = {
+      timeout: this.locationUpdateTimeout,
+      maximumAge: this.maximumLocationAge
+    };
+    return this.getDeviceLocation(source, options);
+  }
+
+  private getDeviceLocation(source: string, options: GeolocationOptions) {
     return new Promise<ServiceResponse>(resolve => {
       if ("dom" == source) {
         let locationDuple = new LocationDuple();
@@ -94,19 +105,27 @@ export class LocationProvider {
         this.ld = locationDuple;
         resolve(new ServiceResponse(0, this.ld));
       } else {
-        this.geolocation.getCurrentPosition().then((resp) => {
+
+        this.geolocation.getCurrentPosition(options).then((resp) => {
           let ld = new LocationDuple();
           ld.lat = resp.coords.latitude;
           ld.lng = resp.coords.longitude;
           resolve(new ServiceResponse(0, ld));
         }).catch((error) => {
-          resolve(new ServiceResponse(-2, null));
+          resolve(new ServiceResponse(-2, error.code));
           console.log('Failed to retrieve precise location' + JSON.stringify(error));
           //TODO Push error
         });
       }
 
     });
+  }
+
+  public getLocationDuplePrecise(source: string): Promise<ServiceResponse> {
+    let options: GeolocationOptions = {
+      timeout: this.locationUpdateTimeout,
+    };
+    return this.getDeviceLocation(source, options);
   }
 
 

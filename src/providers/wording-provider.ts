@@ -101,13 +101,18 @@ export class WordingProvider {
     this.dictionary.timeUntilAksam = "Akşam vaktine kalan süre:";
     this.dictionary.timeUntilYatsi = "Yatsı vaktine kalan süre:";
     this.dictionary.currentlyShowingOfflineData = "Şu anda sistemimize son bağlandığınız lokasyona ait namaz vakitlerini görmektesiniz. Yeniden bağlantı kurulduğunda lokasyon ve namaz bilgileri güncellenecektir.";
-    this.dictionary.mosques = "Camiiler";
+    this.dictionary.mosques = "Camiler";
     this.dictionary.updatingYourLocation = "Konum bilginiz yenileniyor...";
     this.dictionary.findingMosquesNearby = "Yakındaki camiler bulunuyor...";
     this.dictionary.navigate = "Adres Tarifi";
-    this.dictionary.nearbyMosques = "Yakınınızdaki camiiler";
+    this.dictionary.nearbyMosques = "Yakınınızdaki Camiler";
     this.dictionary.eventsOccuredToday = "Tarihte Bugün";
     this.dictionary.appName = "Namaz Vakitleri ve Dini Bilgiler";
+    this.dictionary.canYouRateUs = "Uygulamamızdan memnun musunuz ?";
+    this.dictionary.rateUsWontTakeMuchTime = "Uygulamamıza destek olmak, görmek istediğiniz özelliklerden bahsetmek ya da beğenmediğiniz yönlerini belirtmek için lütfen bize ulaşın.";
+    this.dictionary.rateNoThanks = "Hayır, bir daha sorma";
+    this.dictionary.rateDelay = "Sonra Hatırlat";
+    this.dictionary.rateNow = "Şimdi Oy Ver";
   }
 
   private createEnglishDictionary() {
@@ -152,7 +157,7 @@ export class WordingProvider {
     this.dictionary.timeUntilIkindi = "Remaining time until Asr:";
     this.dictionary.timeUntilAksam = "Remaining time until Maghrib:";
     this.dictionary.timeUntilYatsi = "Remaining time until Isha:";
-    this.dictionary.currentlyShowingOfflineData = "You are no viewing offline data based on your last known location to our servers. After connection established with our servers, your location information and prayer times will updated. ";
+    this.dictionary.currentlyShowingOfflineData = "You are now viewing offline data based on your last known location to our servers. After connection established with our servers, your location information and prayer times will updated. ";
     this.dictionary.mosques = "Mosques";
     this.dictionary.updatingYourLocation = "Updating your location information...";
     this.dictionary.findingMosquesNearby = "Getting nearby mosques...";
@@ -160,6 +165,11 @@ export class WordingProvider {
     this.dictionary.nearbyMosques = "Nearby Mosques";
     this.dictionary.eventsOccuredToday = "Historical events for today";
     this.dictionary.appName = "Salah Times and Islamic Information";
+    this.dictionary.canYouRateUs = "Would you mind rating our application ?";
+    this.dictionary.rateUsWontTakeMuchTime = "Your opinion and support matters for us. Please let us know what you think!";
+    this.dictionary.rateNoThanks = "No Thanks";
+    this.dictionary.rateDelay = "Later";
+    this.dictionary.rateNow = "Rate Now";
   }
 
 }
@@ -213,6 +223,11 @@ export class Dictionary {
   nearbyMosques: string;
   eventsOccuredToday: string;
   appName: string;
+  canYouRateUs: string;
+  rateUsWontTakeMuchTime: string;
+  rateNoThanks: string;
+  rateDelay: string;
+  rateNow: string;
 
   constructor() {
   }

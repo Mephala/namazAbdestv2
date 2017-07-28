@@ -34,7 +34,7 @@ export class NearbyMosquesPage {
     this.loader.present();
 
     this.platform.ready().then((readySource) => {
-      this.locationProvider.getLocationDuple(readySource).then(response => {
+      this.locationProvider.getLocationDuplePrecise(readySource).then(response => {
         if (response.errorCode == 0) {
           let duple: LocationDuple = response.data;
           this.loader.setContent(this.dictionary.findingMosquesNearby);

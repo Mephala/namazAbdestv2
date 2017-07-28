@@ -11,12 +11,12 @@ import {
 import {LocationDuple, LocationProvider} from "../../providers/location";
 import {Dictionary, WordingProvider} from "../../providers/wording-provider";
 import {Hadith, StartupData, WebProvider} from "../../providers/web-provider";
-import {LocalNotifications} from "@ionic-native/local-notifications";
 import {InterstitialProvider} from "../../providers/interstitial-provider";
 import {CalendarResponse, MonthlyCalendarProvider} from "../../providers/monthly-calendar-provider";
 import {AppRate} from "@ionic-native/app-rate";
 import {NearbyMosquesPage} from "../nearby-mosques/nearby-mosques";
 import {GoogleAnalytics} from "@ionic-native/google-analytics";
+import {Diagnostic} from "@ionic-native/diagnostic";
 
 @Component({
   selector: 'page-home',
@@ -32,7 +32,7 @@ export class HomePage {
   timer: Timer;
   loaded: boolean = false;
   offlineLoaded: boolean = false;
-  offlineQuranAvailable: boolean = false;
+  // offlineQuranAvailable: boolean = false;
   noGPS: boolean = false;
   noInternet: boolean = false;
   title: string = "";
@@ -43,7 +43,7 @@ export class HomePage {
 
   constructor(public navCtrl: NavController, public locationProvider: LocationProvider, public toastController: ToastController,
               public wordingProvider: WordingProvider, private adProvider: InterstitialProvider, private monthlyCalendarProvider: MonthlyCalendarProvider,
-              public alertController: AlertController, public loadingController: LoadingController, private localNotifications: LocalNotifications,
+              public alertController: AlertController, public loadingController: LoadingController, private diagnostic: Diagnostic,
               public events: Events, public platform: Platform, public webProvider: WebProvider, private appRate: AppRate, public ga: GoogleAnalytics) {
     this.createLoadingMsg("");
     this.platform.ready().then((readySource) => {
@@ -135,6 +135,7 @@ export class HomePage {
     this.locationProvider.initiate(readySource).then(response => {
       if (response.errorCode >= 0) {
         console.log("Code:" + response.errorCode + ", lat:" + response.data.lat + ", lng:" + response.data.lng);
+        this.loader.setContent(this.dictionary.locationUpdatedNowGettingTimes);
         this.webProvider.getStartupData(this.source).then(response => {
           this.loader.dismissAll();
           if (response.errorCode == 0) {
@@ -147,9 +148,28 @@ export class HomePage {
           }
         });
       } else {
-        this.loader.dismissAll();
-        this.noGPS = true;
-        this.showAlert(this.dictionary.failedToReceiveGPSText, this.dictionary.failedToReceiveGPSText, this.dictionary.ok);
+        //Checking if location is enabled.
+        this.diagnostic.isLocationEnabled().then((retVal) => {
+          if (retVal) {
+            this.showAlert(this.dictionary.failedToReceiveGPSText, "GPS aktif duruyor, neden konum alamadik ?", this.dictionary.ok);
+            if (response.data != null && response.data == 1) {
+              //Illegal access, location permission is required.code :1
+              this.loader.dismissAll();
+              this.noGPS = true;
+              this.showAlert(this.dictionary.failedToReceiveGPSText, "Lutfen konum izni verin!", this.dictionary.ok);
+            } else {
+              this.loader.dismissAll();
+              this.noGPS = true;
+              this.showAlert(this.dictionary.failedToReceiveGPSText, this.dictionary.failedToReceiveGPSText, this.dictionary.ok);
+            }
+          } else {
+            //Illegal access, location permission is required.code :1
+            this.loader.dismissAll();
+            this.noGPS = true;
+            this.showAlert(this.dictionary.failedToReceiveGPSText, "Lutfen GPS'i aktif konuma getirin.", this.dictionary.ok);
+            // this.diagnostic.switchToLocationSettings();
+          }
+        });
       }
     });
   }
@@ -177,11 +197,11 @@ export class HomePage {
             // windows8: 'ms-windows-store:Review?name=<the Package Family Name of the application>'
           },
           customLocale: {
-            title: "Would you mind rating %@?",
-            message: "It won’t take more than a minute and helps to promote our app. Thanks for your support!",
-            cancelButtonLabel: "No, Thanks",
-            laterButtonLabel: "Remind Me Later",
-            rateButtonLabel: "Rate It Now",
+            title: this.dictionary.canYouRateUs,
+            message: this.dictionary.rateUsWontTakeMuchTime,
+            cancelButtonLabel: this.dictionary.rateNoThanks,
+            laterButtonLabel: this.dictionary.rateDelay,
+            rateButtonLabel: this.dictionary.rateNow,
             yesButtonLabel: "Yes!",
             noButtonLabel: "Not really",
             appRatePromptTitle: 'Do you like using %@',

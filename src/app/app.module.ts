@@ -25,6 +25,8 @@ import {AppRate} from "@ionic-native/app-rate";
 import {NearbyMosquesPage} from "../pages/nearby-mosques/nearby-mosques";
 import {LaunchNavigator} from '@ionic-native/launch-navigator';
 import {GoogleAnalytics} from "@ionic-native/google-analytics";
+import { AlertProvider } from '../providers/alert/alert';
+import {Diagnostic} from "@ionic-native/diagnostic";
 
 @NgModule({
   declarations: [
@@ -68,7 +70,9 @@ import {GoogleAnalytics} from "@ionic-native/google-analytics";
     AppRate,
     LaunchNavigator,
     GoogleAnalytics,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    AlertProvider,
+    Diagnostic
   ]
 })
 export class AppModule {
