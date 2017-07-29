@@ -40,7 +40,8 @@ export class LocationProvider {
                 this.events.publish('preciseLocationUpdated', this.ld);
                 this.saveLocationData(this.ld);
               } else {
-                // resolve(new ServiceResponse(2, this.ld));
+                //Precise location update failed.
+                this.alertProvider.presentToast(this.dictionary.preciseLocationUpdateFailure, 10000);
               }
             });
             resolve(new ServiceResponse(1, this.ld));

@@ -118,6 +118,7 @@ export class WordingProvider {
     this.dictionary.activateGPS = "Lütfen cihazınızın GPS (Konum) özelliğinin aktif olduğundan, uygulamaya konum bilgisine erişim izni verdiğinizden ve cihazınızın konumunuzu tespit edebileceği bir ortamda olduğunuzdan emin olunuz.";
     this.dictionary.noGpsFail = "Konum Bilginize Erişemedik";
     this.dictionary.noGpsFailExplanation = "Lütfen cihazınızın GPS (Konum) özelliğinin aktif olduğundan, uygulamaya konum bilgisine erişim izni verdiğinizden ve cihazınızın konumunuzu tespit edebileceği bir ortamda olduğunuzdan emin olunuz.";
+    this.dictionary.preciseLocationUpdateFailure = "Cihazınızdan şu anda bulunduğunuz konum bilgisini alamadık. Bilinen son konumunuza uygun bilgileri görmektesiniz. Lütfen GPS'in aktif ve Konum izinlerinin açık olduğundan emin olunuz.";
   }
 
   private createEnglishDictionary() {
@@ -180,6 +181,7 @@ export class WordingProvider {
     this.dictionary.activateGPS = "Please make sure that your device's GPS is on and you have given our app permission to reach your location data.";
     this.dictionary.noGpsFail = "Can't get your location";
     this.dictionary.noGpsFailExplanation = "Please make sure that your device's GPS is on and you have given our app permission to reach your location data.";
+    this.dictionary.preciseLocationUpdateFailure = "We have failed to retrieve location data from your device. Please make sure GPS is on and Location Permissions are granted.";
   }
 
 }
@@ -243,6 +245,7 @@ export class Dictionary {
   activateGPS: string;
   noGpsFail: string;
   noGpsFailExplanation: string;
+  preciseLocationUpdateFailure: string;
 
   constructor() {
   }
