@@ -25,10 +25,10 @@
         <ion-label>{{dictionary.wantsSpecialDayMessagesToggleString}}</ion-label>
         <ion-toggle [(ngModel)]="wantsSpecialDayMsg" (ngModelChange)="saveSettings()"></ion-toggle>
       </ion-item>
-      <ion-item>
-        <ion-label>{{dictionary.localNotifications}}</ion-label>
-        <ion-toggle [(ngModel)]="wantsLocalNotification" (ngModelChange)="saveSettings()"></ion-toggle>
-      </ion-item>
+      <!--<ion-item>-->
+        <!--<ion-label>{{dictionary.localNotifications}}</ion-label>-->
+        <!--<ion-toggle [(ngModel)]="wantsLocalNotification" (ngModelChange)="saveSettings()"></ion-toggle>-->
+      <!--</ion-item>-->
       <ion-item  text-wrap>
         <ion-icon name="ios-information-circle-outline" item-left (click)="showDownloadKuranTutorial()"></ion-icon>
         <ion-label>{{dictionary.downloadKuran}}</ion-label>
