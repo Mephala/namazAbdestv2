@@ -21,7 +21,7 @@ export class LocationProvider {
   maximumLocationAge = 1800000; // 30 minutes of location cache is allowed.
 
   constructor(public events: Events, private geolocation: Geolocation, private nativeStorage: NativeStorage, public wordingProvider: WordingProvider
-    , private alertProvider: AlertProvider, private webProvider: WebProvider) {
+    , private alertProvider: AlertProvider) {
 
   }
 
@@ -59,7 +59,6 @@ export class LocationProvider {
               this.saveLocationData(this.ld);
               resolve(new ServiceResponse(0, this.ld));
             } else {
-              this.webProvider.pushError("Code 9", "Failed to get location from device. response errCode:" + response.errorCode);
               resolve(new ServiceResponse(-1, null));
             }
           });
@@ -83,7 +82,6 @@ export class LocationProvider {
         },
         error => {
           console.log('Failed to fetch new precise location:' + JSON.stringify(error));
-          this.webProvider.pushError("Code 10","Problem storing location on device.err:" + JSON.stringify(error));
         }
       );
       resolve(new ServiceResponse(0, null));
@@ -124,7 +122,6 @@ export class LocationProvider {
         }).catch((error) => {
           resolve(new ServiceResponse(-2, error.code));
           console.log('Failed to retrieve precise location' + JSON.stringify(error));
-          this.webProvider.pushError("Code 11",'Failed to retrieve precise location' + JSON.stringify(error));
         });
       }
 

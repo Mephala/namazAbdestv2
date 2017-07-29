@@ -13,7 +13,7 @@ import {Platform} from "ionic-angular";
 @Injectable()
 export class InterstitialProvider {
 
-  underDevelopment: boolean = true;  //FIXME remember to change this value before production.
+  underDevelopment: boolean = false;  //FIXME remember to change this value before production.
 
 
   adMobAndroidBannerId: string = "ca-app-pub-5091865704377150/5386042224";
