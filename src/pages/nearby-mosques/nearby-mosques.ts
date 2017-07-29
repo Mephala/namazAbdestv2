@@ -5,6 +5,7 @@ import {LocationDuple, LocationProvider} from "../../providers/location";
 import {WebProvider} from "../../providers/web-provider";
 import {LaunchNavigator, LaunchNavigatorOptions} from '@ionic-native/launch-navigator';
 import {GoogleAnalytics} from "@ionic-native/google-analytics";
+import {AlertProvider} from "../../providers/alert/alert";
 
 /**
  * Generated class for the NearbyMosquesPage page.
@@ -25,7 +26,8 @@ export class NearbyMosquesPage {
   load: boolean;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public wordingProvider: WordingProvider, public locationProvider: LocationProvider,
-              public webProvider: WebProvider, public loadingController: LoadingController, public platform: Platform, private launchNavigator: LaunchNavigator, private ga:GoogleAnalytics) {
+              public webProvider: WebProvider, public loadingController: LoadingController, public platform: Platform, private launchNavigator: LaunchNavigator, private ga: GoogleAnalytics
+    , private alertProvider: AlertProvider) {
     this.dictionary = this.wordingProvider.dictionary;
     this.load = false;
     this.loader = this.loadingController.create({
@@ -39,23 +41,48 @@ export class NearbyMosquesPage {
           let duple: LocationDuple = response.data;
           this.loader.setContent(this.dictionary.findingMosquesNearby);
           this.webProvider.getMosques(duple, this.wordingProvider.preferredLanguage).then(response => {
-            if (response.errorCode == 0) {
+            /**
+             * status codes:
+             * 1 = no result
+             * 0 = ok result
+             * -1 = Google or mosque search failure
+             * -2 = Security or server failure
+             * -3 = Network or client failure
+             */
+
+            if (response.code == 0) {
               this.mosques = response.data;
               this.load = true;
+            } else if (response.code == 1) {
+              this.mosques = null;
+              this.load = true;
+              this.alertProvider.presentAlert(this.dictionary.noMosqueTitle, response.promptMsg);
+              this.navCtrl.pop();
+            } else if (response.code == -1) {
+              this.mosques = null;
+              this.load = true;
+              this.alertProvider.presentAlert(this.dictionary.noMosqueTitle, response.promptMsg);
+              this.navCtrl.pop();
             } else {
-              //TODO Handle error case
+              this.mosques = null;
+              this.load = true;
+              this.alertProvider.presentAlert(this.dictionary.noMosqueTitle, this.dictionary.noMosqueErrorDescription);
+              this.navCtrl.pop();
             }
             this.loader.dismissAll();
 
           });
         } else {
           this.loader.dismissAll();
-          //TODO Handle no location error
+          this.alertProvider.presentAlert(this.dictionary.noMosqueTitle, this.dictionary.activateGPS);
+          this.navCtrl.pop();
         }
       });
     }, error => {
-      //TODO Handle Fail.
       this.loader.dismissAll();
+      this.alertProvider.presentAlert(this.dictionary.noMosqueTitle, this.dictionary.noMosqueErrorDescription);
+      //TODO Push error
+      this.navCtrl.pop();
     });
   }
 
@@ -73,12 +100,20 @@ export class NearbyMosquesPage {
         // Tracker is ready
         // You can now track pages or set additional information such as AppVersion or UserId
       })
-      .catch(e => {console.log('Error starting GoogleAnalytics', e)
+      .catch(e => {
+        console.log('Error starting GoogleAnalytics', e)
 
       });
   }
 
   public navigateTo(lat: number, lng: number) {
+    try {
+      this.ga.trackEvent("MosqueEvent", "MosqueNavigateEvent");
+    } catch (err) {
+      //TODO Push err
+      console.log("Failed to track event, err:" + err);
+    }
+
     let options: LaunchNavigatorOptions = {
       start: this.locationProvider.ld.lat + ", " + this.locationProvider.ld.lng
     };
@@ -86,10 +121,10 @@ export class NearbyMosquesPage {
     this.launchNavigator.navigate(lat + ", " + lng, options)
       .then(
         success => {
-          alert('Launched navigator');
+          console.log('Launched navigator');
         },
         error => {
-          alert('Error launching navigator:' + error + ", errJSON:" + JSON.stringify(error));
+          console.log('Error launching navigator:' + error + ", errJSON:" + JSON.stringify(error));
           //TODO Push Error.
         }
       )

@@ -20,8 +20,8 @@ import {NativeStorage} from "@ionic-native/native-storage";
 export class WebProvider {
 
   appToken: string = "21891fh8291f2812192819h8129f8h34729fh7))_(8128ddh218hf7fh71f21hj1299d218912777898"; //default
-  // serverRoot: string = "http://192.168.0.103:8080/namazAppServer";
-  serverRoot: string = "http://ec2-52-27-157-90.us-west-2.compute.amazonaws.com";
+  serverRoot: string = "http://192.168.0.103:8080/namazAppServer";
+  // serverRoot: string = "http://ec2-52-27-157-90.us-west-2.compute.amazonaws.com";
   version: string = "2.0.0";
   timeout: number = 30000;
   startupData: StartupData;
@@ -249,17 +249,20 @@ export class WebProvider {
     }
   }
 
-  public getMosques(ld: LocationDuple, preferredLanguage: string): Promise<ServiceResponse> {
-    return new Promise<ServiceResponse>(resolve => {
+  public getMosques(ld: LocationDuple, preferredLanguage: string): Promise<WebResponse> {
+    return new Promise<WebResponse>(resolve => {
       let options = this.getOptions();
-      let cresponse: Array<Mosque>;
+      let webResponse: WebResponse;
       this.http.get(this.serverRoot + "/getNearbyMosques?lat=" + ld.lat + "&lng=" + ld.lng + "&preferredLanguage=" + preferredLanguage, options).timeout(this.timeout).map(res => {
-        cresponse = res.json();
+        webResponse = res.json();
       }).subscribe(data => {
-        resolve(new ServiceResponse(0, cresponse));
+        resolve(webResponse);
       }, (err) => {
         alert("Failed http request:" + err);
-        resolve(new ServiceResponse(-1, JSON.stringify(err)));
+        webResponse = new WebResponse();
+        webResponse.data = null;
+        webResponse.code = -3;
+        resolve(webResponse);
       });
     });
   }
@@ -404,6 +407,15 @@ export class PushNotificationMessage {
   data: any;
   title: string;
   message: string;
+
+  constructor() {
+  }
+}
+
+export class WebResponse {
+  code: number;
+  promptMsg: string;
+  data: any;
 
   constructor() {
   }

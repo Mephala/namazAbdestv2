@@ -113,6 +113,9 @@ export class WordingProvider {
     this.dictionary.rateNoThanks = "Hayır, bir daha sorma";
     this.dictionary.rateDelay = "Sonra Hatırlat";
     this.dictionary.rateNow = "Şimdi Oy Ver";
+    this.dictionary.noMosqueTitle = "Cami Bulunamadı";
+    this.dictionary.noMosqueErrorDescription = "Üzgünüz, yakınınızdaki camileri arayamadık. Lütfen çalışan bir internet bağlantınızın olduğunu ve GPS paylaşımınızın açık olduğundan emin olup tekrar deneyiniz.";
+    this.dictionary.activateGPS = "Lütfen cihazınızın GPS (Konum) özelliğinin aktif olduğundan, uygulamaya konum bilgisine erişim izni verdiğinizden ve cihazınızın konumunuzu tespit edebileceği bir ortamda olduğunuzdan emin olunuz.";
   }
 
   private createEnglishDictionary() {
@@ -170,6 +173,9 @@ export class WordingProvider {
     this.dictionary.rateNoThanks = "No Thanks";
     this.dictionary.rateDelay = "Later";
     this.dictionary.rateNow = "Rate Now";
+    this.dictionary.noMosqueTitle = "We couldn't find Mosques";
+    this.dictionary.noMosqueErrorDescription = "Sorry, we failed to search for nearby mosques. Please ensure that your GPS is on and you have a working internet connection.";
+    this.dictionary.activateGPS = "Please make sure that your device's GPS is on and you have given our app permission to reach your location data.";
   }
 
 }
@@ -228,6 +234,9 @@ export class Dictionary {
   rateNoThanks: string;
   rateDelay: string;
   rateNow: string;
+  noMosqueTitle: string;
+  noMosqueErrorDescription: string;
+  activateGPS: string;
 
   constructor() {
   }
