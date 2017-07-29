@@ -17,7 +17,7 @@ export class LocationProvider {
 
   ld: LocationDuple;
   dictionary: Dictionary;
-  locationUpdateTimeout = 15000;
+  locationUpdateTimeout = 20000;
   maximumLocationAge = 1800000; // 30 minutes of location cache is allowed.
 
   constructor(public events: Events, private geolocation: Geolocation, private nativeStorage: NativeStorage, public wordingProvider: WordingProvider, private alertProvider: AlertProvider) {
@@ -31,7 +31,7 @@ export class LocationProvider {
         this.nativeStorage.getItem('ld').then(data => {
           if (data != null) {
             this.ld = data;
-            this.getLocationDupleDevice().then(response => {
+            this.getLocationDupleLimitedPrecise(source).then(response => {
               if (response.errorCode == 0) {
                 this.ld = response.data;
                 resolve(new ServiceResponse(0, this.ld));
@@ -92,6 +92,13 @@ export class LocationProvider {
   public getLocationDuple(source: string): Promise<ServiceResponse> {
     let options: GeolocationOptions = {
       timeout: this.locationUpdateTimeout,
+      maximumAge: this.maximumLocationAge
+    };
+    return this.getDeviceLocation(source, options);
+  }
+  public getLocationDupleLimitedPrecise(source: string): Promise<ServiceResponse> {
+    let options: GeolocationOptions = {
+      timeout: 30000,
       maximumAge: this.maximumLocationAge
     };
     return this.getDeviceLocation(source, options);
