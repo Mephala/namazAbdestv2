@@ -3,6 +3,7 @@ import {NavController} from "ionic-angular";
 import {ImportantDate, WebProvider} from "../../providers/web-provider";
 import {Dictionary, WordingProvider} from "../../providers/wording-provider";
 import {GoogleAnalytics} from "@ionic-native/google-analytics";
+import {LocationProvider} from "../../providers/location";
 
 @Component({
   selector: 'page-contact',
@@ -14,10 +15,13 @@ export class ContactPage {
   dictionary: Dictionary;
   noInternet: boolean = false;
   loaded: boolean = false;
+  noGps: boolean = false;
 
-  constructor(public navCtrl: NavController, public webProvider: WebProvider, public wordingProvider: WordingProvider, private ga:GoogleAnalytics) {
+  constructor(public navCtrl: NavController, public webProvider: WebProvider, public wordingProvider: WordingProvider, private ga: GoogleAnalytics
+    , private locationProvider: LocationProvider) {
     this.dictionary = this.wordingProvider.dictionary;
     this.noInternet = this.webProvider.noInternet;
+    this.noGps = this.locationProvider.ld == null;
     if (this.webProvider.startupData != null) {
       this.importantDayList = this.webProvider.startupData.importantDates;
       this.loaded = true;
@@ -39,7 +43,8 @@ export class ContactPage {
         // Tracker is ready
         // You can now track pages or set additional information such as AppVersion or UserId
       })
-      .catch(e => {console.log('Error starting GoogleAnalytics', e)
+      .catch(e => {
+        console.log('Error starting GoogleAnalytics', e)
 
       });
   }

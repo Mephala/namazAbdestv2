@@ -3,6 +3,7 @@ import {AlertController, LoadingController, NavController, NavParams, ToastContr
 import {StartupData, WebProvider} from "../../providers/web-provider";
 import {Dictionary, WordingProvider} from "../../providers/wording-provider";
 import {NativeStorage} from "@ionic-native/native-storage";
+import {LocationProvider} from "../../providers/location";
 
 /**
  * Generated class for the SettingsPage page.
@@ -24,12 +25,15 @@ export class SettingsPage {
   wantsLocalNotification: boolean;
   noInternet: boolean = false;
   loaded: boolean = false;
+  noGps: boolean;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public webProvider: WebProvider, public alertController: AlertController,
-              public loadingController: LoadingController, public wordingProvider: WordingProvider, private toastController: ToastController, private nativeStorage: NativeStorage) {
+              public loadingController: LoadingController, public wordingProvider: WordingProvider, private locationProvider: LocationProvider
+    , private toastController: ToastController, private nativeStorage: NativeStorage) {
+    this.noGps = this.locationProvider.ld == null;
     this.dictionary = this.wordingProvider.dictionary;
     this.noInternet = this.webProvider.noInternet;
-    if (!this.noInternet) {
+    if (!this.noInternet && this.webProvider.startupData != null) {
       this.startupData = this.webProvider.startupData;
       this.wantsDailyHadis = this.startupData.wantsDailyHadis;
       this.wantsSpecialDayMsg = this.startupData.wantsSpecialDayMessages;

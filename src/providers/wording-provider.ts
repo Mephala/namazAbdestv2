@@ -116,6 +116,8 @@ export class WordingProvider {
     this.dictionary.noMosqueTitle = "Cami Bulunamadı";
     this.dictionary.noMosqueErrorDescription = "Üzgünüz, yakınınızdaki camileri arayamadık. Lütfen çalışan bir internet bağlantınızın olduğunu ve GPS paylaşımınızın açık olduğundan emin olup tekrar deneyiniz.";
     this.dictionary.activateGPS = "Lütfen cihazınızın GPS (Konum) özelliğinin aktif olduğundan, uygulamaya konum bilgisine erişim izni verdiğinizden ve cihazınızın konumunuzu tespit edebileceği bir ortamda olduğunuzdan emin olunuz.";
+    this.dictionary.noGpsFail = "Konum Bilginize Erişemedik";
+    this.dictionary.noGpsFailExplanation = "Lütfen cihazınızın GPS (Konum) özelliğinin aktif olduğundan, uygulamaya konum bilgisine erişim izni verdiğinizden ve cihazınızın konumunuzu tespit edebileceği bir ortamda olduğunuzdan emin olunuz.";
   }
 
   private createEnglishDictionary() {
@@ -176,6 +178,8 @@ export class WordingProvider {
     this.dictionary.noMosqueTitle = "We couldn't find Mosques";
     this.dictionary.noMosqueErrorDescription = "Sorry, we failed to search for nearby mosques. Please ensure that your GPS is on and you have a working internet connection.";
     this.dictionary.activateGPS = "Please make sure that your device's GPS is on and you have given our app permission to reach your location data.";
+    this.dictionary.noGpsFail = "Can't get your location";
+    this.dictionary.noGpsFailExplanation = "Please make sure that your device's GPS is on and you have given our app permission to reach your location data.";
   }
 
 }
@@ -237,6 +241,8 @@ export class Dictionary {
   noMosqueTitle: string;
   noMosqueErrorDescription: string;
   activateGPS: string;
+  noGpsFail: string;
+  noGpsFailExplanation: string;
 
   constructor() {
   }

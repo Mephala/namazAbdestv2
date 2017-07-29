@@ -25,7 +25,7 @@
   </ng-template>
 
 
-  <ion-card *ngIf="noInternet">
+  <ion-card *ngIf="!loaded && noInternet">
     <img src="assets/images/no-internet.jpg"/>
     <ion-card-content>
       <ion-card-title>
@@ -33,6 +33,18 @@
       </ion-card-title>
       <p>
         {{dictionary.noInternetFailExplanation}}
+      </p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="!loaded && !noInternet  && noGps">
+    <img src="assets/images/no-internet.jpg"/>
+    <ion-card-content>
+      <ion-card-title>
+        {{dictionary.noGpsFail}}
+      </ion-card-title>
+      <p>
+        {{dictionary.noGpsFailExplanation}}
       </p>
     </ion-card-content>
   </ion-card>

@@ -142,6 +142,7 @@ export class HomePage {
             this.processStartupData(response.data);
             console.log("WebSource live calculations are finished");
           } else {
+            console.log("Server connection failure.");
             this.noInternet = true;
             //TODO Implement this after offline namaz vakitleri is available
             // this.showAlert(this.dictionary.failedToReceiveGPSText, this.dictionary.failedToReceiveGPSText, this.dictionary.ok);
@@ -151,22 +152,21 @@ export class HomePage {
         //Checking if location is enabled.
         this.diagnostic.isLocationEnabled().then((retVal) => {
           if (retVal) {
-            this.showAlert(this.dictionary.failedToReceiveGPSText, "GPS aktif duruyor, neden konum alamadik ?", this.dictionary.ok);
             if (response.data != null && response.data == 1) {
               //Illegal access, location permission is required.code :1
               this.loader.dismissAll();
               this.noGPS = true;
-              this.showAlert(this.dictionary.failedToReceiveGPSText, "Lutfen konum izni verin!", this.dictionary.ok);
+              this.showAlert(this.dictionary.noGpsFail, this.dictionary.noGpsFailExplanation, this.dictionary.ok);
             } else {
               this.loader.dismissAll();
               this.noGPS = true;
-              this.showAlert(this.dictionary.failedToReceiveGPSText, this.dictionary.failedToReceiveGPSText, this.dictionary.ok);
+              this.showAlert(this.dictionary.noGpsFail, this.dictionary.noGpsFailExplanation, this.dictionary.ok);
             }
           } else {
             //Illegal access, location permission is required.code :1
             this.loader.dismissAll();
             this.noGPS = true;
-            this.showAlert(this.dictionary.failedToReceiveGPSText, "Lutfen GPS'i aktif konuma getirin.", this.dictionary.ok);
+            this.showAlert(this.dictionary.noGpsFail, this.dictionary.noGpsFailExplanation, this.dictionary.ok);
             // this.diagnostic.switchToLocationSettings();
           }
         });

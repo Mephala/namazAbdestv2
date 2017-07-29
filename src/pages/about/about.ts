@@ -4,6 +4,7 @@ import {Hadith, WebProvider} from "../../providers/web-provider";
 import {InterstitialProvider} from "../../providers/interstitial-provider";
 import {Dictionary, WordingProvider} from "../../providers/wording-provider";
 import {GoogleAnalytics} from "@ionic-native/google-analytics";
+import {LocationProvider} from "../../providers/location";
 
 @Component({
   selector: 'page-about',
@@ -16,12 +17,15 @@ export class AboutPage {
   noInternet: boolean;
   loaded: boolean;
   dictionary: Dictionary;
+  noGps:boolean;
 
-  constructor(public navCtrl: NavController, public webProvider: WebProvider, public adProvider: InterstitialProvider, private wordingProvider: WordingProvider, private ga: GoogleAnalytics) {
+  constructor(public navCtrl: NavController, public webProvider: WebProvider, public adProvider: InterstitialProvider, private wordingProvider: WordingProvider
+    , private ga: GoogleAnalytics, private locationProvider: LocationProvider) {
     this.noInternet = this.webProvider.noInternet;
     this.dictionary = this.wordingProvider.dictionary;
+    this.noGps = this.locationProvider.ld == null;
     console.log("Internet status:" + this.noInternet);
-    if (!this.noInternet) {
+    if (this.webProvider.startupData != null && this.webProvider.startupData.previousHadith != null) {
       console.log("Processing load...");
       this.hadisList = this.webProvider.startupData.previousHadith;
       this.loaded = true;
@@ -41,7 +45,8 @@ export class AboutPage {
         // Tracker is ready
         // You can now track pages or set additional information such as AppVersion or UserId
       })
-      .catch(e => {console.log('Error starting GoogleAnalytics', e)
+      .catch(e => {
+        console.log('Error starting GoogleAnalytics', e)
 
       });
   }

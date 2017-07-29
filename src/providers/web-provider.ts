@@ -80,7 +80,10 @@ export class WebProvider {
                 this.resolveStartup(resolve);
               });
 
-              pushObject.on('error').subscribe(error => console.error('Error with Push plugin', error));
+              pushObject.on('error').subscribe(error => {
+                console.log('Error with Push plugin, problem:' + JSON.stringify(error));
+                this.resolveStartup(resolve);
+              });
             } else {
               console.log('We do not have permission to send push notifications');
               this.pushAllowed = false;

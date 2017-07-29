@@ -50,5 +50,17 @@
     </ion-card-content>
   </ion-card>
 
+  <ion-card *ngIf="!noInternet && !loaded && noGps">
+    <img src="assets/images/no-internet.jpg"/>
+    <ion-card-content>
+      <ion-card-title>
+        {{dictionary.noGpsFail}}
+      </ion-card-title>
+      <p>
+        {{dictionary.noGpsFailExplanation}}
+      </p>
+    </ion-card-content>
+  </ion-card>
+
 
 </ion-content>
