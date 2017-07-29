@@ -86,7 +86,7 @@ export class ReadQuran {
           console.log("Error fetching kuran from storage:" + error);
           console.log("Getting kuran from web....");
           this.loadQuranFromWeb(loader);
-          this.alertProvider.presentToast(this.dictionary.downloadingKuranFirstTimeOnly, 11000);
+          this.alertProvider.presentToast(this.dictionary.downloadingKuranFirstTimeOnly, 7000);
         });
       } else {
         console.log("User disabled saving kuran to storage. Loading it from web.");

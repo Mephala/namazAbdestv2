@@ -29,10 +29,10 @@
         <ion-label>{{dictionary.localNotifications}}</ion-label>
         <ion-toggle [(ngModel)]="wantsLocalNotification" (ngModelChange)="saveSettings()"></ion-toggle>
       </ion-item>
-      <ion-item (click)="showDownloadKuranTutorial()" text-wrap>
-        <ion-icon name="ios-information-circle-outline" item-left></ion-icon>
+      <ion-item  text-wrap>
+        <ion-icon name="ios-information-circle-outline" item-left (click)="showDownloadKuranTutorial()"></ion-icon>
         <ion-label>{{dictionary.downloadKuran}}</ion-label>
-        <ion-toggle [(ngModel)]="wantsKuranDL" (ngModelChange)="saveSettingsQuran()"></ion-toggle>
+        <ion-toggle [(ngModel)]="wantsKuranDL" (ngModelChange)="saveSettings()"></ion-toggle>
       </ion-item>
     </ion-list>
 

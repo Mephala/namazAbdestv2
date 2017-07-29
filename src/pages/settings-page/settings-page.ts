@@ -26,6 +26,7 @@ export class SettingsPage {
   noInternet: boolean = false;
   loaded: boolean = false;
   noGps: boolean;
+  kuranDLWantedBefore: boolean;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public webProvider: WebProvider, public alertController: AlertController,
               public loadingController: LoadingController, public wordingProvider: WordingProvider, private locationProvider: LocationProvider
@@ -38,6 +39,7 @@ export class SettingsPage {
       this.wantsDailyHadis = this.startupData.wantsDailyHadis;
       this.wantsSpecialDayMsg = this.startupData.wantsSpecialDayMessages;
       this.wantsKuranDL = this.startupData.wantsKuranDownloaded;
+      this.kuranDLWantedBefore = this.startupData.wantsKuranDownloaded;
       this.wantsLocalNotification = this.startupData.wantsLocalNotification;
       this.loaded = true;
     }
@@ -49,14 +51,18 @@ export class SettingsPage {
 
   public saveSettings() {
     if (this.webProvider.source == "dom") {
-      alert("Settings are disabled for dom source. Sorry pal.");
+      console.log("Updating settings :" + this.wantsDailyHadis + ", " + this.wantsSpecialDayMsg + ", " + this.wantsLocalNotification + ", " + this.wantsKuranDL);
+      // alert("Settings are disabled for dom source. Sorry pal.");
       return;
+    }
+    if (this.wantsKuranDL == false) {
+      this.nativeStorage.remove("kuran");
     }
     let loader = this.loadingController.create({
       content: this.dictionary.pleaseWait
     });
     loader.present();
-
+    console.log("Updating settings :" + this.wantsDailyHadis + ", " + this.wantsSpecialDayMsg + ", " + this.wantsLocalNotification + ", " + this.wantsKuranDL);
     this.webProvider.saveSettings(this.wantsDailyHadis, this.wantsSpecialDayMsg, this.wantsLocalNotification, this.wantsKuranDL).then(response => {
       loader.dismissAll();
       let msg = "";
@@ -68,6 +74,7 @@ export class SettingsPage {
         this.webProvider.startupData.wantsKuranDownloaded = this.wantsKuranDL;
         this.webProvider.startupData.wantsSpecialDayMessages = this.wantsSpecialDayMsg;
         this.webProvider.saveWantsKuranOfflineSettings(this.wantsKuranDL);
+
       } else {
         msg = this.dictionary.settingsSavedError;
       }
@@ -93,12 +100,6 @@ export class SettingsPage {
     }
   }
 
-  public saveSettingsQuran() {
-    if (this.wantsKuranDL = false) {
-      this.nativeStorage.remove("kuran");
-    }
-    this.saveSettings();
-  }
 
   public showDownloadKuranTutorial() {
     let alert = this.alertController.create({
