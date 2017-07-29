@@ -20,7 +20,8 @@ export class LocationProvider {
   locationUpdateTimeout = 20000;
   maximumLocationAge = 1800000; // 30 minutes of location cache is allowed.
 
-  constructor(public events: Events, private geolocation: Geolocation, private nativeStorage: NativeStorage, public wordingProvider: WordingProvider, private alertProvider: AlertProvider) {
+  constructor(public events: Events, private geolocation: Geolocation, private nativeStorage: NativeStorage, public wordingProvider: WordingProvider
+    , private alertProvider: AlertProvider, private webProvider: WebProvider) {
 
   }
 
@@ -58,7 +59,7 @@ export class LocationProvider {
               this.saveLocationData(this.ld);
               resolve(new ServiceResponse(0, this.ld));
             } else {
-              //TODO Push error
+              this.webProvider.pushError("Code 9", "Failed to get location from device. response errCode:" + response.errorCode);
               resolve(new ServiceResponse(-1, null));
             }
           });
@@ -81,8 +82,8 @@ export class LocationProvider {
           console.log('Stored new location:' + ld);
         },
         error => {
-          console.log('Failed to fetch new precise location:' + error);
-          //TODO push error and show warning.
+          console.log('Failed to fetch new precise location:' + JSON.stringify(error));
+          this.webProvider.pushError("Code 10","Problem storing location on device.err:" + JSON.stringify(error));
         }
       );
       resolve(new ServiceResponse(0, null));
@@ -96,6 +97,7 @@ export class LocationProvider {
     };
     return this.getDeviceLocation(source, options);
   }
+
   public getLocationDupleLimitedPrecise(source: string): Promise<ServiceResponse> {
     let options: GeolocationOptions = {
       timeout: 30000,
@@ -122,7 +124,7 @@ export class LocationProvider {
         }).catch((error) => {
           resolve(new ServiceResponse(-2, error.code));
           console.log('Failed to retrieve precise location' + JSON.stringify(error));
-          //TODO Push error
+          this.webProvider.pushError("Code 11",'Failed to retrieve precise location' + JSON.stringify(error));
         });
       }
 

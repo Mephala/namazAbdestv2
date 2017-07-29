@@ -81,7 +81,7 @@ export class NearbyMosquesPage {
     }, error => {
       this.loader.dismissAll();
       this.alertProvider.presentAlert(this.dictionary.noMosqueTitle, this.dictionary.noMosqueErrorDescription);
-      //TODO Push error
+      this.webProvider.pushError("Code 4", "Platform ready problem on mosque page. Detail:" + JSON.stringify(error));
       this.navCtrl.pop();
     });
   }
@@ -110,7 +110,7 @@ export class NearbyMosquesPage {
     try {
       this.ga.trackEvent("MosqueEvent", "MosqueNavigateEvent");
     } catch (err) {
-      //TODO Push err
+      this.webProvider.pushError("Code 6","Failed to initiate google analytics tracking. err:" + err);
       console.log("Failed to track event, err:" + err);
     }
 
@@ -125,7 +125,7 @@ export class NearbyMosquesPage {
         },
         error => {
           console.log('Error launching navigator:' + error + ", errJSON:" + JSON.stringify(error));
-          //TODO Push Error.
+          this.webProvider.pushError("Code 5","Problem navigating to mosque. err:" + JSON.stringify(error));
         }
       )
   }

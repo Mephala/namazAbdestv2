@@ -16,6 +16,7 @@ export class WordingProvider {
 
   dictionary: Dictionary;
   preferredLanguage: string;
+  determinedLan: string;
 
   constructor(public globalization: Globalization, public events: Events) {
     console.log('Hello WordingProvider Provider');
@@ -39,8 +40,9 @@ export class WordingProvider {
         });
       } else {
         console.log("Test configuration detected. Returning turkish dictionary as test defaults");
-        // this.preferredLanguage = "tr-test";
-        this.preferredLanguage = "en-US";
+        this.preferredLanguage = "tr-test";
+        this.determinedLan = "tr";
+        // this.preferredLanguage = "en-US";
         this.createTurkishDictionary();
         this.events.publish('wordingsConstructed', this.dictionary);
         resolve(new ServiceResponse(0, this.dictionary));
@@ -53,8 +55,10 @@ export class WordingProvider {
     this.preferredLanguage = val;
     if (val.startsWith("tr")) {
       this.createTurkishDictionary();
+      this.determinedLan = "tr";
     } else {
       this.createEnglishDictionary();
+      this.determinedLan = "en";
     }
   }
 

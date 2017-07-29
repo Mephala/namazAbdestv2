@@ -94,7 +94,7 @@ export class SettingsPage {
         //Decided not to keep Quran on phone. Deleting from native storage.
         this.nativeStorage.remove("kuran");
       } catch (err) {
-        //TODO Push error
+        this.webProvider.pushError("Code 8","Failed to remove Kuran from device storage. err:" + err);
         console.log("Failed to remove kuran from local Storage. err:" + err);
       }
     }

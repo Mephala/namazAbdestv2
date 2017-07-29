@@ -76,7 +76,7 @@
 
     <br>
 
-    <ion-item (click)="readQuran()" text-wrap>
+    <ion-item (click)="readQuran()" text-wrap *ngIf = "turkishLan">
       <ion-avatar item-left>
         <img src="assets/images/kuranOkuyun.jpg">
       </ion-avatar>
@@ -95,7 +95,7 @@
       <ion-icon name="md-pin" item-right color="primary"></ion-icon>
     </ion-item>
 
-    <ng-template [ngIf]="eventsTodayEnabled">
+    <ng-template [ngIf]="eventsTodayEnabled && turkishLan">
       <ion-card>
         <ion-card-header style="text-align:center">
           {{dictionary.eventsOccuredToday}}
@@ -177,7 +177,7 @@
 
     <br>
 
-    <ion-item (click)="readQuran()" text-wrap>
+    <ion-item (click)="readQuran()" text-wrap *ngIf = "turkishLan">
       <ion-avatar item-left>
         <img src="assets/images/kuranOkuyun.jpg">
       </ion-avatar>

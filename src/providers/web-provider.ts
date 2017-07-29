@@ -244,11 +244,11 @@ export class WebProvider {
       }).subscribe(data => {
       }, (err) => {
         console.log("Failed http request:" + err);
-        //TODO Push err
+        this.pushError("Code 12", 'Failed to submit rate my app decision' + JSON.stringify(err));
       });
     } catch (err) {
       console.log("Failed to make rate my app request. err:" + err);
-      //TODO Push err
+      this.pushError("Code 13", 'Failed to submit rate my app decision' + err);
     }
   }
 
@@ -290,7 +290,7 @@ export class WebProvider {
           }
           resolve(new ServiceResponse(0, data));
         }, error => {
-          //TODO add error push here
+          this.pushError("Code 14", 'Failed to retrieve offline data from native storage' + JSON.stringify(error));
           console.log("Failed to get offline data from native storage");
           resolve(new ServiceResponse(-2, null));
         });
@@ -299,6 +299,21 @@ export class WebProvider {
         resolve(new ServiceResponse(-3, null));
       }
     });
+  }
+
+  public pushError(code: string, details: string) {
+    try {
+      let options = this.getOptions();
+      let preferredLanguage = this.wordingProvider.preferredLanguage;
+      this.http.get(this.serverRoot + "/pushError?code=" + code + "&details=" + details + "&preferredLanguage=" + preferredLanguage, options).timeout(this.timeout).map(res => {
+
+      }).subscribe(data => {
+      }, (err) => {
+        console.log("Failed http request:" + err);
+      });
+    } catch (err) {
+      console.log("Failed to push error. err:" + err);
+    }
   }
 
 }

@@ -94,7 +94,7 @@ export class ReadQuran {
         this.alertProvider.presentToast(this.dictionary.showingKuranFromWebBecauseYouDontWantItDownloaded, 3000);
       }
     } catch (err) {
-      //TODO push err
+      this.webProvider.pushError("Code 7","Device storage not accessible to get Kuran. err:" + err);
       console.log("Device storage is not accessible. Getting kuran from web. Problem:" + err);
       this.loadQuranFromWeb(loader);
     }

@@ -39,6 +39,7 @@ export class HomePage {
   offlineTimer: Timer;
   eventsTodayEnabled: boolean;
   onlyOffline = false;
+  turkishLan = false;
 
 
   constructor(public navCtrl: NavController, public locationProvider: LocationProvider, public toastController: ToastController,
@@ -97,6 +98,7 @@ export class HomePage {
 
   private startMainProcess(readySource) {
     this.wordingProvider.init(readySource).then(response => {
+      this.turkishLan = this.wordingProvider.determinedLan == "tr";
       this.dictionary = response.data;
       this.title = this.dictionary.prayerTime;
       this.loader.setContent(this.dictionary.pleaseWait);
@@ -287,7 +289,7 @@ export class HomePage {
         }
       });
     } catch (err) {
-      //TODO Push failure
+      this.webProvider.pushError("Code 2","Problem retrieving monthtly calendar timings:" + err);
       console.log("Failed to retrieve new monthly calendar timings. err:" + err);
     }
 
@@ -596,7 +598,7 @@ export class HomePage {
         this.startupData.aksamClass = "subduedd";
         this.updateTimer(this.startupData.yatsiTime, this.timer);
       } else {
-        //TODO push error, this branching should never occur.
+        this.webProvider.pushError("Code 3","Problem adjusting online clock, un-predicted branching.");
       }
     }
   }

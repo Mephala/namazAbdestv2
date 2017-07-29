@@ -65,7 +65,7 @@ export class AboutPage {
       if (response.errorCode < 0) {
         console.log("Problem with loading more hadis");
         infiniteScroll.enable(false);
-        //TODO Push error.
+        this.webProvider.pushError("Code 1","Problem loading more hadis");
       } else {
         let moreHadis: Array<Hadith> = response.data;
         if (moreHadis == null || moreHadis.length == 0) {
