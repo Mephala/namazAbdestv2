@@ -5,6 +5,7 @@ import {Kuran, StartupData, Sure, WebProvider} from "../../providers/web-provide
 import {NativeStorage} from "@ionic-native/native-storage";
 import {InterstitialProvider} from "../../providers/interstitial-provider";
 import {GoogleAnalytics} from "@ionic-native/google-analytics";
+import {AlertProvider} from "../../providers/alert/alert";
 
 /**
  * Generated class for the ReadQuran page.
@@ -31,7 +32,7 @@ export class ReadQuran {
 
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private nativeStorage: NativeStorage, private adProvider: InterstitialProvider,
-              public loadingController: LoadingController, public wordingProvider: WordingProvider,
+              public loadingController: LoadingController, public wordingProvider: WordingProvider, private alertProvider: AlertProvider,
               public webProvider: WebProvider, private ga: GoogleAnalytics) {
     this.dictionary = this.wordingProvider.dictionary;
     this.startupData = this.webProvider.startupData;
@@ -85,10 +86,12 @@ export class ReadQuran {
           console.log("Error fetching kuran from storage:" + error);
           console.log("Getting kuran from web....");
           this.loadQuranFromWeb(loader);
+          this.alertProvider.presentToast(this.dictionary.downloadingKuranFirstTimeOnly, 11000);
         });
       } else {
         console.log("User disabled saving kuran to storage. Loading it from web.");
         this.loadQuranFromWeb(loader);
+        this.alertProvider.presentToast(this.dictionary.showingKuranFromWebBecauseYouDontWantItDownloaded, 3000);
       }
     } catch (err) {
       //TODO push err

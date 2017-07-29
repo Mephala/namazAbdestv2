@@ -119,6 +119,8 @@ export class WordingProvider {
     this.dictionary.noGpsFail = "Konum Bilginize Erişemedik";
     this.dictionary.noGpsFailExplanation = "Lütfen cihazınızın GPS (Konum) özelliğinin aktif olduğundan, uygulamaya konum bilgisine erişim izni verdiğinizden ve cihazınızın konumunuzu tespit edebileceği bir ortamda olduğunuzdan emin olunuz.";
     this.dictionary.preciseLocationUpdateFailure = "Cihazınızdan şu anda bulunduğunuz konum bilgisini alamadık. Bilinen son konumunuza uygun bilgileri görmektesiniz. Lütfen GPS'in aktif ve Konum izinlerinin açık olduğundan emin olunuz.";
+    this.dictionary.showingKuranFromWebBecauseYouDontWantItDownloaded = "Kuran okuyabilmeniz için sistemimizden gerekli bilgiler yükleniyor. Eğer Ayarlar -> Kuran İndir kısmını aktive ederseniz internet bağlantısı olmadan da Kuran okuyabilirsiniz.";
+    this.dictionary.downloadingKuranFirstTimeOnly = "Kuran okuyabilmeniz için gerekli bilgiler sistemimizden alınıp cihazınıza yükleniyor. Bundan sonraki kullanımlarınızda internet bağlantınız olmadan da Kuran okuyabileceksiniz. Eğer telefonunuza yüklenmesini istemiyorsanız Ayarlar-> Kuran İndir bölümünde değişiklik yapabilirsiniz.";
   }
 
   private createEnglishDictionary() {
@@ -182,6 +184,8 @@ export class WordingProvider {
     this.dictionary.noGpsFail = "Can't get your location";
     this.dictionary.noGpsFailExplanation = "Please make sure that your device's GPS is on and you have given our app permission to reach your location data.";
     this.dictionary.preciseLocationUpdateFailure = "We have failed to retrieve location data from your device. Please make sure GPS is on and Location Permissions are granted.";
+    this.dictionary.showingKuranFromWebBecauseYouDontWantItDownloaded = "Connecting to our system for you to read Quran. Please notice that you can change this from Settings-> Download Quran so that you may read without active Internet connection.";
+    this.dictionary.downloadingKuranFirstTimeOnly = "Getting necessary information from our system and downloading it to your device. From now on, you may read Quran without active internet connection. If you don't want anything to be stored in your phone, you may change Settings-> Download Quran to disable it.";
   }
 
 }
@@ -246,6 +250,8 @@ export class Dictionary {
   noGpsFail: string;
   noGpsFailExplanation: string;
   preciseLocationUpdateFailure: string;
+  showingKuranFromWebBecauseYouDontWantItDownloaded: string;
+  downloadingKuranFirstTimeOnly: string;
 
   constructor() {
   }
