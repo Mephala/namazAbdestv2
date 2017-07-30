@@ -36,14 +36,16 @@
         "@ionic/cloud-angular": "^0.12.0",
         "@ionic/storage": "2.0.1",
         "cordova-android": "^6.2.3",
+        "cordova-ios": "^4.4.0",
         "cordova-plugin-actionsheet": "^2.3.3",
         "cordova-plugin-admobpro": "^2.29.21",
+        "cordova-plugin-app-event": "^1.2.0",
         "cordova-plugin-apprate": "^1.3.0",
         "cordova-plugin-compat": "^1.1.0",
         "cordova-plugin-console": "^1.0.7",
         "cordova-plugin-device": "^1.1.6",
         "cordova-plugin-dialogs": "^1.3.3",
-        "cordova-plugin-extension": "^1.5.1",
+        "cordova-plugin-extension": "file:node_modules/cordova-plugin-extension",
         "cordova-plugin-geolocation": "^2.4.3",
         "cordova-plugin-globalization": "^1.0.7",
         "cordova-plugin-google-analytics": "^1.8.3",
@@ -68,6 +70,7 @@
         "@ionic/app-scripts": "2.0.2",
         "@ionic/cli-plugin-cordova": "1.4.0",
         "@ionic/cli-plugin-ionic-angular": "1.3.2",
+        "ionic": "3.6.0",
         "typescript": "2.3.4"
     },
     "cordovaPlugins": [
@@ -85,7 +88,9 @@
             "cordova-plugin-admobpro": {},
             "cordova-plugin-console": {},
             "cordova-plugin-device": {},
-            "cordova-plugin-geolocation": {},
+            "cordova-plugin-geolocation": {
+                "GEOLOCATION_USAGE_DESCRIPTION": " "
+            },
             "cordova-plugin-globalization": {},
             "cordova-plugin-nativestorage": {},
             "cordova-plugin-splashscreen": {},
@@ -99,7 +104,12 @@
                 "SENDER_ID": "925153129457"
             },
             "cordova-plugin-google-analytics": {},
-            "cordova.plugins.diagnostic": {}
+            "cordova.plugins.diagnostic": {},
+            "cordova-plugin-actionsheet": {},
+            "cordova-plugin-app-event": {},
+            "cordova-plugin-compat": {},
+            "cordova-plugin-dialogs": {},
+            "cordova-plugin-inappbrowser": {}
         },
         "platforms": [
             "android"
