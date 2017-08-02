@@ -97,7 +97,8 @@ export class InterstitialProvider {
       this.admob.createBanner({
         adId: this.bannerId,
         autoShow: true,
-        isTesting: this.isTest
+        isTesting: this.isTest,
+        position: this.admob.AD_POSITION.BOTTOM_CENTER
       });
     }
   }

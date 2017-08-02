@@ -40,6 +40,7 @@ export class HomePage {
   eventsTodayEnabled: boolean;
   onlyOffline = false;
   turkishLan = false;
+  isIos: boolean;
 
 
   constructor(public navCtrl: NavController, public locationProvider: LocationProvider, public toastController: ToastController,
@@ -48,6 +49,8 @@ export class HomePage {
               public events: Events, public platform: Platform, public webProvider: WebProvider, private appRate: AppRate, public ga: GoogleAnalytics) {
     this.createLoadingMsg("");
     this.platform.ready().then((readySource) => {
+      this.isIos = this.platform.is("ios");
+      this.showAlert("isIOS?", "val:" + this.isIos, "mik");
       this.source = readySource;
       this.webProvider.source = readySource;
       this.subscribeNotificationEvents();
@@ -289,7 +292,7 @@ export class HomePage {
         }
       });
     } catch (err) {
-      this.webProvider.pushError("Code 2","Problem retrieving monthtly calendar timings:" + err);
+      this.webProvider.pushError("Code 2", "Problem retrieving monthtly calendar timings:" + err);
       console.log("Failed to retrieve new monthly calendar timings. err:" + err);
     }
 
@@ -598,7 +601,7 @@ export class HomePage {
         this.startupData.aksamClass = "subduedd";
         this.updateTimer(this.startupData.yatsiTime, this.timer);
       } else {
-        this.webProvider.pushError("Code 3","Problem adjusting online clock, un-predicted branching.");
+        this.webProvider.pushError("Code 3", "Problem adjusting online clock, un-predicted branching.");
       }
     }
   }

@@ -6,7 +6,6 @@ import {LocationDuple, LocationProvider, ServiceResponse} from "./location";
 import {WordingProvider} from "./wording-provider";
 import {Push, PushObject, PushOptions} from "@ionic-native/push";
 import {CalendarResponse} from "./monthly-calendar-provider";
-import {Mosque} from "../pages/nearby-mosques/nearby-mosques";
 import {Events} from "ionic-angular";
 import {NativeStorage} from "@ionic-native/native-storage";
 
@@ -41,106 +40,68 @@ export class WebProvider {
 
       if (source != "dom") {
         // to check if we have permission.
-        alert(source);
         this.push.hasPermission()
           .then((res: any) => {
 
             if (res.isEnabled) {
-              console.log('We have permission to send push notifications');
-              // to initialize push notifications
-
-              const options: PushOptions = {
-                android: {
-                  senderID: '925153129457'
-                },
-                ios: {
-                  alert: 'true',
-                  badge: true,
-                  sound: 'false'
-                },
-                windows: {}
-              };
-
-              alert("initing push!!!");
-              const pushObject: PushObject = this.push.init(options);
-
-              pushObject.on('notification').subscribe((notification: any) => {
-
-                let pushNotificationMessage = JSON.parse(notification.additionalData.payload.hadisId);
-                if (pushNotificationMessage.type == 0) {
-                  if (notification.additionalData.coldstart) {
-                    //Uygulama kapaliyken geldiyse goster
-                    this.events.publish("hadisNotificationReceived", pushNotificationMessage.data);
-                  }
-                }
-
-              });
-
-              pushObject.on('registration').subscribe((registration: any) => {
-                alert("Registered Push!!!");
-                this.regt = registration.registrationId;
-                this.appToken = this.regt;
-                this.resolveStartup(resolve);
-              });
-
-              pushObject.on('error').subscribe(error => {
-                console.log('Error with Push plugin, problem:' + JSON.stringify(error));
-                this.resolveStartup(resolve);
-              });
+              this.processPush(resolve);
             } else {
-              alert("Push not allowed no permission, going anyways!!!!!");
               try {
-                const options: PushOptions = {
-                  android: {
-                    senderID: '925153129457'
-                  },
-                  ios: {
-                    alert: 'true',
-                    badge: true,
-                    sound: 'false'
-                  },
-                  windows: {}
-                };
-
-                alert("initing push!!!");
-                const pushObject: PushObject = this.push.init(options);
-
-                pushObject.on('notification').subscribe((notification: any) => {
-
-                  let pushNotificationMessage = JSON.parse(notification.additionalData.payload.hadisId);
-                  if (pushNotificationMessage.type == 0) {
-                    if (notification.additionalData.coldstart) {
-                      //Uygulama kapaliyken geldiyse goster
-                      this.events.publish("hadisNotificationReceived", pushNotificationMessage.data);
-                    }
-                  }
-
-                });
-
-                pushObject.on('registration').subscribe((registration: any) => {
-                  alert("Registered Push!!!");
-                  this.regt = registration.registrationId;
-                  this.appToken = this.regt;
-                  this.resolveStartup(resolve);
-                });
+                // Trying anyways to trigger Apple push permissions.
+                this.processPush(resolve);
               } catch (err) {
-                alert("Failed to go for push without permission : ( err:" + err);
-                console.log('We do not have permission to send push notifications');
+                console.log('We do not have permission and received error after trying err:' + err);
+                this.pushError("Code 15", "Push init error received:" + err);
                 this.pushAllowed = false;
                 this.resolveStartup(resolve);
               }
-
-
             }
-
           });
-
-
       } else {
-        alert("Push not allowed bcuz it is dom!!!");
         this.resolveStartup(resolve);
       }
+    });
+  }
 
+  private processPush(resolve) {
+    console.log('We have permission to send push notifications');
+    // to initialize push notifications
+
+    const options: PushOptions = {
+      android: {
+        senderID: '925153129457'
+      },
+      ios: {
+        alert: 'true',
+        badge: true,
+        sound: 'false'
+      },
+      windows: {}
+    };
+
+    const pushObject: PushObject = this.push.init(options);
+
+    pushObject.on('notification').subscribe((notification: any) => {
+
+      let pushNotificationMessage = JSON.parse(notification.additionalData.payload.hadisId);
+      if (pushNotificationMessage.type == 0) {
+        if (notification.additionalData.coldstart) {
+          //Uygulama kapaliyken geldiyse goster
+          this.events.publish("hadisNotificationReceived", pushNotificationMessage.data);
+        }
+      }
+
+    });
+
+    pushObject.on('registration').subscribe((registration: any) => {
+      this.regt = registration.registrationId;
+      this.appToken = this.regt;
+      this.resolveStartup(resolve);
+    });
+
+    pushObject.on('error').subscribe(error => {
+      console.log('Error with Push plugin, problem:' + JSON.stringify(error));
+      this.resolveStartup(resolve);
     });
   }
 

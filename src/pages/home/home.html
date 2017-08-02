@@ -212,15 +212,33 @@
     </ion-card-content>
   </ion-card>
 
+  <ng-template  [ngIf]="isIos">
+    <style>
+      .timer-button {
+        font-size: 4rem !important;
+        height: 1em !important;
+      }
 
-  <style>
-    .timer-button {
-      font-size: 5rem !important;
-      height: 1em !important;
-    }
+      .no-bottom-border.item .item-inner {
+        border-bottom: none !important;
+      }
+    </style>
 
-    .no-bottom-border.item .item-inner {
-      border-bottom: none !important;
-    }
-  </style>
+  </ng-template>
+
+  <ng-template  [ngIf]="!isIos">
+    <style>
+      .timer-button {
+        font-size: 5rem !important;
+        height: 1em !important;
+      }
+
+      .no-bottom-border.item .item-inner {
+        border-bottom: none !important;
+      }
+    </style>
+
+  </ng-template>
+
+
 </ion-content>
