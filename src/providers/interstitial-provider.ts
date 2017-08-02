@@ -31,6 +31,22 @@ export class InterstitialProvider {
 
   constructor(public http: Http, private admob: AdMob, private platform: Platform) {
     console.log('Hello InterstitialProvider Provider');
+    this.admob.onAdDismiss()
+      .subscribe((data) => {
+        alert('onAdDismiss:' + JSON.stringify(data));
+      });
+    this.admob.onAdLeaveApp()
+      .subscribe((data) => {
+        alert('onAdLeaveAppd' + JSON.stringify(data));
+      });
+    this.admob.onAdLoaded()
+      .subscribe((data) => {
+        alert('onAdLoaded' + JSON.stringify(data));
+      });
+    this.admob.onAdPresent()
+      .subscribe((data) => {
+        alert('onAdPresent' + JSON.stringify(data));
+      });
   }
 
   public initAds(source: string, threshold: number) {
