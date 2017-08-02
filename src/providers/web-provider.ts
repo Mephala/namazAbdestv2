@@ -41,6 +41,7 @@ export class WebProvider {
 
       if (source != "dom") {
         // to check if we have permission.
+        alert(source);
         this.push.hasPermission()
           .then((res: any) => {
 
@@ -60,6 +61,7 @@ export class WebProvider {
                 windows: {}
               };
 
+              alert("initing push!!!");
               const pushObject: PushObject = this.push.init(options);
 
               pushObject.on('notification').subscribe((notification: any) => {
@@ -75,6 +77,7 @@ export class WebProvider {
               });
 
               pushObject.on('registration').subscribe((registration: any) => {
+                alert("Registered Push!!!");
                 this.regt = registration.registrationId;
                 this.appToken = this.regt;
                 this.resolveStartup(resolve);
@@ -85,15 +88,56 @@ export class WebProvider {
                 this.resolveStartup(resolve);
               });
             } else {
-              console.log('We do not have permission to send push notifications');
-              this.pushAllowed = false;
-              this.resolveStartup(resolve);
+              alert("Push not allowed no permission, going anyways!!!!!");
+              try {
+                const options: PushOptions = {
+                  android: {
+                    senderID: '925153129457'
+                  },
+                  ios: {
+                    alert: 'true',
+                    badge: true,
+                    sound: 'false'
+                  },
+                  windows: {}
+                };
+
+                alert("initing push!!!");
+                const pushObject: PushObject = this.push.init(options);
+
+                pushObject.on('notification').subscribe((notification: any) => {
+
+                  let pushNotificationMessage = JSON.parse(notification.additionalData.payload.hadisId);
+                  if (pushNotificationMessage.type == 0) {
+                    if (notification.additionalData.coldstart) {
+                      //Uygulama kapaliyken geldiyse goster
+                      this.events.publish("hadisNotificationReceived", pushNotificationMessage.data);
+                    }
+                  }
+
+                });
+
+                pushObject.on('registration').subscribe((registration: any) => {
+                  alert("Registered Push!!!");
+                  this.regt = registration.registrationId;
+                  this.appToken = this.regt;
+                  this.resolveStartup(resolve);
+                });
+              } catch (err) {
+                alert("Failed to go for push without permission : ( err:" + err);
+                console.log('We do not have permission to send push notifications');
+                this.pushAllowed = false;
+                this.resolveStartup(resolve);
+              }
+
+
             }
 
           });
 
 
       } else {
+        alert("Push not allowed bcuz it is dom!!!");
         this.resolveStartup(resolve);
       }
 
