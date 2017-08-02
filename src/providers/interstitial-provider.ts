@@ -3,6 +3,7 @@ import {Http} from "@angular/http";
 import "rxjs/add/operator/map";
 import {AdMob} from "@ionic-native/admob";
 import {Platform} from "ionic-angular";
+import {AdMobFree, AdMobFreeBannerConfig} from '@ionic-native/admob-free';
 
 /*
  Generated class for the InterstitialProvider provider.
@@ -30,24 +31,8 @@ export class InterstitialProvider {
   init: boolean = false;
   banner: any;
 
-  constructor(public http: Http, private admob: AdMob, private platform: Platform) {
-    console.log('Hello InterstitialProvider Provider');
-    this.admob.onAdDismiss()
-      .subscribe((data) => {
-        console.log('onAdDismiss:' + JSON.stringify(data));
-      });
-    this.admob.onAdLeaveApp()
-      .subscribe((data) => {
-        console.log('onAdLeaveAppd' + JSON.stringify(data));
-      });
-    this.admob.onAdLoaded()
-      .subscribe((data) => {
-        console.log('onAdLoaded' + JSON.stringify(data));
-      });
-    this.admob.onAdPresent()
-      .subscribe((data) => {
-        console.log('onAdPresent' + JSON.stringify(data));
-      });
+  constructor(public http: Http, private admob: AdMob, private platform: Platform, private admobFree: AdMobFree) {
+    console.log('Constructed Interstitial p.');
   }
 
   public initAds(source: string, threshold: number) {
@@ -66,13 +51,16 @@ export class InterstitialProvider {
           this.isTest = true;
         }
         if (this.platform.is('android')) {
+          console.log("Ads are being initiated for Android configuration.");
           this.bannerId = this.adMobAndroidBannerId;
           this.interstitialId = this.adMobAndroidInterstitialId;
+          this.initBanner();
         } else {
+          console.log("Ads are being initiated for IOS configuration.");
           this.bannerId = this.adMobIOSBannerId;
           this.interstitialId = this.admobIOSInterstitialId;
+          this.initBannerIOS();
         }
-        this.initBanner();
         this.prepInterstitial();
       }
     }
@@ -125,6 +113,24 @@ export class InterstitialProvider {
         this.banner = banner;
         alert(JSON.stringify(banner));
       });
+    }
+  }
+
+  private initBannerIOS() {
+    if (!this.adsDisabled) {
+      const bannerConfig: AdMobFreeBannerConfig = {
+        id: this.bannerId,
+        isTesting: false,
+        autoShow: true,
+        bannerAtTop: false
+      };
+      this.admobFree.banner.config(bannerConfig);
+      this.admobFree.banner.prepare()
+        .then(() => {
+          // banner Ad is ready
+          // if we set autoShow to false, then we will need to call the show method here
+        })
+        .catch(e => console.log(e));
     }
   }
 

@@ -107,4 +107,5 @@
         <variable name="SENDER_ID" value="925153129457" />
     </plugin>
     <plugin name="uk.co.workingedge.phonegap.plugin.launchnavigator" spec="^4.0.3" />
+    <plugin name="cordova-plugin-admob-free" spec="^0.10.0" />
 </widget>
