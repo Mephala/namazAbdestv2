@@ -65,7 +65,8 @@ export class InterstitialProvider {
     this.admob.prepareInterstitial({
       adId: this.interstitialId,
       autoShow: false,
-      isTesting: this.isTest
+      isTesting: this.isTest,
+      position: this.admob.AD_POSITION.BOTTOM_CENTER
     }).then((inter) => {
       this.interstitialReady = true;
       console.log("Interstitial is ready and stored:" + inter);
