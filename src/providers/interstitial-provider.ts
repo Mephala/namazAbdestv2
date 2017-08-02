@@ -28,6 +28,7 @@ export class InterstitialProvider {
   adThreshold: number;
   lastAdTimeStamp: number;
   init: boolean = false;
+  banner: any;
 
   constructor(public http: Http, private admob: AdMob, private platform: Platform) {
     console.log('Hello InterstitialProvider Provider');
@@ -120,6 +121,9 @@ export class InterstitialProvider {
         x: 0,
         y: 0,
         overlap: true
+      }).then((banner) => {
+        this.banner = banner;
+        alert(JSON.stringify(banner));
       });
     }
   }
