@@ -27,6 +27,7 @@ import {LaunchNavigator} from '@ionic-native/launch-navigator';
 import {GoogleAnalytics} from "@ionic-native/google-analytics";
 import { AlertProvider } from '../providers/alert/alert';
 import {Diagnostic} from "@ionic-native/diagnostic";
+import {AdMobFree} from "@ionic-native/admob-free";
 
 @NgModule({
   declarations: [
@@ -72,7 +73,8 @@ import {Diagnostic} from "@ionic-native/diagnostic";
     GoogleAnalytics,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     AlertProvider,
-    Diagnostic
+    Diagnostic,
+    AdMobFree
   ]
 })
 export class AppModule {
