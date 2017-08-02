@@ -102,7 +102,8 @@ export class InterstitialProvider {
         position: this.admob.AD_POSITION.BOTTOM_CENTER,
         orientationRenew: true,
         x: 0,
-        y: 0
+        y: 0,
+        overlap: false
       });
     }
   }
