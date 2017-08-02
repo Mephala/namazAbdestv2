@@ -66,7 +66,7 @@ export class InterstitialProvider {
       adId: this.interstitialId,
       autoShow: false,
       isTesting: this.isTest,
-      position: this.admob.AD_POSITION.BOTTOM_CENTER
+      orientationRenew: true
     }).then((inter) => {
       this.interstitialReady = true;
       console.log("Interstitial is ready and stored:" + inter);
@@ -100,7 +100,9 @@ export class InterstitialProvider {
         autoShow: true,
         isTesting: this.isTest,
         position: this.admob.AD_POSITION.BOTTOM_CENTER,
-        orientationRenew: true
+        orientationRenew: true,
+        x: 0,
+        y: 0
       });
     }
   }
