@@ -120,7 +120,7 @@ export class InterstitialProvider {
         orientationRenew: true,
         x: 0,
         y: 0,
-        overlap: true
+        overlap: false
       }).then((banner) => {
         this.banner = banner;
         alert(JSON.stringify(banner));
