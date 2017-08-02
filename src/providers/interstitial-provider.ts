@@ -80,12 +80,7 @@ export class InterstitialProvider {
         let difference = now - this.lastAdTimeStamp;
         if (difference >= this.adThreshold) {
           console.log("Interstitial is ready and will be shown now.");
-          alert("Destroying banner");
-          this.admob.removeBanner();
-          alert("Banner must have destroyed");
           this.admob.showInterstitial();
-          alert("You dismissed add, congratz.");
-          this.initBanner();
           this.lastAdTimeStamp = new Date().getTime();
           this.interstitialReady = false;
           this.prepInterstitial();
@@ -104,7 +99,8 @@ export class InterstitialProvider {
         adId: this.bannerId,
         autoShow: true,
         isTesting: this.isTest,
-        position: this.admob.AD_POSITION.BOTTOM_CENTER
+        position: this.admob.AD_POSITION.BOTTOM_CENTER,
+        orientationRenew: true
       });
     }
   }
