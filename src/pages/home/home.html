@@ -9,7 +9,8 @@
     <h2>{{startupData.namazText}}</h2>
     <ion-card>
       <ion-item class="no-bottom-border item">
-        <button ion-button large full clear class="timer-button timer-text" style="text-align:center">{{timer.displayTime()}}</button>
+        <button ion-button large full clear class="ttimer-button ttimer-text" *ngIf="isIos">{{timer.displayTime()}}</button>
+        <button ion-button large full clear class="timer-button timer-text" *ngIf="!isIos">{{timer.displayTime()}}</button>
       </ion-item>
       <!--<ion-item class="no-bottom-border" *ngIf="timeInSeconds && timeInSeconds > 0">-->
       <!--<button ion-button icon-left clear color="danger" small (click)="initTimer()" item-left *ngIf="!timer.runTimer && (timer.hasStarted || timer.hasFinished) || timer.hasFinished">-->
@@ -212,33 +213,22 @@
     </ion-card-content>
   </ion-card>
 
-  <ng-template  [ngIf]="isIos">
-    <style>
-      .timer-button {
-        font-size: 4rem !important;
-        height: 1em !important;
-      }
+  <style>
+    .timer-button {
+      font-size: 5rem !important;
+      height: 1em !important;
+    }
 
-      .no-bottom-border.item .item-inner {
-        border-bottom: none !important;
-      }
-    </style>
+    .no-bottom-border.item .item-inner {
+      border-bottom: none !important;
+    }
 
-  </ng-template>
+    .ttimer-button {
+      font-size: 4rem !important;
+      height: 1em !important;
+    }
 
-  <ng-template  [ngIf]="!isIos">
-    <style>
-      .timer-button {
-        font-size: 5rem !important;
-        height: 1em !important;
-      }
-
-      .no-bottom-border.item .item-inner {
-        border-bottom: none !important;
-      }
-    </style>
-
-  </ng-template>
+  </style>
 
 
 </ion-content>

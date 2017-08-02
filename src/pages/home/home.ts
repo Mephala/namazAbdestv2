@@ -50,7 +50,7 @@ export class HomePage {
     this.createLoadingMsg("");
     this.platform.ready().then((readySource) => {
       this.isIos = this.platform.is("ios");
-      this.showAlert("isIOS?", "val:" + this.isIos, "mik");
+      console.log("isIOS:" + this.isIos);
       this.source = readySource;
       this.webProvider.source = readySource;
       this.subscribeNotificationEvents();
