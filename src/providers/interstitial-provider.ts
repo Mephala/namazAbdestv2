@@ -29,7 +29,7 @@ export class InterstitialProvider {
   lastAdTimeStamp: number;
   init: boolean = false;
   isIos: boolean;
-  iosResetBannerTimeout: number = 30000;
+  iosResetBannerTimeout: number = 20000;
 
   constructor(public http: Http, private admob: AdMob, private platform: Platform) {
     console.log('Hello InterstitialProvider Provider');
@@ -89,7 +89,6 @@ export class InterstitialProvider {
           this.admob.showInterstitial();
           if (this.isIos) {
             setTimeout(() => {
-              alert("Recreating banner...");
               this.initBanner();
             }, this.iosResetBannerTimeout);
           }

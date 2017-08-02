@@ -125,6 +125,10 @@ export class WordingProvider {
     this.dictionary.preciseLocationUpdateFailure = "Cihazınızdan şu anda bulunduğunuz konum bilgisini alamadık. Bilinen son konumunuza uygun bilgileri görmektesiniz. Lütfen GPS'in aktif ve Konum izinlerinin açık olduğundan emin olunuz.";
     this.dictionary.showingKuranFromWebBecauseYouDontWantItDownloaded = "Kuran okuyabilmeniz için sistemimizden gerekli bilgiler yükleniyor. Eğer Ayarlar -> Kuran İndir kısmını aktive ederseniz internet bağlantısı olmadan da Kuran okuyabilirsiniz.";
     this.dictionary.downloadingKuranFirstTimeOnly = "Kuran okuyabilmeniz için gerekli bilgiler sistemimizden alınıp cihazınıza yükleniyor. Bundan sonraki kullanımlarınızda internet bağlantınız olmadan da Kuran okuyabileceksiniz. Eğer telefonunuza yüklenmesini istemiyorsanız Ayarlar-> Kuran İndir bölümünde değişiklik yapabilirsiniz.";
+    this.dictionary.yesclamation = "Evet!";
+    this.dictionary.notReally = "Pek Sayılmaz";
+    this.dictionary.doYouLikeUsingOurApp = "Uygulamamızdan memnun musunuz ?";
+    this.dictionary.mindGivingUsFeedBack = "Lütfen fikirlerinizi paylaşın";
   }
 
   private createEnglishDictionary() {
@@ -190,6 +194,10 @@ export class WordingProvider {
     this.dictionary.preciseLocationUpdateFailure = "We have failed to retrieve location data from your device. Please make sure GPS is on and Location Permissions are granted.";
     this.dictionary.showingKuranFromWebBecauseYouDontWantItDownloaded = "Connecting to our system for you to read Quran. Please notice that you can change this from Settings-> Download Quran so that you may read without active Internet connection.";
     this.dictionary.downloadingKuranFirstTimeOnly = "Getting necessary information from our system and downloading it to your device. From now on, you may read Quran without active internet connection. If you don't want anything to be stored in your phone, you may change Settings-> Download Quran to disable it.";
+    this.dictionary.yesclamation = "Yes!";
+    this.dictionary.notReally = "Not Really";
+    this.dictionary.doYouLikeUsingOurApp = "Do you enjoy using our application";
+    this.dictionary.mindGivingUsFeedBack = "Would you mind giving us a feed-back ?";
   }
 
 }
@@ -256,6 +264,10 @@ export class Dictionary {
   preciseLocationUpdateFailure: string;
   showingKuranFromWebBecauseYouDontWantItDownloaded: string;
   downloadingKuranFirstTimeOnly: string;
+  yesclamation: string;
+  notReally: string;
+  doYouLikeUsingOurApp: string;
+  mindGivingUsFeedBack: string;
 
   constructor() {
   }

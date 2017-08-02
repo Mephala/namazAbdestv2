@@ -207,10 +207,14 @@ export class HomePage {
             cancelButtonLabel: this.dictionary.rateNoThanks,
             laterButtonLabel: this.dictionary.rateDelay,
             rateButtonLabel: this.dictionary.rateNow,
-            yesButtonLabel: "Yes!",
-            noButtonLabel: "Not really",
-            appRatePromptTitle: 'Do you like using %@',
-            feedbackPromptTitle: 'Mind giving us some feedback?',
+            yesButtonLabel: this.dictionary.yesclamation,
+            noButtonLabel: this.dictionary.notReally,
+            appRatePromptTitle: this.dictionary.doYouLikeUsingOurApp,
+            feedbackPromptTitle: this.dictionary.mindGivingUsFeedBack
+            // yesButtonLabel: "Yes!",
+            // noButtonLabel: "Not really",
+            // appRatePromptTitle: 'Do you like using %@',
+            // feedbackPromptTitle: 'Mind giving us some feedback?',
           },
           callbacks: {
             onButtonClicked: (buttonIndex) => {
