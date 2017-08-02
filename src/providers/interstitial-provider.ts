@@ -33,19 +33,19 @@ export class InterstitialProvider {
     console.log('Hello InterstitialProvider Provider');
     this.admob.onAdDismiss()
       .subscribe((data) => {
-        alert('onAdDismiss:' + JSON.stringify(data));
+        console.log('onAdDismiss:' + JSON.stringify(data));
       });
     this.admob.onAdLeaveApp()
       .subscribe((data) => {
-        alert('onAdLeaveAppd' + JSON.stringify(data));
+        console.log('onAdLeaveAppd' + JSON.stringify(data));
       });
     this.admob.onAdLoaded()
       .subscribe((data) => {
-        alert('onAdLoaded' + JSON.stringify(data));
+        console.log('onAdLoaded' + JSON.stringify(data));
       });
     this.admob.onAdPresent()
       .subscribe((data) => {
-        alert('onAdPresent' + JSON.stringify(data));
+        console.log('onAdPresent' + JSON.stringify(data));
       });
   }
 
@@ -119,7 +119,7 @@ export class InterstitialProvider {
         orientationRenew: true,
         x: 0,
         y: 0,
-        overlap: false
+        overlap: true
       });
     }
   }
