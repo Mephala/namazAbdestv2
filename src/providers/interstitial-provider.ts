@@ -84,10 +84,8 @@ export class InterstitialProvider {
           this.admob.removeBanner();
           alert("Banner must have destroyed");
           this.admob.showInterstitial();
-          this.admob.onAdDismiss().subscribe( () => {
-             alert("You dismissed add, congratz.");
-             this.initBanner();
-          });
+          alert("You dismissed add, congratz.");
+          this.initBanner();
           this.lastAdTimeStamp = new Date().getTime();
           this.interstitialReady = false;
           this.prepInterstitial();
