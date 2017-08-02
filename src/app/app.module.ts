@@ -73,8 +73,7 @@ import {AdMobFree} from "@ionic-native/admob-free";
     GoogleAnalytics,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     AlertProvider,
-    Diagnostic,
-    AdMobFree
+    Diagnostic
   ]
 })
 export class AppModule {

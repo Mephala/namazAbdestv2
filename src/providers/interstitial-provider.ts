@@ -3,7 +3,6 @@ import {Http} from "@angular/http";
 import "rxjs/add/operator/map";
 import {AdMob} from "@ionic-native/admob";
 import {Platform} from "ionic-angular";
-import {AdMobFree, AdMobFreeBannerConfig} from '@ionic-native/admob-free';
 
 /*
  Generated class for the InterstitialProvider provider.
@@ -29,10 +28,11 @@ export class InterstitialProvider {
   adThreshold: number;
   lastAdTimeStamp: number;
   init: boolean = false;
-  banner: any;
+  isIos: boolean;
+  iosResetBannerTimeout: number = 30000;
 
-  constructor(public http: Http, private admob: AdMob, private platform: Platform, private admobFree: AdMobFree) {
-    console.log('Constructed Interstitial p.');
+  constructor(public http: Http, private admob: AdMob, private platform: Platform) {
+    console.log('Hello InterstitialProvider Provider');
   }
 
   public initAds(source: string, threshold: number) {
@@ -51,16 +51,15 @@ export class InterstitialProvider {
           this.isTest = true;
         }
         if (this.platform.is('android')) {
-          console.log("Ads are being initiated for Android configuration.");
+          this.isIos = false;
           this.bannerId = this.adMobAndroidBannerId;
           this.interstitialId = this.adMobAndroidInterstitialId;
-          this.initBanner();
         } else {
-          console.log("Ads are being initiated for IOS configuration.");
+          this.isIos = true;
           this.bannerId = this.adMobIOSBannerId;
           this.interstitialId = this.admobIOSInterstitialId;
-          this.initBannerIOS();
         }
+        this.initBanner();
         this.prepInterstitial();
       }
     }
@@ -70,8 +69,7 @@ export class InterstitialProvider {
     this.admob.prepareInterstitial({
       adId: this.interstitialId,
       autoShow: false,
-      isTesting: this.isTest,
-      orientationRenew: true
+      isTesting: this.isTest
     }).then((inter) => {
       this.interstitialReady = true;
       console.log("Interstitial is ready and stored:" + inter);
@@ -85,7 +83,16 @@ export class InterstitialProvider {
         let difference = now - this.lastAdTimeStamp;
         if (difference >= this.adThreshold) {
           console.log("Interstitial is ready and will be shown now.");
+          if (this.isIos) {
+            this.admob.removeBanner();
+          }
           this.admob.showInterstitial();
+          if (this.isIos) {
+            setTimeout(() => {
+              alert("Recreating banner...");
+              this.initBanner();
+            }, this.iosResetBannerTimeout);
+          }
           this.lastAdTimeStamp = new Date().getTime();
           this.interstitialReady = false;
           this.prepInterstitial();
@@ -104,33 +111,8 @@ export class InterstitialProvider {
         adId: this.bannerId,
         autoShow: true,
         isTesting: this.isTest,
-        position: this.admob.AD_POSITION.BOTTOM_CENTER,
-        orientationRenew: true,
-        x: 0,
-        y: 0,
-        overlap: false
-      }).then((banner) => {
-        this.banner = banner;
-        alert(JSON.stringify(banner));
+        position: this.admob.AD_POSITION.BOTTOM_CENTER
       });
-    }
-  }
-
-  private initBannerIOS() {
-    if (!this.adsDisabled) {
-      const bannerConfig: AdMobFreeBannerConfig = {
-        id: this.bannerId,
-        isTesting: false,
-        autoShow: true,
-        bannerAtTop: false
-      };
-      this.admobFree.banner.config(bannerConfig);
-      this.admobFree.banner.prepare()
-        .then(() => {
-          // banner Ad is ready
-          // if we set autoShow to false, then we will need to call the show method here
-        })
-        .catch(e => console.log(e));
     }
   }
 
