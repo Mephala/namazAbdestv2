@@ -19,8 +19,8 @@ import {NativeStorage} from "@ionic-native/native-storage";
 export class WebProvider {
 
   appToken: string = "21891fh8291f2812192819h8129f8h34729fh7))_(8128ddh218hf7fh71f21hj1299d218912777898"; //default
-  // serverRoot: string = "http://192.168.0.103:8080/namazAppServer";
-  serverRoot: string = "http://ec2-52-27-157-90.us-west-2.compute.amazonaws.com";
+  serverRoot: string = "http://192.168.1.105:8080/namazAppServer";
+  // serverRoot: string = "http://ec2-52-27-157-90.us-west-2.compute.amazonaws.com";
   version: string = "2.0.0";
   timeout: number = 30000;
   startupData: StartupData;
@@ -50,6 +50,7 @@ export class WebProvider {
                 // Trying anyways to trigger Apple push permissions.
                 this.processPush(resolve);
               } catch (err) {
+                alert("Failed to init push process...");
                 console.log('We do not have permission and received error after trying err:' + err);
                 this.pushError("Code 15", "Push init error received:" + err);
                 this.pushAllowed = false;
@@ -58,6 +59,7 @@ export class WebProvider {
             }
           });
       } else {
+        alert("Resolving startup without push settings...");
         this.resolveStartup(resolve);
       }
     });
@@ -83,11 +85,13 @@ export class WebProvider {
 
     pushObject.on('notification').subscribe((notification: any) => {
 
-      let pushNotificationMessage = JSON.parse(notification.additionalData.payload.hadisId);
-      if (pushNotificationMessage.type == 0) {
+      console.log("Received notification:" + JSON.stringify(notification));
+      if (notification.additionalData.type == 0) {
+        let pushNotificationMessage = JSON.parse(notification.additionalData.hadisId);
         if (notification.additionalData.coldstart) {
+          console.log("Coldstart notification received, processing data...");
           //Uygulama kapaliyken geldiyse goster
-          this.events.publish("hadisNotificationReceived", pushNotificationMessage.data);
+          this.events.publish("hadisNotificationReceived", pushNotificationMessage);
         }
       }
 
@@ -100,6 +104,7 @@ export class WebProvider {
     });
 
     pushObject.on('error').subscribe(error => {
+      alert("Push error!!! :" + JSON.stringify(error));
       console.log('Error with Push plugin, problem:' + JSON.stringify(error));
       this.resolveStartup(resolve);
     });

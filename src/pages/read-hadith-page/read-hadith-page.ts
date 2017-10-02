@@ -23,6 +23,7 @@ export class ReadHadithPage {
   constructor(public navParams: NavParams, private wordingProvider: WordingProvider, public events: Events, private ga: GoogleAnalytics) {
     this.dictionary = this.wordingProvider.dictionary;
     this.hadis = this.navParams.get("hadis");
+    console.log("Hadis set up successfully:" + JSON.stringify(this.hadis));
   }
 
   ionViewDidEnter() {
