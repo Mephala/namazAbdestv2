@@ -19,7 +19,7 @@ import {NativeStorage} from "@ionic-native/native-storage";
 export class WebProvider {
 
   appToken: string = "21891fh8291f2812192819h8129f8h34729fh7))_(8128ddh218hf7fh71f21hj1299d218912777898"; //default
-  serverRoot: string = "http://192.168.1.105:8080/namazAppServer";
+  serverRoot: string = "http://192.168.1.103:8080/namazAppServer";
   // serverRoot: string = "http://ec2-52-27-157-90.us-west-2.compute.amazonaws.com";
   version: string = "2.0.0";
   timeout: number = 30000;
@@ -158,8 +158,12 @@ export class WebProvider {
       response = res.json();
     }).subscribe(data => {
       this.startupData = response;
-      this.assignDateParams(time);
-      resolve(new ServiceResponse(0, response));
+      if (this.startupData.errorFound) {
+        resolve(new ServiceResponse(-1, "Error"));
+      } else {
+        this.assignDateParams(time);
+        resolve(new ServiceResponse(0, response));
+      }
     }, (err) => {
       this.noInternet = true;
       console.log("Failed http request:" + err);
