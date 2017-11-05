@@ -59,7 +59,7 @@ export class WebProvider {
             }
           });
       } else {
-        alert("Resolving startup without push settings...");
+        // alert("Resolving startup without push settings...");
         this.resolveStartup(resolve);
       }
     });
@@ -87,7 +87,7 @@ export class WebProvider {
 
       console.log("Received notification:" + JSON.stringify(notification));
       if (notification.additionalData.type == 0) {
-        let pushNotificationMessage = JSON.parse(notification.additionalData.hadisId);
+        let pushNotificationMessage = notification.additionalData.hadisId;
         if (notification.additionalData.coldstart) {
           console.log("Coldstart notification received, processing data...");
           //Uygulama kapaliyken geldiyse goster
