@@ -21,7 +21,7 @@ export class WebProvider {
   appToken: string = "21891fh8291f2812192819h8129f8h34729fh7))_(8128ddh218hf7fh71f21hj1299d218912777898"; //default
   serverRoot: string = "http://192.168.1.103:8080/namazAppServer";
   // serverRoot: string = "http://ec2-52-27-157-90.us-west-2.compute.amazonaws.com";
-  version: string = "2.0.0";
+  version: string = "2.0.1";
   timeout: number = 30000;
   startupData: StartupData;
   regt: string = "";
