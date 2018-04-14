@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.ionicframework.myapp244359" version="2.0.2" xmlns="http://www.w3.org/ns/widgets">
+<widget id="com.ionicframework.myapp244359" version="2.0.3" xmlns="http://www.w3.org/ns/widgets">
     <name>namazAbdestv2</name>
     <description>Namaz ve Ezan vakitlerini takip edin, dini bilgilere ulasin.</description>
     <author email="gokhan.ozgozen@gmail.com" href="http://gokhanozg.com/">Gokhan Ozgozen</author>
