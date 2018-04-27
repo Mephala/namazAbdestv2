@@ -49,6 +49,7 @@ export class ReadQuran {
           this.loadQuran(loader);
         } else {
           //TODO add alerts based on error codes.
+          this.webProvider.pushError("Code 16", "Unexpected branching occured. Please leave no error un-handled!");
         }
       })
     } else {
@@ -94,7 +95,7 @@ export class ReadQuran {
         this.alertProvider.presentToast(this.dictionary.showingKuranFromWebBecauseYouDontWantItDownloaded, 3000);
       }
     } catch (err) {
-      this.webProvider.pushError("Code 7","Device storage not accessible to get Kuran. err:" + err);
+      this.webProvider.pushError("Code 7", "Device storage not accessible to get Kuran. err:" + err);
       console.log("Device storage is not accessible. Getting kuran from web. Problem:" + err);
       this.loadQuranFromWeb(loader);
     }
