@@ -25,9 +25,10 @@ import {AppRate} from "@ionic-native/app-rate";
 import {NearbyMosquesPage} from "../pages/nearby-mosques/nearby-mosques";
 import {LaunchNavigator} from '@ionic-native/launch-navigator';
 import {GoogleAnalytics} from "@ionic-native/google-analytics";
-import { AlertProvider } from '../providers/alert/alert';
+import {AlertProvider} from '../providers/alert/alert';
 import {Diagnostic} from "@ionic-native/diagnostic";
 import {AdMobFree} from "@ionic-native/admob-free";
+import {StreamingMedia} from '@ionic-native/streaming-media';
 
 @NgModule({
   declarations: [
@@ -73,7 +74,8 @@ import {AdMobFree} from "@ionic-native/admob-free";
     GoogleAnalytics,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     AlertProvider,
-    Diagnostic
+    Diagnostic,
+    StreamingMedia
   ]
 })
 export class AppModule {

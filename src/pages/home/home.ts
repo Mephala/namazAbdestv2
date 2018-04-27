@@ -158,17 +158,20 @@ export class HomePage {
         this.diagnostic.isLocationEnabled().then((retVal) => {
           if (retVal) {
             if (response.data != null && response.data == 1) {
+              console.log("LocationService diagnostics response code:1");
               //Illegal access, location permission is required.code :1
               this.loader.dismissAll();
               this.noGPS = true;
               this.showAlert(this.dictionary.noGpsFail, this.dictionary.noGpsFailExplanation, this.dictionary.ok);
             } else {
+              console.log("LocationService diagnostics response code:2" + "response:" + JSON.stringify(response));
               this.loader.dismissAll();
               this.noGPS = true;
               this.showAlert(this.dictionary.noGpsFail, this.dictionary.noGpsFailExplanation, this.dictionary.ok);
             }
           } else {
             //Illegal access, location permission is required.code :1
+            console.log("LocationService diagnostics response code:3");
             this.loader.dismissAll();
             this.noGPS = true;
             this.showAlert(this.dictionary.noGpsFail, this.dictionary.noGpsFailExplanation, this.dictionary.ok);

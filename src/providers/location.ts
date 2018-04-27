@@ -3,7 +3,6 @@ import {Events} from "ionic-angular";
 import {NativeStorage} from "@ionic-native/native-storage";
 import {Geolocation, GeolocationOptions} from "@ionic-native/geolocation";
 import {Dictionary, WordingProvider} from "./wording-provider";
-import {WebProvider} from "./web-provider";
 import {AlertProvider} from "./alert/alert";
 
 /*
@@ -91,7 +90,8 @@ export class LocationProvider {
   public getLocationDuple(source: string): Promise<ServiceResponse> {
     let options: GeolocationOptions = {
       timeout: this.locationUpdateTimeout,
-      maximumAge: this.maximumLocationAge
+      maximumAge: this.maximumLocationAge,
+      enableHighAccuracy: false
     };
     return this.getDeviceLocation(source, options);
   }
@@ -99,7 +99,8 @@ export class LocationProvider {
   public getLocationDupleLimitedPrecise(source: string): Promise<ServiceResponse> {
     let options: GeolocationOptions = {
       timeout: 30000,
-      maximumAge: this.maximumLocationAge
+      maximumAge: this.maximumLocationAge,
+      enableHighAccuracy: false
     };
     return this.getDeviceLocation(source, options);
   }

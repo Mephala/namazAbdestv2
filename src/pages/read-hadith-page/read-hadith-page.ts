@@ -3,6 +3,7 @@ import {Events, IonicPage, NavParams} from "ionic-angular";
 import {Hadith} from "../../providers/web-provider";
 import {Dictionary, WordingProvider} from "../../providers/wording-provider";
 import {GoogleAnalytics} from "@ionic-native/google-analytics";
+import {StreamingMedia, StreamingVideoOptions} from '@ionic-native/streaming-media';
 
 /**
  * Generated class for the ReadHadithPage page.
@@ -20,7 +21,7 @@ export class ReadHadithPage {
   hadis: Hadith;
   dictionary: Dictionary;
 
-  constructor(public navParams: NavParams, private wordingProvider: WordingProvider, public events: Events, private ga: GoogleAnalytics) {
+  constructor(public navParams: NavParams, private streamingMedia: StreamingMedia, private wordingProvider: WordingProvider, public events: Events, private ga: GoogleAnalytics) {
     this.dictionary = this.wordingProvider.dictionary;
     this.hadis = this.navParams.get("hadis");
     console.log("Hadis set up successfully:" + JSON.stringify(this.hadis));
@@ -45,6 +46,20 @@ export class ReadHadithPage {
         console.log('Error starting GoogleAnalytics', e)
 
       });
+  }
+
+  public playStuff() {
+    let options: StreamingVideoOptions = {
+      successCallback: () => {
+        console.log('Video played')
+      },
+      errorCallback: (e) => {
+        console.log('Error streaming')
+      },
+      orientation: 'landscape'
+    };
+
+    this.streamingMedia.playVideo('https://www.youtube.com/watch?v=XeEnzHKiW4E', options);
   }
 
 }

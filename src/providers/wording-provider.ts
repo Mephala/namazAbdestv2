@@ -26,7 +26,7 @@ export class WordingProvider {
     return new Promise<ServiceResponse>(resolve => {
       if (source != "dom") {
         this.globalization.getPreferredLanguage().then(res => {
-          console.log("Determine preferred language:" + res);
+          console.log("Determine preferred language:" + JSON.stringify(res));
           this.lanDetermined(res);
           this.events.publish('wordingsConstructed', this.dictionary);
           resolve(new ServiceResponse(0, this.dictionary));
