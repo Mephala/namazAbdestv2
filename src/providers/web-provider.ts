@@ -304,9 +304,19 @@ export class WebProvider {
           }
           resolve(new ServiceResponse(0, data));
         }, error => {
-          this.pushError("Code 14", 'Failed to retrieve offline data from native storage' + JSON.stringify(error));
-          console.log("Failed to get offline data from native storage");
-          resolve(new ServiceResponse(-2, null));
+          if (error.code == 2) {
+            //item not found error. https://stackoverflow.com/questions/48534417/ionic3-native-storage-error-code-2
+            // Saving with default values and returning 0.
+            this.pushError("Code 14", 'Failed to retrieve offline data from native storage' + JSON.stringify(error));
+            console.log("Failed to get offline data from native storage");
+            this.saveWantsKuranOfflineSettings(true);
+            resolve(new ServiceResponse(0, true));
+          } else {
+            this.pushError("Code 14", 'Failed to retrieve offline data from native storage' + JSON.stringify(error));
+            console.log("Failed to get offline data from native storage");
+            resolve(new ServiceResponse(-2, null));
+          }
+
         });
       } catch (err) {
         console.log("Failed to read from DB , err:" + err);
