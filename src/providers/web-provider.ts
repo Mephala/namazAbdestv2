@@ -307,8 +307,7 @@ export class WebProvider {
           if (error.code == 2) {
             //item not found error. https://stackoverflow.com/questions/48534417/ionic3-native-storage-error-code-2
             // Saving with default values and returning 0.
-            this.pushError("Code 14", 'Failed to retrieve offline data from native storage' + JSON.stringify(error));
-            console.log("Failed to get offline data from native storage");
+            console.log("Failed to get offline data from native storage because item does not exist. Saving default values for Kuran settings.");
             this.saveWantsKuranOfflineSettings(true);
             resolve(new ServiceResponse(0, true));
           } else {
