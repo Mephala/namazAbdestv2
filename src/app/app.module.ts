@@ -28,7 +28,6 @@ import {GoogleAnalytics} from "@ionic-native/google-analytics";
 import {AlertProvider} from '../providers/alert/alert';
 import {Diagnostic} from "@ionic-native/diagnostic";
 import {AdMobFree} from "@ionic-native/admob-free";
-import {StreamingMedia} from '@ionic-native/streaming-media';
 
 @NgModule({
   declarations: [
@@ -74,8 +73,7 @@ import {StreamingMedia} from '@ionic-native/streaming-media';
     GoogleAnalytics,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     AlertProvider,
-    Diagnostic,
-    StreamingMedia
+    Diagnostic
   ]
 })
 export class AppModule {

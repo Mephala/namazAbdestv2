@@ -1,8 +1,8 @@
 {
   "name": "namazAbdestv2",
-  "app_id": "4f444e3e",
-  "type": "ionic-angular",
   "integrations": {
     "cordova": {}
-  }
+  },
+  "type": "ionic-angular",
+  "pro_id": "4f444e3e"
 }
